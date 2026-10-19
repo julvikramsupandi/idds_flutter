@@ -42,11 +42,22 @@ class _Group {
 class GalleryShell extends StatefulWidget {
   const GalleryShell({
     super.key,
+    required this.page,
+    required this.onPageChanged,
     required this.brand,
     required this.brightness,
     required this.onBrandChanged,
     required this.onBrightnessChanged,
   });
+
+  /// Id halaman awal, juga dipakai sebagai URL (`/#/button`).
+  static const String homePage = 'home';
+
+  /// Id halaman yang ditampilkan. Id yang tidak dikenal menampilkan Beranda.
+  final String page;
+
+  /// Dipanggil saat menu dipilih; induk memperbarui URL lalu [page].
+  final ValueChanged<String> onPageChanged;
 
   final IddsBrand brand;
   final Brightness brightness;
@@ -58,12 +69,10 @@ class GalleryShell extends StatefulWidget {
 }
 
 class _GalleryShellState extends State<GalleryShell> {
-  String _current = 'home';
-
   late final List<_Group> _groups = <_Group>[
     _Group('Mulai', <_Page>[
       _Page(
-        'home',
+        GalleryShell.homePage,
         'Beranda',
         TablerIcons.layout_dashboard,
         (BuildContext context) => HomePage(brand: widget.brand, onBrandChanged: widget.onBrandChanged),
@@ -108,9 +117,13 @@ class _GalleryShellState extends State<GalleryShell> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[child]),
       );
 
-  _Page get _page => _groups.expand((_Group g) => g.pages).firstWhere((_Page p) => p.id == _current);
+  Iterable<_Page> get _pages => _groups.expand((_Group g) => g.pages);
 
-  void _select(String id) => setState(() => _current = id);
+  _Page get _page => _pages.firstWhere((_Page p) => p.id == widget.page, orElse: () => _pages.first);
+
+  String get _current => _page.id;
+
+  void _select(String id) => widget.onPageChanged(id);
 
   void _openDrawer() {
     showIddsDrawer<void>(
@@ -194,49 +207,54 @@ class _GalleryShellState extends State<GalleryShell> {
     // Key per halaman: state tiap halaman dibuat baru saat berpindah menu.
     final Widget content = KeyedSubtree(key: ValueKey<String>(_current), child: Builder(builder: _page.builder));
 
-    return Scaffold(
-      backgroundColor: c.backgroundPrimary,
-      body: SafeArea(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            if (wide)
-              Container(
-                width: 280,
-                decoration: BoxDecoration(color: c.backgroundPrimary, border: Border(right: line)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Container(
-                      height: 64,
-                      padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s16),
-                      alignment: AlignmentDirectional.centerStart,
-                      decoration: BoxDecoration(border: Border(bottom: line)),
-                      child: Text(
-                        'IDDS Flutter',
-                        style: theme.textStyle(
-                          fontSize: IddsFontSize.lg,
-                          lineHeight: IddsLineHeight.lg,
-                          fontWeight: IddsFontWeight.bold,
-                          color: c.primaryMain,
+    // Judul tab browser mengikuti halaman yang dibuka.
+    return Title(
+      title: '${_page.title} · idds_flutter',
+      color: c.primaryMain,
+      child: Scaffold(
+        backgroundColor: c.backgroundPrimary,
+        body: SafeArea(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              if (wide)
+                Container(
+                  width: 280,
+                  decoration: BoxDecoration(color: c.backgroundPrimary, border: Border(right: line)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Container(
+                        height: 64,
+                        padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s16),
+                        alignment: AlignmentDirectional.centerStart,
+                        decoration: BoxDecoration(border: Border(bottom: line)),
+                        child: Text(
+                          'IDDS Flutter',
+                          style: theme.textStyle(
+                            fontSize: IddsFontSize.lg,
+                            lineHeight: IddsLineHeight.lg,
+                            fontWeight: IddsFontWeight.bold,
+                            color: c.primaryMain,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: _Menu(groups: _groups, current: _current, onSelected: _select),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: _Menu(groups: _groups, current: _current, onSelected: _select),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[topBar, Expanded(child: content)],
                 ),
               ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[topBar, Expanded(child: content)],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -2,6 +2,8 @@
 
 [![pub package](https://img.shields.io/pub/v/idds_flutter.svg)](https://pub.dev/packages/idds_flutter)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/julvikramsupandi/idds_flutter/actions/workflows/ci.yml/badge.svg)](https://github.com/julvikramsupandi/idds_flutter/actions/workflows/ci.yml)
+[![galeri](https://img.shields.io/badge/galeri-live%20demo-0b8ae1.svg)](https://julvikramsupandi.github.io/idds_flutter/)
 
 Port Flutter dari [INA Digital Design System (IDDS)](https://design.inadigital.go.id/):
 token desain, tema multi-brand (terang/gelap), dan komponen UI yang mengikuti
@@ -10,6 +12,12 @@ desktop.
 
 *Bukan produk resmi INA Digital. Package ini dibuat secara independen agar
 IDDS dapat dipakai di aplikasi Flutter.*
+
+**[Lihat galeri komponen →](https://julvikramsupandi.github.io/idds_flutter/)**
+Semua komponen bisa dicoba langsung di browser, lengkap dengan pilihan brand,
+mode gelap, dan contoh kode. Setiap halaman punya alamat sendiri, misalnya
+[`#/button`](https://julvikramsupandi.github.io/idds_flutter/#/button) atau
+[`#/table`](https://julvikramsupandi.github.io/idds_flutter/#/table).
 
 ## Status
 

@@ -5,6 +5,7 @@ description: >-
 version: 0.1.0
 repository: https://github.com/julvikramsupandi/idds_flutter
 issue_tracker: https://github.com/julvikramsupandi/idds_flutter/issues
+documentation: https://julvikramsupandi.github.io/idds_flutter/
 
 topics:
   - design-system
