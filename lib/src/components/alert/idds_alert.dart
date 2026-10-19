@@ -164,7 +164,10 @@ class _DismissButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final IddsColors c = IddsTheme.of(context).colors;
+    // container: tombol tutup jadi node aksesibilitas sendiri, tidak
+    // tergabung dengan judul alert.
     return Semantics(
+      container: true,
       button: true,
       label: label,
       onTap: onPressed,
