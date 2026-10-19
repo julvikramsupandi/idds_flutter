@@ -441,7 +441,11 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          SizedBox(
+          // Flexible: bila ruang di atas/bawah pemicu kurang dari tinggi
+          // panel, daftar jam/menit memendek (tetap bisa digulir) alih-alih
+          // panel meluber.
+          Flexible(
+            child: SizedBox(
             height: 224,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -452,6 +456,7 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
                 ],
               ],
             ),
+          ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s12, vertical: IddsSpacing.s8),

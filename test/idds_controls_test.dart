@@ -36,6 +36,8 @@ void main() {
 
       tester.view.physicalSize = const Size(700, 800);
       await tester.pumpWidget(testApp(IddsCheckbox(value: true, onChanged: (_) {})));
+      // Perubahan ukuran dianimasikan; tunggu sampai selesai.
+      await tester.pumpAndSettle();
       expect(boxSize(), const Size.square(16));
     });
 
@@ -118,6 +120,8 @@ void main() {
     testWidgets('ukuran track sesuai spesifikasi', (WidgetTester tester) async {
       for (final IddsToggleSize size in IddsToggleSize.values) {
         await tester.pumpWidget(testApp(IddsToggle(value: false, size: size, onChanged: (_) {})));
+        // Perubahan ukuran antarvarian dianimasikan; tunggu sampai selesai.
+        await tester.pumpAndSettle();
         expect(tester.getSize(find.byType(IddsToggle)), Size(size.trackWidth, size.trackHeight));
       }
     });
