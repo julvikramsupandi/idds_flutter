@@ -209,6 +209,8 @@ void main() {
       Future<double> heightAt(double width) async {
         tester.view.physicalSize = Size(width, 800);
         await tester.pumpWidget(testApp(const IddsTextField()));
+        // Perubahan tinggi dianimasikan; tunggu sampai selesai.
+        await tester.pumpAndSettle();
         return tester.getSize(find.byType(AnimatedContainer).first).height;
       }
 
