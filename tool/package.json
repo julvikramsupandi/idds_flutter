@@ -1,0 +1,12 @@
+{
+  "name": "idds-flutter-token-generator",
+  "private": true,
+  "description": "Membuat token desain Dart untuk idds_flutter dari @idds/styles (dan membandingkannya dengan ekspor Figma).",
+  "type": "module",
+  "scripts": {
+    "generate": "node generate_tokens.mjs && (dart format ../lib/src/tokens || echo 'dart tidak ditemukan: lewati format')"
+  },
+  "devDependencies": {
+    "@idds/styles": "1.6.38"
+  }
+}

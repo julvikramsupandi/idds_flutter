@@ -1,0 +1,36 @@
+name: idds_flutter_example
+description: Galeri komponen idds_flutter.
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ^3.6.0
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  idds_flutter:
+    path: ../
+  # IDDS memakai ikon Tabler; galeri memakai package ikon Tabler untuk ikon
+  # tambahan (menu, kartu, tombol).
+  flutter_tabler_icons: ^1.43.0
+  # Font Inter (font resmi IDDS), diunduh saat aplikasi berjalan dan disimpan
+  # di cache.
+  google_fonts: ">=6.2.1 <10.0.0"
+  # Pewarna sintaks contoh kode dengan tema VS Code Light dan Dark+.
+  re_highlight: ^0.0.3
+  # Logo instansi dan ilustrasi Beranda (SVG di assets/).
+  flutter_svg: ^2.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logos/
+    - assets/illustrations/
+

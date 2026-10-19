@@ -1,0 +1,33 @@
+# Berkas yang TIDAK ikut diunggah ke pub.dev.
+# (Bila .pubignore ada, pub tidak membaca .gitignore di folder ini.)
+
+# Dart / Flutter
+.dart_tool/
+.packages
+build/
+pubspec.lock
+.flutter-plugins
+.flutter-plugins-dependencies
+coverage/
+
+# Galeri contoh: hanya kode sumbernya yang ikut, bukan folder platform/build
+example/build/
+example/.dart_tool/
+example/android/
+example/ios/
+example/macos/
+example/linux/
+example/windows/
+example/web/
+example/pubspec.lock
+example/*.iml
+
+# Generator token (hanya dibutuhkan pengembang package)
+tool/node_modules/
+tool/figma/
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
