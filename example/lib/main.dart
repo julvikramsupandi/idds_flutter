@@ -45,7 +45,7 @@ class _GalleryAppState extends State<GalleryApp> {
   Widget build(BuildContext context) {
     final IddsThemeData idds = IddsThemeData(brand: _brand, brightness: _brightness, textStyleBuilder: interFont);
     return MaterialApp.router(
-      title: 'idds_flutter',
+      title: 'IDDS Flutter',
       debugShowCheckedModeBanner: false,
       theme: idds.toMaterialTheme(),
       builder: (BuildContext context, Widget? child) => AnimatedIddsTheme(data: idds, child: child!),
