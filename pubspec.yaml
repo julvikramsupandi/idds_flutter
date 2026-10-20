@@ -2,7 +2,7 @@ name: idds_flutter
 description: >-
   Unofficial Flutter port of INA Digital Design System (IDDS):
   design tokens, multi-brand theming, and UI components.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/julvikramsupandi/idds_flutter
 issue_tracker: https://github.com/julvikramsupandi/idds_flutter/issues
 documentation: https://julvikramsupandi.github.io/idds_flutter/
@@ -13,6 +13,16 @@ topics:
   - widget
   - theme
   - indonesia
+
+screenshots:
+  - description: Beranda galeri dengan brand INAgov dalam mode terang.
+    path: doc/screenshots/beranda.webp
+  - description: Beranda yang sama dengan brand BKN dalam mode gelap.
+    path: doc/screenshots/beranda-gelap-bkn.webp
+  - description: Text Input, Checkbox, Radio, dan Toggle beserta status validasi.
+    path: doc/screenshots/form.webp
+  - description: Grafik garis, batang, dan donat dengan palet IDDS.
+    path: doc/screenshots/grafik.webp
 
 environment:
   sdk: ^3.6.0

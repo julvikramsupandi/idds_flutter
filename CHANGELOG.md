@@ -1,3 +1,8 @@
+## 0.1.1
+
+- Menambahkan screenshot galeri untuk halaman pub.dev.
+- README memuat cuplikan galeri.
+
 ## 0.1.0
 
 Rilis pertama.

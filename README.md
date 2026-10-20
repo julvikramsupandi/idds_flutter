@@ -19,6 +19,11 @@ mode gelap, dan contoh kode. Setiap halaman punya alamat sendiri, misalnya
 [`#/button`](https://julvikramsupandi.github.io/idds_flutter/#/button) atau
 [`#/table`](https://julvikramsupandi.github.io/idds_flutter/#/table).
 
+<p>
+  <img src="https://raw.githubusercontent.com/julvikramsupandi/idds_flutter/main/doc/screenshots/beranda.webp" alt="Beranda galeri, brand INAgov, mode terang" width="49%">
+  <img src="https://raw.githubusercontent.com/julvikramsupandi/idds_flutter/main/doc/screenshots/beranda-gelap-bkn.webp" alt="Beranda galeri, brand BKN, mode gelap" width="49%">
+</p>
+
 ## Status
 
 | Bagian | Status |
