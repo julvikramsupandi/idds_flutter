@@ -92,11 +92,40 @@ class AlertSection extends StatefulWidget {
 class _AlertSectionState extends State<AlertSection> {
   final Set<IddsAlertVariant> _hidden = <IddsAlertVariant>{};
 
+  /// Layar penuh tidak punya isi halaman untuk alert; lembar bawah tidak
+  /// menutupi bidikan dan muat lebih dari satu aksi.
+  void _showAlertSheet(BuildContext context) {
+    showIddsBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) => Padding(
+        padding: const EdgeInsets.all(IddsSpacing.s16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: IddsSpacing.s12,
+          children: <Widget>[
+            const IddsAlert(
+              variant: IddsAlertVariant.critical,
+              title: Text('Presensi belum terkirim'),
+              message: Text('Server tidak merespons. Foto dan lokasi tetap tersimpan.'),
+            ),
+            IddsButton(onPressed: () => Navigator.pop(context), child: const Text('Coba lagi')),
+            IddsButton(
+              hierarchy: IddsButtonHierarchy.secondary,
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Tutup'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GallerySection(
       title: 'Alert',
-      usage: 'Untuk pesan penting di dalam halaman. Alert tidak menyembunyikan dirinya sendiri: simpan status tampil di state dan hapus widget saat onDismiss dipanggil. Isi action untuk langkah lanjutan (mis. "Coba lagi"). Untuk notifikasi sementara, pakai Toast.',
+      usage: 'Untuk pesan penting di dalam halaman. Alert tidak menyembunyikan dirinya sendiri: simpan status tampil di state dan hapus widget saat onDismiss dipanggil. Isi action untuk langkah lanjutan (mis. "Coba lagi"). Di layar penuh tanpa isi halaman (kamera, pemindai, peta) atau bila ada 2+ aksi, taruh alert di showIddsBottomSheet. Untuk notifikasi sementara, pakai Toast.',
       code: _alertCode,
       children: <Widget>[
         for (final IddsAlertVariant v in IddsAlertVariant.values)
@@ -124,6 +153,17 @@ class _AlertSectionState extends State<AlertSection> {
             ),
           ),
         ),
+        const GalleryCaption('Di layar penuh (kamera, pemindai, peta): alert di lembar bawah'),
+        const SizedBox(height: IddsSpacing.s8),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: IddsButton(
+            hierarchy: IddsButtonHierarchy.secondary,
+            onPressed: () => _showAlertSheet(context),
+            child: const Text('Buka alert di lembar bawah'),
+          ),
+        ),
+        const SizedBox(height: IddsSpacing.s12),
         if (_hidden.isNotEmpty)
           IddsButton(
             hierarchy: IddsButtonHierarchy.link,
@@ -184,4 +224,30 @@ IddsAlert(
     child: const Text('Coba lagi'),
   ),
 )
+
+// Layar penuh (kamera, pemindai, peta) atau 2+ aksi: di lembar bawah.
+showIddsBottomSheet<void>(
+  context: context,
+  builder: (context) => Padding(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 12,
+      children: [
+        const IddsAlert(
+          variant: IddsAlertVariant.critical,
+          title: Text('Presensi belum terkirim'),
+          message: Text('Server tidak merespons.'),
+        ),
+        IddsButton(onPressed: retry, child: const Text('Coba lagi')),
+        IddsButton(
+          hierarchy: IddsButtonHierarchy.secondary,
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Tutup'),
+        ),
+      ],
+    ),
+  ),
+);
 ''';
