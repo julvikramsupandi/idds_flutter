@@ -1,4 +1,4 @@
-## 0.2.0 (belum dirilis)
+## 0.2.0
 
 Perbaikan dari pemakaian di aplikasi mobile (Android/iOS).
 

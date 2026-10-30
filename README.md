@@ -48,7 +48,7 @@ mode gelap, dan contoh kode. Setiap halaman punya alamat sendiri, misalnya
 
 ```yaml
 dependencies:
-  idds_flutter: ^0.1.0
+  idds_flutter: ^0.2.0
 ```
 
 ## Pemakaian
