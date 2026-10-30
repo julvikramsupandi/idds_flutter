@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../../foundation/idds_hit_area.dart';
 import '../../foundation/idds_icon.dart';
 import '../../foundation/idds_interactive.dart';
 import '../../foundation/idds_theme.dart';
@@ -51,6 +52,7 @@ class IddsAlert extends StatelessWidget {
     this.showIcon = true,
     this.onDismiss,
     this.dismissLabel = 'Tutup peringatan',
+    this.action,
   });
 
   /// Varian warna.
@@ -75,6 +77,11 @@ class IddsAlert extends StatelessWidget {
 
   /// Label tombol tutup untuk pembaca layar.
   final String dismissLabel;
+
+  /// Langkah lanjutan dari pesan ini (mis. `IddsButton` "Coba lagi"),
+  /// ditaruh di bawah [message]. Tidak ada di IDDS React; ditambahkan karena
+  /// alert galat di aplikasi (terutama mobile) hampir selalu butuh aksi.
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +123,11 @@ class IddsAlert extends StatelessWidget {
                 ),
                 child: message!,
               ),
+            ),
+          if (action != null)
+            Padding(
+              padding: EdgeInsets.only(top: title == null && message == null ? 0 : IddsSpacing.s12),
+              child: action!,
             ),
         ],
       ),
@@ -166,24 +178,28 @@ class _DismissButton extends StatelessWidget {
     final IddsColors c = IddsTheme.of(context).colors;
     // container: tombol tutup jadi node aksesibilitas sendiri, tidak
     // tergabung dengan judul alert.
-    return Semantics(
-      container: true,
-      button: true,
-      label: label,
-      onTap: onPressed,
-      child: IddsInteractive(
+    // Ikon 14px seperti CSS, area tekan 48dp untuk layar sentuh. Paling luar:
+    // induk seukuran ikon (mis. Semantics) akan menolak sentuhan di luarnya.
+    return IddsHitArea(
+      child: Semantics(
+        container: true,
+        button: true,
+        label: label,
         onTap: onPressed,
-        builder: (BuildContext context, IddsInteractionState state) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(IddsRadius.sm),
-              boxShadow: state.focused
-                  ? <BoxShadow>[BoxShadow(color: c.guide.shade500, spreadRadius: 2)]
-                  : null,
-            ),
-            child: IddsIcon(IddsIcons.x, size: 14, color: color, strokeWidth: state.hovered ? 2.5 : 2),
-          );
-        },
+        child: IddsInteractive(
+          onTap: onPressed,
+          builder: (BuildContext context, IddsInteractionState state) {
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(IddsRadius.sm),
+                boxShadow: state.focused
+                    ? <BoxShadow>[BoxShadow(color: c.guide.shade500, spreadRadius: 2)]
+                    : null,
+              ),
+              child: IddsIcon(IddsIcons.x, size: 14, color: color, strokeWidth: state.hovered ? 2.5 : 2),
+            );
+          },
+        ),
       ),
     );
   }

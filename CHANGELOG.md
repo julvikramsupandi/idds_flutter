@@ -1,3 +1,20 @@
+## 0.2.0 (belum dirilis)
+
+Perbaikan dari pemakaian di aplikasi mobile (Android/iOS).
+
+- **Perubahan perilaku:** `showIddsToast` kini bawaan `replaceExisting: true`
+  (aturan IDDS: maksimal satu toast aktif). Isi `false` untuk menumpuk seperti
+  0.1.x.
+- `showIddsToast`/`dismissAllIddsToasts` bisa dipanggil dengan context di atas
+  overlay (mis. `navigatorKey.currentContext`), atau parameter `overlay`.
+  Sebelumnya gagal dengan "No Overlay widget found".
+- `IddsAlert.action`: langkah lanjutan di bawah pesan.
+- Tombol tutup Alert & Toast: area tekan 48dp tanpa mengubah tampilan.
+- Toast di perangkat sentuh: masuk bergeser dari tepi, geser untuk menutup,
+  timer dijeda selama disentuh, posisi bawah di atas keyboard.
+- Toast saat pembaca layar aktif: durasi ×2; toast ber-aksi tidak tertutup
+  otomatis.
+
 ## 0.1.1
 
 - Menambahkan screenshot galeri untuk halaman pub.dev.

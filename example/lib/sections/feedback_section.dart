@@ -35,9 +35,10 @@ class _FeedbackSectionState extends State<FeedbackSection> {
     final IddsThemeData theme = IddsTheme.of(context);
     return GallerySection(
       title: 'Toast & Tooltip',
-      subtitle: 'Toast tertutup otomatis setelah 5 detik. Tooltip muncul saat disorot mouse, '
+      subtitle: 'Toast tertutup otomatis setelah 5 detik, hanya satu yang tampil (toast baru menggantikan yang lama), '
+          'dan bisa digeser menjauhi tepi layar untuk menutup. Tooltip muncul saat disorot mouse, '
           'difokuskan dengan Tab, atau ditekan lama di layar sentuh.',
-      usage: 'showIddsToast menampilkan notifikasi sementara di atas halaman dan mengembalikan controller untuk menutupnya. IddsTooltip membungkus widget apa saja; isi title/description untuk tooltip kartu (onboarding).',
+      usage: 'showIddsToast menampilkan notifikasi sementara di atas halaman dan mengembalikan controller untuk menutupnya. Bawaan replaceExisting: true (aturan IDDS satu toast); isi false untuk menumpuk. Bisa dipanggil dengan context Navigator root (mis. dari navigatorKey) atau isi overlay. IddsTooltip membungkus widget apa saja; isi title/description untuk tooltip kartu (onboarding).',
       code: _feedbackCode,
       children: <Widget>[
         const GalleryCaption('Posisi dan gaya toast'),
@@ -156,6 +157,13 @@ showIddsToast(
   state: IddsToastState.positive, // normal, destructive, positive
   style: IddsToastStyle.solid, // solid atau outline
   position: IddsToastPosition.topRight,
+  // replaceExisting: false, // menumpuk; bawaan true (satu toast)
+);
+
+// Tanpa BuildContext halaman (mis. dari helper), pakai navigator root.
+showIddsToast(
+  context: navigatorKey.currentContext!,
+  title: const Text('Tautan disalin'),
 );
 
 IddsTooltip(

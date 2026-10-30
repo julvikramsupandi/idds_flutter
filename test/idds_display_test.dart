@@ -82,6 +82,32 @@ void main() {
       await tester.pumpWidget(testApp(const IddsAlert(title: Text('Info'), showIcon: false)));
       expect(find.byType(IddsIcon), findsNothing);
     });
+
+    testWidgets('action tampil di bawah pesan', (WidgetTester tester) async {
+      await tester.pumpWidget(testApp(const IddsAlert(
+        variant: IddsAlertVariant.critical,
+        title: Text('Gagal mengirim'),
+        message: Text('Server tidak merespons.'),
+        action: Text('Coba lagi'),
+      )));
+      expect(find.text('Coba lagi'), findsOneWidget);
+      expect(
+        tester.getTopLeft(find.text('Coba lagi')).dy,
+        greaterThan(tester.getBottomLeft(find.text('Server tidak merespons.')).dy),
+      );
+    });
+
+    testWidgets('tombol tutup: area tekan 48dp walau ikon 14px', (WidgetTester tester) async {
+      int dismissed = 0;
+      await tester.pumpWidget(testApp(IddsAlert(
+        title: const Text('Info'),
+        message: const Text('Pesan dua baris agar alert cukup tinggi untuk diuji.'),
+        onDismiss: () => dismissed++,
+      )));
+      final Rect icon = tester.getRect(find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == IddsIcons.x));
+      await tester.tapAt(icon.center + const Offset(-14, 12));
+      expect(dismissed, 1);
+    });
   });
 
   group('IddsIcon', () {

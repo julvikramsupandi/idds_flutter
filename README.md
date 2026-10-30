@@ -188,6 +188,7 @@ IddsAlert(
   variant: IddsAlertVariant.caution,
   title: Text('Sesi hampir berakhir'),
   message: Text('Simpan pekerjaan Anda.'),
+  action: IddsButton(onPressed: save, child: Text('Simpan sekarang')),
   onDismiss: () {},
 )
 
@@ -306,10 +307,11 @@ showIddsDrawer(
 );
 
 showIddsToast(
-  context: context,
+  context: context, // boleh context Navigator root (navigatorKey)
   title: Text('Data berhasil disimpan'),
   state: IddsToastState.positive, // normal, destructive, positive
   position: IddsToastPosition.topRight,
+  // replaceExisting: false, // bawaan true: satu toast aktif (aturan IDDS)
 )
 
 IddsTooltip(message: 'Unduh dokumen', child: IddsButton(onPressed: () {}, child: Text('Unduh')))
@@ -502,6 +504,10 @@ diubah karena di CSS aslinya tidak terbaca atau hilang di dark mode:
 | Modal, lebar bawaan | Mengikuti isi, minimal 480px | Tetap 480px (`IddsModalSize.sm`), dibatasi lebar layar |
 | Drawer kiri/kanan, sudut | Sudut membulat di sisi yang menempel tepi layar | Sudut membulat di sisi yang menghadap halaman |
 | Toast gaya outline | Ikon selalu putih (tidak terlihat di latar terang) | Ikon mengikuti warna teks |
+| Alert, langkah lanjutan | Tidak ada slot aksi | `action` di bawah pesan (alert galat di mobile hampir selalu butuh "Coba lagi") |
+| Alert & Toast, tombol tutup | Area tekan seukuran ikon (14px/20px) | Area tekan 48dp tanpa mengubah tampilan (target sentuh WCAG 2.5.8) |
+| Toast di perangkat sentuh | Hanya fade; ditutup lewat X | Masuk bergeser dari tepi; bisa digeser menjauhi tepi untuk menutup; timer dijeda selama disentuh; posisi bawah di atas keyboard |
+| Toast & pembaca layar | Tertutup sesuai durasi | Saat pembaca layar aktif: durasi ×2, toast ber-aksi tidak tertutup otomatis (WCAG 2.2.1) |
 | Tooltip kartu, tombol "Lanjut" | Teks `white` di atas warna brand | `onPrimary` |
 | Skeleton & Spinner, dark mode | Warna `neutral-200`/`neutral-300` dan warna 100 (terang) | Latar tersier / garis tepi / warna 800 |
 | Table, teks kosong | "No data found" | "Data tidak ditemukan" |

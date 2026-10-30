@@ -55,6 +55,7 @@ void main() {
         context: ctx,
         title: const Text('Dua'),
         duration: null,
+        replaceExisting: false,
         state: IddsToastState.destructive,
         style: IddsToastStyle.outline,
         position: IddsToastPosition.bottomCenter,
@@ -75,6 +76,102 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Dua'), findsNothing);
       expect(second.isOpen, isFalse);
+    });
+  });
+
+  group('showIddsToast (mobile & aturan IDDS)', () {
+    Future<BuildContext> pumpHost(WidgetTester tester) async {
+      late BuildContext ctx;
+      await tester.pumpWidget(testApp(Builder(builder: (BuildContext context) {
+        ctx = context;
+        return const SizedBox();
+      })));
+      return ctx;
+    }
+
+    testWidgets('bawaan: toast baru menggantikan yang lama (maksimal satu)', (WidgetTester tester) async {
+      final BuildContext ctx = await pumpHost(tester);
+      int closed = 0;
+      showIddsToast(context: ctx, title: const Text('Satu'), duration: null, onClose: () => closed++);
+      await tester.pumpAndSettle();
+      showIddsToast(context: ctx, title: const Text('Dua'), duration: null);
+      await tester.pumpAndSettle();
+      expect(find.text('Satu'), findsNothing);
+      expect(find.text('Dua'), findsOneWidget);
+      expect(closed, 1);
+      dismissAllIddsToasts(ctx);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('context di atas overlay (Navigator root) tetap bisa', (WidgetTester tester) async {
+      final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(WidgetsApp(
+        color: const Color(0xFF000000),
+        navigatorKey: navigatorKey,
+        pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) =>
+            PageRouteBuilder<T>(settings: settings, pageBuilder: (BuildContext context, _, __) => builder(context)),
+        home: const SizedBox(),
+      ));
+      showIddsToast(context: navigatorKey.currentContext!, title: const Text('Dari navigator'), duration: null);
+      await tester.pumpAndSettle();
+      expect(find.text('Dari navigator'), findsOneWidget);
+      dismissAllIddsToasts(navigatorKey.currentContext!);
+      await tester.pumpAndSettle();
+      expect(find.text('Dari navigator'), findsNothing);
+    });
+
+    testWidgets('tombol X: area tekan 48dp walau ikon 16px', (WidgetTester tester) async {
+      final BuildContext ctx = await pumpHost(tester);
+      final IddsToastController toast = showIddsToast(context: ctx, title: const Text('OK'), duration: null);
+      await tester.pumpAndSettle();
+      final Rect icon = tester.getRect(find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == IddsIcons.x));
+      // 14px di kiri ikon: di luar ikon, di dalam area 48dp.
+      await tester.tapAt(icon.centerLeft - const Offset(14, 0));
+      await tester.pumpAndSettle();
+      expect(toast.isOpen, isFalse);
+    });
+
+    testWidgets('geser ke atas menutup toast', (WidgetTester tester) async {
+      final BuildContext ctx = await pumpHost(tester);
+      final IddsToastController toast = showIddsToast(context: ctx, title: const Text('Geser'), duration: null);
+      await tester.pumpAndSettle();
+      await tester.fling(find.text('Geser'), const Offset(0, -200), 1000);
+      await tester.pumpAndSettle();
+      expect(toast.isOpen, isFalse);
+      expect(find.text('Geser'), findsNothing);
+    });
+
+    testWidgets('pembaca layar: tampil lebih lama; dengan aksi tidak tertutup sendiri', (WidgetTester tester) async {
+      late BuildContext ctx;
+      await tester.pumpWidget(testApp(Builder(builder: (BuildContext context) {
+        ctx = context;
+        return const SizedBox();
+      })));
+      await tester.pumpWidget(MediaQuery(
+        data: const MediaQueryData(accessibleNavigation: true),
+        child: testApp(Builder(builder: (BuildContext context) {
+          ctx = context;
+          return const SizedBox();
+        })),
+      ));
+      showIddsToast(context: ctx, title: const Text('Lama'));
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 6));
+      expect(find.text('Lama'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 5));
+      await tester.pumpAndSettle();
+      expect(find.text('Lama'), findsNothing);
+
+      final IddsToastController withAction = showIddsToast(
+        context: ctx,
+        title: const Text('Ada aksi'),
+        action: const Text('Ulangi'),
+      );
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 30));
+      expect(withAction.isOpen, isTrue);
+      withAction.close();
+      await tester.pumpAndSettle();
     });
   });
 

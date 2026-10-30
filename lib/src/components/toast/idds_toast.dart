@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show TargetPlatform, defaultTargetPlatform;
 import 'package:flutter/widgets.dart';
+
+import '../../foundation/idds_hit_area.dart';
 
 import '../../foundation/idds_icon.dart';
 import '../../foundation/idds_interactive.dart';
@@ -77,8 +80,17 @@ class IddsToastController {
 /// Menampilkan toast (notifikasi singkat) di atas semua halaman.
 ///
 /// Toast tertutup otomatis setelah [duration] (bawaan 5 detik; `null` =
-/// tetap tampil sampai ditutup), atau saat tombol X ditekan. Beberapa toast
-/// di posisi yang sama ditumpuk.
+/// tetap tampil sampai ditutup), saat tombol X ditekan, atau saat digeser
+/// menjauhi tepi layar.
+///
+/// - [replaceExisting] `true` (bawaan, aturan IDDS "maksimal satu toast
+///   aktif"): toast yang sedang tampil ditutup dulu. `false` = ditumpuk.
+/// - [overlay]: overlay tujuan. Bila kosong dicari dari [context]; context
+///   di atas overlay (mis. context `Navigator` root dari `navigatorKey`)
+///   memakai overlay navigator tersebut.
+/// - Saat pembaca layar aktif (`MediaQuery.accessibleNavigationOf`), toast
+///   ber-[action] tidak tertutup otomatis dan toast lain tampil dua kali
+///   lebih lama, agar sempat dibacakan (WCAG 2.2.1).
 ///
 /// ```dart
 /// showIddsToast(
@@ -98,9 +110,17 @@ IddsToastController showIddsToast({
   Widget? action,
   VoidCallback? onClose,
   String closeLabel = 'Tutup notifikasi',
+  bool replaceExisting = true,
+  OverlayState? overlay,
 }) {
-  final OverlayState overlay = Overlay.of(context, rootOverlay: true);
-  final _ToastManager manager = _ToastManager.of(overlay);
+  final _ToastManager manager = _ToastManager.of(overlay ?? _overlayOf(context));
+  if (replaceExisting) manager._closeAll();
+  final bool screenReader = MediaQuery.maybeAccessibleNavigationOf(context) ?? false;
+  final Duration? shown = !screenReader || duration == null
+      ? duration
+      : action != null
+          ? null
+          : duration * 2;
   final _ToastEntry entry = _ToastEntry(
     manager: manager,
     theme: IddsTheme.of(context),
@@ -113,19 +133,36 @@ IddsToastController showIddsToast({
     onClose: onClose,
     closeLabel: closeLabel,
   );
-  manager._add(entry, duration);
+  manager._add(entry, shown);
   return IddsToastController._(entry);
 }
 
 /// Menutup semua toast yang sedang tampil.
-void dismissAllIddsToasts(BuildContext context) {
-  final OverlayState overlay = Overlay.of(context, rootOverlay: true);
-  final _ToastManager? manager = _ToastManager._managers[overlay];
-  if (manager == null) return;
-  for (final _ToastEntry e in List<_ToastEntry>.of(manager._entries)) {
-    manager._close(e);
-  }
+void dismissAllIddsToasts(BuildContext context, {OverlayState? overlay}) {
+  _ToastManager._managers[overlay ?? _overlayOf(context)]?._closeAll();
 }
+
+/// Overlay root dari [context]. `Overlay.of` hanya berhasil dari context di
+/// dalam entry overlay; context di atasnya (mis. `Navigator` root) memakai
+/// overlay milik navigator tersebut.
+OverlayState _overlayOf(BuildContext context) {
+  final OverlayState? overlay =
+      Overlay.maybeOf(context, rootOverlay: true) ?? Navigator.maybeOf(context, rootNavigator: true)?.overlay;
+  if (overlay == null) {
+    throw FlutterError(
+      'showIddsToast tidak menemukan Overlay dari context ini.\n'
+      'Pakai context di bawah MaterialApp/WidgetsApp/Navigator, atau isi parameter overlay.',
+    );
+  }
+  return overlay;
+}
+
+/// Perangkat sentuh (Android/iOS/Fuchsia): toast masuk dengan geser dari
+/// tepi, seperti pola notifikasi mobile. Desktop/web tetap fade seperti CSS.
+bool get _isTouchPlatform => switch (defaultTargetPlatform) {
+      TargetPlatform.android || TargetPlatform.iOS || TargetPlatform.fuchsia => true,
+      _ => false,
+    };
 
 class _ToastEntry {
   _ToastEntry({
@@ -152,6 +189,7 @@ class _ToastEntry {
   final VoidCallback? onClose;
   final String closeLabel;
   final Key key = UniqueKey();
+  Duration? duration;
   Timer? timer;
   bool closing = false;
 }
@@ -170,12 +208,25 @@ class _ToastManager {
 
   void _add(_ToastEntry entry, Duration? duration) {
     _entries.add(entry);
-    if (duration != null) entry.timer = Timer(duration, () => _close(entry));
+    entry.duration = duration;
+    _startTimer(entry);
     if (_overlayEntry == null) {
       _overlayEntry = OverlayEntry(builder: _build);
       overlay.insert(_overlayEntry!);
     } else {
       _overlayEntry!.markNeedsBuild();
+    }
+  }
+
+  void _startTimer(_ToastEntry entry) {
+    entry.timer?.cancel();
+    final Duration? duration = entry.duration;
+    if (duration != null && !entry.closing) entry.timer = Timer(duration, () => _close(entry));
+  }
+
+  void _closeAll() {
+    for (final _ToastEntry e in List<_ToastEntry>.of(_entries)) {
+      _close(e);
     }
   }
 
@@ -219,7 +270,8 @@ class _ToastManager {
                 IddsToastPosition.bottomLeft ||
                 IddsToastPosition.bottomRight ||
                 IddsToastPosition.bottomCenter =>
-                  inset + safe.bottom,
+                  // Di atas keyboard virtual bila sedang terbuka.
+                  inset + math.max(safe.bottom, MediaQuery.viewInsetsOf(context).bottom),
                 IddsToastPosition.centerLeft || IddsToastPosition.centerRight => 0,
                 _ => null,
               },
@@ -396,20 +448,24 @@ class _ToastViewState extends State<_ToastView> with SingleTickerProviderStateMi
             e.action!,
           ],
           const SizedBox(width: IddsSpacing.s8),
-          Semantics(
-            button: true,
-            label: e.closeLabel,
-            onTap: () => e.manager._close(e),
-            excludeSemantics: true,
-            child: IddsInteractive(
+          // Ikon 16px seperti CSS, area tekan 48dp untuk layar sentuh (paling
+          // luar, lihat IddsHitArea).
+          IddsHitArea(
+            child: Semantics(
+              button: true,
+              label: e.closeLabel,
               onTap: () => e.manager._close(e),
-              builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
-                visible: state.focused,
-                borderRadius: BorderRadius.circular(IddsRadius.sm),
-                rings: <(double, Color)>[(1.5, foreground)],
-                child: Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: IddsIcon(IddsIcons.x, size: 16, strokeWidth: state.hovered ? 3 : 2, color: foreground),
+              excludeSemantics: true,
+              child: IddsInteractive(
+                onTap: () => e.manager._close(e),
+                builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+                  visible: state.focused,
+                  borderRadius: BorderRadius.circular(IddsRadius.sm),
+                  rings: <(double, Color)>[(1.5, foreground)],
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: IddsIcon(IddsIcons.x, size: 16, strokeWidth: state.hovered ? 3 : 2, color: foreground),
+                  ),
                 ),
               ),
             ),
@@ -418,9 +474,36 @@ class _ToastViewState extends State<_ToastView> with SingleTickerProviderStateMi
       ),
     );
 
-    return FadeTransition(
-      opacity: CurvedAnimation(parent: _fade, curve: Curves.easeInOut),
+    final Animation<double> curve = CurvedAnimation(parent: _fade, curve: Curves.easeInOut);
+    final bool fromBottom = e.position._isBottom;
+    Widget result = FadeTransition(
+      opacity: curve,
       child: Semantics(liveRegion: true, container: true, child: IntrinsicWidth(child: toast)),
+    );
+    if (_isTouchPlatform) {
+      result = SlideTransition(
+        position: Tween<Offset>(begin: Offset(0, fromBottom ? 0.5 : -0.5), end: Offset.zero).animate(curve),
+        child: result,
+      );
+    }
+    // Geser menjauhi tepi layar untuk menutup (pola notifikasi mobile);
+    // timer dijeda selama toast disentuh agar tidak hilang saat dibaca.
+    return Listener(
+      onPointerDown: (_) => e.timer?.cancel(),
+      onPointerUp: (_) => e.manager._startTimer(e),
+      onPointerCancel: (_) => e.manager._startTimer(e),
+      child: Dismissible(
+        key: ValueKey<Key>(e.key),
+        direction: fromBottom ? DismissDirection.down : DismissDirection.up,
+        // Tanpa animasi menyusut: entri langsung dilepas setelah tergeser.
+        resizeDuration: null,
+        onDismissed: (_) {
+          e.closing = true;
+          e.timer?.cancel();
+          e.manager._remove(e);
+        },
+        child: result,
+      ),
     );
   }
 }

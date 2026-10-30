@@ -96,7 +96,7 @@ class _AlertSectionState extends State<AlertSection> {
   Widget build(BuildContext context) {
     return GallerySection(
       title: 'Alert',
-      usage: 'Untuk pesan penting di dalam halaman. Alert tidak menyembunyikan dirinya sendiri: simpan status tampil di state dan hapus widget saat onDismiss dipanggil. Untuk notifikasi sementara, pakai Toast.',
+      usage: 'Untuk pesan penting di dalam halaman. Alert tidak menyembunyikan dirinya sendiri: simpan status tampil di state dan hapus widget saat onDismiss dipanggil. Isi action untuk langkah lanjutan (mis. "Coba lagi"). Untuk notifikasi sementara, pakai Toast.',
       code: _alertCode,
       children: <Widget>[
         for (final IddsAlertVariant v in IddsAlertVariant.values)
@@ -110,6 +110,20 @@ class _AlertSectionState extends State<AlertSection> {
                 onDismiss: () => setState(() => _hidden.add(v)),
               ),
             ),
+        const Padding(
+          padding: EdgeInsets.only(bottom: IddsSpacing.s12),
+          child: IddsAlert(
+            variant: IddsAlertVariant.critical,
+            title: Text('Presensi belum terkirim'),
+            message: Text('Server tidak merespons. Foto dan lokasi tetap tersimpan.'),
+            action: IddsButton(
+              hierarchy: IddsButtonHierarchy.secondary,
+              size: IddsButtonSize.sm,
+              onPressed: null,
+              child: Text('Coba lagi'),
+            ),
+          ),
+        ),
         if (_hidden.isNotEmpty)
           IddsButton(
             hierarchy: IddsButtonHierarchy.link,
@@ -157,4 +171,17 @@ if (_showAlert)
     // Tombol X hanya muncul bila onDismiss diisi.
     onDismiss: () => setState(() => _showAlert = false),
   ),
+
+// Dengan langkah lanjutan.
+IddsAlert(
+  variant: IddsAlertVariant.critical,
+  title: const Text('Presensi belum terkirim'),
+  message: const Text('Server tidak merespons. Foto dan lokasi tetap tersimpan.'),
+  action: IddsButton(
+    hierarchy: IddsButtonHierarchy.secondary,
+    size: IddsButtonSize.sm,
+    onPressed: retry,
+    child: const Text('Coba lagi'),
+  ),
+)
 ''';
