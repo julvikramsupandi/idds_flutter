@@ -203,7 +203,9 @@ void main() {
       variant: TargetPlatformVariant.all(),
     );
 
-    testWidgets('tinggi md: 44 / 40 / 36 sesuai lebar layar', (WidgetTester tester) async {
+    // Kotak input tidak dipadatkan di layar sempit (README "Penyesuaian dari
+    // IDDS"): tinggi md 44 di semua lebar, sama dengan tombol.
+    testWidgets('tinggi md: 44 di semua lebar layar', (WidgetTester tester) async {
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       Future<double> heightAt(double width) async {
@@ -215,8 +217,8 @@ void main() {
       }
 
       expect(await heightAt(1024), 44);
-      expect(await heightAt(700), 40);
-      expect(await heightAt(400), 36);
+      expect(await heightAt(700), 44);
+      expect(await heightAt(400), 44);
     });
   });
 }

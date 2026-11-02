@@ -37,13 +37,13 @@ enum IddsTextFieldStatus {
   success,
 }
 
-/// Ukuran [IddsTextField]. Tinggi di layar ≥ 768px, 640–767px, dan < 640px:
+/// Ukuran [IddsTextField]. Tinggi sama di semua lebar layar: [sm] 40,
+/// [md] 44, [lg] 48.
 ///
-/// | Ukuran | Tinggi |
-/// |---|---|
-/// | [sm] | 40 / 36 / 32 |
-/// | [md] | 44 / 40 / 36 |
-/// | [lg] | 48 / 44 / 40 |
+/// Kotak input tidak ikut mode compact (lihat
+/// [IddsThemeData.compactOnSmallScreens]): IDDS menetapkan tinggi minimum
+/// 40px dan memasangkan tinggi input dengan tombol (44px), sedangkan versi
+/// sebelumnya menurunkan `md` menjadi 36px di HP.
 enum IddsTextFieldSize {
   /// Kecil.
   sm(40),
@@ -268,12 +268,12 @@ class _IddsTextFieldState extends State<IddsTextField> {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
     final double width = iddsScreenWidth(context);
-    final bool compactable = theme.compactOnSmallScreens;
-    final bool small = compactable && width < IddsBreakpoint.sm;
-    final bool medium = compactable && width < IddsBreakpoint.md;
-    final double height = widget.size.height - (small ? 8 : medium ? 4 : 0);
-    final double fontSize = small ? IddsFontSize.xs : IddsFontSize.sm;
-    final double lineHeight = small ? IddsLineHeight.xs : IddsLineHeight.sm;
+    final bool small = theme.compactOnSmallScreens && width < IddsBreakpoint.sm;
+    // Kotak input (tinggi dan teks isian) tidak dipadatkan di layar sempit;
+    // `small` hanya mengatur label dan teks bantuan (lihat [IddsTextFieldSize]).
+    final double height = widget.size.height;
+    const double fontSize = IddsFontSize.sm;
+    const double lineHeight = IddsLineHeight.sm;
 
     final bool enabled = widget.enabled;
     final bool focused = _focusNode.hasFocus;

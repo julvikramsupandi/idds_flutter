@@ -106,7 +106,7 @@ class _MoreInputsSectionState extends State<MoreInputsSection> {
         const SizedBox(height: IddsSpacing.s24),
         IddsOtpInput(
           title: 'Verifikasi nomor',
-          description: 'Masukkan 6 digit kode yang dikirim ke 0812****7890. Coba 123456.',
+          description: 'Masukkan 6 digit kode yang dikirim ke 0812****7890. Coba 123456, atau salin lalu tekan lama kotak → Tempel.',
           value: _otp,
           error: _otpError,
           helperText: _otpError ? 'Kode salah, coba lagi.' : null,
@@ -151,10 +151,14 @@ IddsTimePicker(
   onChanged: (IddsTime? t) => setState(() => _startTime = t),
 )
 
+// Tekan lama kotak → menu "Tempel" (label: pasteLabel).
 IddsOtpInput(
   title: 'Verifikasi nomor',
   value: _otp,
   onChanged: (String v) => setState(() => _otp = v),
   onCompleted: (String code) => verify(code),
 )
+
+// Tombol tempel milik aplikasi: ambil kode dari isi papan klip.
+final String code = IddsOtpInput.codeFromText(clipboardText); // '123456'
 ''';

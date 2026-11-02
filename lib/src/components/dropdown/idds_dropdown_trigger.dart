@@ -9,15 +9,27 @@ import '../../tokens/idds_dimension_tokens.g.dart';
 import '../../tokens/idds_typography_tokens.g.dart';
 
 /// Ukuran pemicu dropdown ([IddsSelect], [IddsMultiSelect], [IddsActionMenu]).
+/// Tinggi sama di semua lebar layar: [sm] 40, [md] 44, [lg] 48, seragam
+/// dengan [IddsTextFieldSize].
+///
+/// Kotak pemicu tidak ikut mode compact (lihat
+/// [IddsThemeData.compactOnSmallScreens]): IDDS menetapkan tinggi minimum
+/// 40px dan memasangkan tinggi input dengan tombol dan text field (44px),
+/// sedangkan versi sebelumnya menurunkan `md` menjadi 36px di HP.
 enum IddsDropdownSize {
-  /// Tinggi 40px (36px di layar < 768px, 32px di layar < 640px).
-  sm,
+  /// Kecil.
+  sm(40),
 
-  /// Tinggi 44px (40px di layar < 768px, 36px di layar < 640px).
-  md,
+  /// Sedang (bawaan).
+  md(44),
 
-  /// Tinggi 48px (44px di layar < 768px, 40px di layar < 640px).
-  lg,
+  /// Besar.
+  lg(48);
+
+  const IddsDropdownSize(this.height);
+
+  /// Tinggi pemicu di semua lebar layar.
+  final double height;
 }
 
 /// Ukuran turunan dari [IddsDropdownSize] dan lebar layar. Internal.
@@ -27,14 +39,8 @@ class IddsDropdownMetrics {
   factory IddsDropdownMetrics.of(BuildContext context, IddsDropdownSize size) {
     final bool small = iddsIsCompact(context, IddsBreakpoint.sm);
     final bool medium = iddsIsCompact(context, IddsBreakpoint.md);
-    final int step = small ? 2 : (medium ? 1 : 0);
-    final double base = switch (size) {
-      IddsDropdownSize.sm => 40,
-      IddsDropdownSize.md => 44,
-      IddsDropdownSize.lg => 48,
-    };
     return IddsDropdownMetrics._(
-      height: base - 4.0 * step,
+      height: size.height,
       horizontalPadding: size == IddsDropdownSize.sm ? IddsSpacing.s12 : IddsSpacing.s16,
       fontSize: medium ? IddsFontSize.xs : IddsFontSize.sm,
       lineHeight: medium ? IddsLineHeight.xs : IddsLineHeight.sm,

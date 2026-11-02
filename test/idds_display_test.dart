@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:idds_flutter/idds_flutter.dart';
@@ -57,6 +59,37 @@ void main() {
   });
 
   group('IddsAlert', () {
+    // Dark mode: latar gelap bernuansa (bukan *-100 terang), judul dan isi
+    // kontras ≥ 4,5:1 (README "Penyesuaian dari IDDS").
+    for (final Brightness brightness in Brightness.values) {
+      for (final IddsAlertVariant variant in IddsAlertVariant.values) {
+        testWidgets('kontras ${variant.name} ${brightness.name}', (WidgetTester tester) async {
+          final IddsThemeData theme = IddsThemeData(brightness: brightness);
+          await tester.pumpWidget(testApp(
+            IddsAlert(variant: variant, title: const Text('Judul'), message: const Text('Isi pesan.')),
+            theme: theme,
+          ));
+          final Color background = (tester
+                  .widget<Container>(find.descendant(of: find.byType(IddsAlert), matching: find.byType(Container)).first)
+                  .decoration! as BoxDecoration)
+              .color!;
+          Color textColor(String text) =>
+              tester.widget<RichText>(find.descendant(of: find.text(text), matching: find.byType(RichText)).first).text.style!.color!;
+          double contrast(Color a, Color b) {
+            final double la = a.computeLuminance(), lb = b.computeLuminance();
+            return (math.max(la, lb) + 0.05) / (math.min(la, lb) + 0.05);
+          }
+
+          expect(contrast(textColor('Judul'), background), greaterThanOrEqualTo(4.5));
+          expect(contrast(textColor('Isi pesan.'), background), greaterThanOrEqualTo(4.5));
+          if (brightness == Brightness.dark) {
+            // Latar tidak boleh terang di layar gelap.
+            expect(background.computeLuminance(), lessThan(0.1));
+          }
+        });
+      }
+    }
+
     testWidgets('menampilkan judul dan pesan', (WidgetTester tester) async {
       await tester.pumpWidget(
         testApp(const IddsAlert(title: Text('Tersimpan'), message: Text('Data sudah disimpan.'))),

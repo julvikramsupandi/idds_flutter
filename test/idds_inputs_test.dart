@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:idds_flutter/idds_flutter.dart';
@@ -118,5 +119,63 @@ void main() {
       expect(const IddsTime(9, 3, 7).format(showSeconds: true), '09:03:07');
       expect(const IddsTime(0, 15).format(use12Hours: true), '12:15 AM');
     });
+  });
+
+  testWidgets('IddsOtpInput 6 kotak tetap satu baris di lebar 264', (WidgetTester tester) async {
+    tester.view
+      ..physicalSize = const Size(320, 640)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(testApp(SizedBox(
+      width: 264,
+      child: IddsOtpInput(value: '', onChanged: (_) {}),
+    )));
+    expect(tester.takeException(), isNull);
+    final Size size = tester.getSize(find.byType(IddsOtpInput));
+    // Satu baris = setinggi satu kotak (≤ 40), bukan dua baris.
+    expect(size.height, lessThanOrEqualTo(40));
+    expect(size.width, lessThanOrEqualTo(264));
+  });
+
+  test('IddsOtpInput.codeFromText mengambil kode dari teks papan klip', () {
+    expect(IddsOtpInput.codeFromText('123456'), '123456');
+    expect(IddsOtpInput.codeFromText('Kode Anda 123 456, berlaku 5 menit'), '123456');
+    expect(IddsOtpInput.codeFromText('Berlaku 2 menit: 654321'), '654321');
+    expect(IddsOtpInput.codeFromText('123-456'), '123456');
+    expect(IddsOtpInput.codeFromText('kode 12a3'), '123');
+    expect(IddsOtpInput.codeFromText('tanpa kode'), '');
+    expect(IddsOtpInput.codeFromText('Token: AB12CD ok', numeric: false), 'AB12CD');
+  });
+
+  testWidgets('IddsOtpInput tekan lama → Tempel mengisi kotak', (WidgetTester tester) async {
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, (MethodCall call) async {
+      if (call.method == 'Clipboard.getData') return <String, dynamic>{'text': 'Kode Godigi Anda 482 913'};
+      return null;
+    });
+    addTearDown(() => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, null));
+    String code = '';
+    String? completed;
+    await tester.pumpWidget(testApp(StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) => IddsOtpInput(
+        value: code,
+        pasteLabel: 'Tempel kode',
+        onChanged: (String v) => setState(() => code = v),
+        onCompleted: (String v) => completed = v,
+      ),
+    )));
+
+    await tester.longPress(find.byType(IddsOtpInput));
+    await tester.pumpAndSettle();
+    // Menu setinggi isinya (48), bukan memanjang ke atas layar.
+    expect(
+      tester.getSize(find.ancestor(of: find.text('Tempel kode'), matching: find.byType(IddsPopoverSurface))).height,
+      lessThanOrEqualTo(56),
+    );
+    await tester.tap(find.text('Tempel kode'));
+    await tester.pumpAndSettle();
+
+    expect(code, '482913');
+    expect(completed, '482913');
+    expect(find.text('Tempel kode'), findsNothing);
   });
 }
