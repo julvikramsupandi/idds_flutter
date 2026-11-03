@@ -362,7 +362,9 @@ IddsTextArea(label: Text('Alamat'), maxLength: 200, showCharCount: true)
 IddsPasswordField(label: Text('Kata sandi'))
 IddsSearchField(onSearch: (q) {}) // jeda 300 ms
 IddsPhoneInput(value: '+6281234567890', onChanged: (v) {}) // 239 negara
-IddsOtpInput(length: 6, value: otpCode, onChanged: (v) {}, onCompleted: (v) {})
+IddsOtpInput(length: 6, value: otpCode, onChanged: (v) {}, onCompleted: (v) {}) // tekan lama = Tempel
+// Kode dari teks papan klip (mis. tombol "Tempel kode" sendiri):
+IddsOtpInput.codeFromText('Kode Anda 123 456') // '123456'
 IddsTimePicker(value: IddsTime(8, 0), minuteStep: 15, onChanged: (t) {})
 
 IddsMonthPicker(value: 8, onChanged: (m) {})
@@ -487,8 +489,11 @@ diubah karena di CSS aslinya tidak terbaca atau hilang di dark mode:
 | Badge soft brand / neutral, dark mode | Teks sewarna dengan latar | Teks warna brand terang / `content-primary` |
 | Badge fill brand | Teks `primary-25` | Teks `onPrimary` |
 | Alert caution | Judul & ikon `warning-500` (kontras ±1,6:1) | `warning-600` |
-| Alert berwarna, dark mode | Deskripsi `content-primary` (putih di atas latar terang) | Teks gelap tetap |
+| Alert berwarna, dark mode | Latar `*-100` tetap terang (skala warna status sama di kedua mode), deskripsi `content-primary` (putih di atas latar terang) | Latar gelap bernuansa (warna 500 ±16% di atas `background-primary`), judul/ikon skala 300, deskripsi `content-primary`; kontras ≥ 4,5:1 |
+| Alert info & critical, judul | `guide-500` / `negative-500` (kontras ±4,35 / ±3,6:1 di atas latar 100) | `guide-600` / `negative-600`; garis tepi tetap 500 |
 | Radio, hover | Latar `neutral-50` (terang di dark mode) | `background-secondary` |
+| Text Field di layar < 640px | Tinggi turun 8px (`md` 44 → 36) dan teks isian 12px | Kotak input tetap 40/44/48 dan teks 14px: di bawah 40px melanggar tinggi minimum IDDS sendiri, dan tinggi input harus sama dengan tombol di form |
+| OTP Input di layar sempit | `flex-wrap`: kotak turun ke baris berikutnya bila tidak muat | Selalu satu baris; kotak menyusut mengikuti lebar induk, jarak 8px di layar ≤ 640px |
 | Text Input, status warning | Pesan `warning-500` (kontras ±1,8:1) | `warning-600` |
 | Chip, dark mode | Teks `content-primary` di atas latar terang, latar outline `neutral-25` | Teks gelap tetap, latar `background-primary` |
 | Chip filled terpilih | Teks putih di atas `primary-300` (tidak terbaca di brand terang) | Putih/hitam sesuai kontras |

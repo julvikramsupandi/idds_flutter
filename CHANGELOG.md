@@ -1,3 +1,27 @@
+## Belum dirilis
+
+Temuan dari pemakaian di aplikasi Godigi (Android/iOS).
+
+- `IddsTextField`/`IddsPasswordField`: kotak input tidak lagi dipadatkan di
+  layar < 640px. Tinggi tetap `sm` 40, `md` 44, `lg` 48 dan teks isian 14px
+  (sebelumnya `md` 36px di HP, di bawah minimum IDDS 40px). Label dan teks
+  bantuan tetap mengikuti mode compact.
+- `IddsOtpInput`: kotak selalu satu baris dan menyusut mengikuti lebar induk
+  (sebelumnya 6 kotak 40px + jarak 12px turun ke baris kedua di kartu HP
+  320px). Jarak antarkotak 8px di layar ≤ 640px.
+- `IddsOtpInput`: **tekan lama pada kotak memunculkan menu "Tempel"**
+  (label `pasteLabel`). Sebelumnya tempel hanya lewat Ctrl/Cmd+V atau saran
+  papan klip keyboard; di HP tidak ada menu tempel. Fungsi publik
+  `IddsOtpInput.codeFromText` mengambil kode dari teks bebas (mis. pesan
+  "Kode Anda 123 456") untuk tombol tempel milik aplikasi.
+- `IddsAlert` di **dark mode**: latar varian berwarna kini gelap bernuansa
+  (sebelumnya `*-100` terang yang menyilaukan), judul/ikon skala 300, teks
+  `content-primary`. Mode terang: judul & ikon varian info dan critical memakai
+  600 agar kontras ≥ 4,5:1. Test kontras untuk semua varian di kedua mode.
+- `IddsTextField`/`IddsSearchField`: area tekan tombol hapus (✕) kini 40px ×
+  tinggi kolom; ikon tetap 16px. Sebelumnya hanya 20 × 20px, sulit dikenai
+  jari di HP.
+
 ## 0.2.0
 
 Perbaikan dari pemakaian di aplikasi mobile (Android/iOS).

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../../foundation/idds_color_scale.dart';
 import '../../foundation/idds_hit_area.dart';
 import '../../foundation/idds_icon.dart';
 import '../../foundation/idds_interactive.dart';
@@ -88,7 +89,7 @@ class IddsAlert extends StatelessWidget {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
     final bool compact = iddsIsCompact(context, IddsBreakpoint.sm);
-    final _AlertStyle style = _AlertStyle.of(variant, c);
+    final _AlertStyle style = _AlertStyle.of(variant, c, isDark: theme.isDark);
 
     final Widget? leading = !showIcon
         ? null
@@ -214,10 +215,34 @@ class _AlertStyle {
     required this.icon,
   });
 
-  factory _AlertStyle.of(IddsAlertVariant variant, IddsColors c) {
-    // Latar varian berwarna tidak berubah di dark mode, jadi teksnya memakai
-    // warna gelap tetap (CSS: content-primary, yang menjadi putih di dark mode
-    // dan tidak terbaca).
+  factory _AlertStyle.of(IddsAlertVariant variant, IddsColors c, {required bool isDark}) {
+    final _AlertStyle light = _AlertStyle._light(variant, c);
+    if (!isDark || variant == IddsAlertVariant.neutral) return light;
+    // Dark mode: skala warna status IDDS sama di kedua mode, sehingga latar
+    // `*-100` tetap terang dan menyilaukan di layar gelap. Dipakai latar
+    // gelap bernuansa (warna 500 ±16% di atas background-primary), judul/ikon
+    // skala 300 dan teks content-primary agar kontras ≥ 4,5:1. Garis tepi
+    // tetap seperti mode terang.
+    final IddsPalette palette = switch (variant) {
+      IddsAlertVariant.info => c.guide,
+      IddsAlertVariant.success => c.positive,
+      IddsAlertVariant.caution => c.warning,
+      _ => c.negative,
+    };
+    return _AlertStyle(
+      background: Color.alphaBlend(palette.shade500.withValues(alpha: 0.16), c.backgroundPrimary),
+      border: light.border,
+      accent: palette.shade300,
+      text: c.contentPrimary,
+      icon: light.icon,
+    );
+  }
+
+  /// Gaya mode terang (dan neutral di kedua mode), sesuai CSS IDDS.
+  factory _AlertStyle._light(IddsAlertVariant variant, IddsColors c) {
+    // Latar varian berwarna di CSS tidak berubah di dark mode; teks memakai
+    // warna gelap tetap (CSS: content-primary). Dark mode memakai gaya lain
+    // di [_AlertStyle.of].
     final Color onLight = IddsPrimitives.neutral.shade800;
     return switch (variant) {
       IddsAlertVariant.neutral => _AlertStyle(
@@ -227,10 +252,11 @@ class _AlertStyle {
           text: c.contentPrimary,
           icon: IddsIcons.box,
         ),
+      // Judul & ikon 600 (CSS 500: kontras ±4,35:1 di atas guide-100).
       IddsAlertVariant.info => _AlertStyle(
           background: c.guide.shade100,
           border: c.guide.shade500,
-          accent: c.guide.shade500,
+          accent: c.guide.shade600,
           text: onLight,
           icon: IddsIcons.infoCircle,
         ),
@@ -250,10 +276,11 @@ class _AlertStyle {
           text: onLight,
           icon: IddsIcons.alertTriangle,
         ),
+      // Judul & ikon 600 (CSS 500: kontras ±3,6:1 di atas negative-100).
       IddsAlertVariant.critical => _AlertStyle(
           background: c.negative.shade100,
           border: c.negative.shade500,
-          accent: c.negative.shade500,
+          accent: c.negative.shade600,
           text: onLight,
           icon: IddsIcons.alertCircle,
         ),
