@@ -372,7 +372,7 @@ class _IddsTextFieldState extends State<IddsTextField> {
               children: <Widget>[
                 if (widget.prefixIcon != null) widget.prefixIcon!,
                 Expanded(child: field),
-                if (showClear) _ClearButton(onPressed: _clear, label: widget.clearLabel),
+                if (showClear) _ClearButton(onPressed: _clear, label: widget.clearLabel, height: height - 2),
                 if (widget.suffixIcon != null) widget.suffixIcon!,
               ],
             ),
@@ -443,10 +443,13 @@ class _IddsTextFieldState extends State<IddsTextField> {
 }
 
 class _ClearButton extends StatelessWidget {
-  const _ClearButton({required this.onPressed, required this.label});
+  const _ClearButton({required this.onPressed, required this.label, required this.height});
 
   final VoidCallback onPressed;
   final String label;
+
+  /// Tinggi bagian dalam kolom: area tekan setinggi kolom.
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -458,19 +461,27 @@ class _ClearButton extends StatelessWidget {
       excludeSemantics: true,
       child: IddsInteractive(
         onTap: onPressed,
-        builder: (BuildContext context, IddsInteractionState state) => Container(
-          padding: const EdgeInsets.all(2),
-          decoration: state.focused
-              ? BoxDecoration(
-                  color: c.backgroundSecondary,
-                  border: Border.all(color: c.strokeSecondary, width: 2),
-                  borderRadius: BorderRadius.circular(IddsRadius.sm),
-                )
-              : null,
-          child: IddsIcon(
-            IddsIcons.x,
-            size: 16,
-            color: state.focused ? c.contentPrimary : c.contentSecondary,
+        // Ikon tetap 16 seperti CSS, tetapi area tekan 40 × tinggi kolom:
+        // dulu hanya 20 × 20 dp, sulit dikenai jari di HP (#17).
+        builder: (BuildContext context, IddsInteractionState state) => SizedBox(
+          width: 40,
+          height: height,
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: state.focused
+                  ? BoxDecoration(
+                      color: c.backgroundSecondary,
+                      border: Border.all(color: c.strokeSecondary, width: 2),
+                      borderRadius: BorderRadius.circular(IddsRadius.sm),
+                    )
+                  : null,
+              child: IddsIcon(
+                IddsIcons.x,
+                size: 16,
+                color: state.focused ? c.contentPrimary : c.contentSecondary,
+              ),
+            ),
           ),
         ),
       ),

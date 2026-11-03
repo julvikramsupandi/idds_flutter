@@ -37,6 +37,25 @@ void main() {
     expect(searches, <String>['ktp']);
   });
 
+  testWidgets('tombol hapus: area tekan ≥ 40 dp dan mengosongkan pencarian (#17)', (WidgetTester tester) async {
+    final List<String> searches = <String>[];
+    await tester.pumpWidget(testApp(SizedBox(width: 300, child: IddsSearchField(onSearch: searches.add))));
+    await tester.enterText(find.byType(EditableText), 'ktp');
+    await tester.pump(const Duration(milliseconds: 400));
+
+    final Finder clear = find.bySemanticsLabel('Hapus input');
+    expect(clear, findsOneWidget);
+    final Size size = tester.getSize(clear);
+    expect(size.width, greaterThanOrEqualTo(40));
+    expect(size.height, greaterThanOrEqualTo(40));
+
+    // Ketuk tepi area tekan (bukan ikon 16 dp di tengah).
+    await tester.tapAt(tester.getTopLeft(clear) + const Offset(2, 2));
+    await tester.pump();
+    expect(searches.last, '');
+    expect(tester.widget<EditableText>(find.byType(EditableText)).controller.text, isEmpty);
+  });
+
   group('IddsPhoneInput', () {
     testWidgets('memformat angka dan mengirim nomor lengkap', (WidgetTester tester) async {
       String? value;

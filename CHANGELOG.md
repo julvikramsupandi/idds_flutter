@@ -18,6 +18,9 @@ Temuan dari pemakaian di aplikasi Godigi (Android/iOS).
   (sebelumnya `*-100` terang yang menyilaukan), judul/ikon skala 300, teks
   `content-primary`. Mode terang: judul & ikon varian info dan critical memakai
   600 agar kontras ≥ 4,5:1. Test kontras untuk semua varian di kedua mode.
+- `IddsTextField`/`IddsSearchField`: area tekan tombol hapus (✕) kini 40px ×
+  tinggi kolom; ikon tetap 16px. Sebelumnya hanya 20 × 20px, sulit dikenai
+  jari di HP.
 
 ## 0.2.0
 
