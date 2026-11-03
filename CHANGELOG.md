@@ -1,4 +1,4 @@
-## Belum dirilis
+## 0.2.1
 
 Temuan dari pemakaian di aplikasi Godigi (Android/iOS).
 
