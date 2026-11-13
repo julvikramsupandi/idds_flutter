@@ -19,16 +19,21 @@ void main() {
   /// Bingkai ke-[index]: 0 Masuk, 1 Beranda, 2 Form Pengajuan.
   Finder frame(int index) => find.byType(PhoneFrame).at(index);
 
-  testWidgets('isi bingkai memakai lebar layar ponsel', (WidgetTester tester) async {
+  testWidgets('isi bingkai memakai lebar layar ponsel',
+      (WidgetTester tester) async {
     await pumpGallery(tester);
     expect(find.byType(PhoneFrame), findsNWidgets(3));
-    final BuildContext inside = tester.element(find.descendant(of: frame(0), matching: find.text('Masuk ke akun Anda')));
+    final BuildContext inside = tester.element(find.descendant(
+        of: frame(0), matching: find.text('Masuk ke akun Anda')));
     expect(MediaQuery.sizeOf(inside).width, PhoneFrame.defaultScreenWidth);
   });
 
-  testWidgets('bottom sheet layanan terbuka di dalam bingkai, lalu membuka form', (WidgetTester tester) async {
+  testWidgets(
+      'bottom sheet layanan terbuka di dalam bingkai, lalu membuka form',
+      (WidgetTester tester) async {
     await pumpGallery(tester);
-    await tester.tap(find.descendant(of: frame(1), matching: find.text('KTP-el')));
+    await tester
+        .tap(find.descendant(of: frame(1), matching: find.text('KTP-el')));
     await tester.pumpAndSettle();
 
     final Finder apply = find.text('Ajukan Sekarang');
@@ -39,16 +44,23 @@ void main() {
     await tester.tap(apply);
     await tester.pumpAndSettle();
     expect(apply, findsNothing);
-    expect(find.descendant(of: frame(1), matching: find.text('Pengajuan KTP-el')), findsOneWidget);
+    expect(
+        find.descendant(of: frame(1), matching: find.text('Pengajuan KTP-el')),
+        findsOneWidget);
 
-    await tester.tap(find.descendant(of: frame(1), matching: find.byIcon(TablerIcons.arrow_left)));
+    await tester.tap(find.descendant(
+        of: frame(1), matching: find.byIcon(TablerIcons.arrow_left)));
     await tester.pumpAndSettle();
-    expect(find.descendant(of: frame(1), matching: find.text('Pengajuan KTP-el')), findsNothing);
+    expect(
+        find.descendant(of: frame(1), matching: find.text('Pengajuan KTP-el')),
+        findsNothing);
   });
 
-  testWidgets('form pengajuan memvalidasi langkah pertama', (WidgetTester tester) async {
+  testWidgets('form pengajuan memvalidasi langkah pertama',
+      (WidgetTester tester) async {
     await pumpGallery(tester);
-    await tester.tap(find.descendant(of: frame(2), matching: find.text('Lanjut')));
+    await tester
+        .tap(find.descendant(of: frame(2), matching: find.text('Lanjut')));
     await tester.pump();
     expect(find.text('Nama lengkap wajib diisi'), findsOneWidget);
     expect(find.text('NIK wajib diisi'), findsOneWidget);

@@ -7,12 +7,15 @@ import '../sections/common.dart';
 /// Brand yang bisa dipilih di galeri: 8 brand resmi + 2 contoh kustom.
 final List<IddsBrand> galleryBrands = <IddsBrand>[
   ...IddsBrand.values,
-  IddsBrand.fromSeed(const Color(0xFF7C3AED), id: 'ungu-seed', name: 'Ungu (fromSeed)'),
-  IddsBrand.fromPalette(IddsPrimitives.violet, id: 'violet', name: 'Violet (fromPalette)'),
+  IddsBrand.fromSeed(const Color(0xFF7C3AED),
+      id: 'ungu-seed', name: 'Ungu (fromSeed)'),
+  IddsBrand.fromPalette(IddsPrimitives.violet,
+      id: 'violet', name: 'Violet (fromPalette)'),
 ];
 
 class BrandPage extends StatelessWidget {
-  const BrandPage({super.key, required this.brand, required this.onBrandChanged});
+  const BrandPage(
+      {super.key, required this.brand, required this.onBrandChanged});
 
   final IddsBrand brand;
   final ValueChanged<IddsBrand> onBrandChanged;
@@ -21,11 +24,16 @@ class BrandPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
-    final TextStyle caption = theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary);
+    final TextStyle caption = theme.textStyle(
+        fontSize: IddsFontSize.xs,
+        lineHeight: IddsLineHeight.xs,
+        color: c.contentSecondary);
     return GallerySection(
       title: 'Brand & Warna',
-      subtitle: '8 brand resmi IDDS, ditambah dua contoh brand kustom dari IddsBrand.fromSeed dan IddsBrand.fromPalette.',
-      usage: 'Bungkus aplikasi dengan IddsTheme (atau AnimatedIddsTheme agar pergantian tema beranimasi). Untuk widget Material, pakai toMaterialTheme() dari package:idds_flutter/material.dart. Warna diambil lewat IddsTheme.of(context).colors.',
+      subtitle:
+          '8 brand resmi IDDS, ditambah dua contoh brand kustom dari IddsBrand.fromSeed dan IddsBrand.fromPalette.',
+      usage:
+          'Bungkus aplikasi dengan IddsTheme (atau AnimatedIddsTheme agar pergantian tema beranimasi). Untuk widget Material, pakai toMaterialTheme() dari package:idds_flutter/material.dart. Warna diambil lewat IddsTheme.of(context).colors.',
       code: _brandCode,
       children: <Widget>[
         Wrap(
@@ -35,22 +43,30 @@ class BrandPage extends StatelessWidget {
             for (final IddsBrand b in galleryBrands)
               IddsButton(
                 size: IddsButtonSize.sm,
-                hierarchy: b.id == brand.id ? IddsButtonHierarchy.primary : IddsButtonHierarchy.secondary,
+                hierarchy: b.id == brand.id
+                    ? IddsButtonHierarchy.primary
+                    : IddsButtonHierarchy.secondary,
                 onPressed: () => onBrandChanged(b),
                 child: Text(b.name),
               ),
           ],
         ),
         const SizedBox(height: IddsSpacing.s24),
-        _ScaleStrip(label: 'Primary', colors: c.primary.colors, main: c.primaryMain, caption: caption),
+        _ScaleStrip(
+            label: 'Primary',
+            colors: c.primary.colors,
+            main: c.primaryMain,
+            caption: caption),
         const SizedBox(height: IddsSpacing.s8),
-        _ScaleStrip(label: 'Secondary', colors: c.secondary.colors, caption: caption),
+        _ScaleStrip(
+            label: 'Secondary', colors: c.secondary.colors, caption: caption),
         const SizedBox(height: IddsSpacing.s24),
         const GalleryCaption('Palet grafik (IddsChartColors.categorical)'),
         const SizedBox(height: IddsSpacing.s8),
         Row(
           children: <Widget>[
-            for (final Color color in IddsChartColors.categorical) Expanded(child: Container(height: 24, color: color)),
+            for (final Color color in IddsChartColors.categorical)
+              Expanded(child: Container(height: 24, color: color)),
           ],
         ),
       ],
@@ -59,7 +75,11 @@ class BrandPage extends StatelessWidget {
 }
 
 class _ScaleStrip extends StatelessWidget {
-  const _ScaleStrip({required this.label, required this.colors, required this.caption, this.main});
+  const _ScaleStrip(
+      {required this.label,
+      required this.colors,
+      required this.caption,
+      this.main});
 
   final String label;
   final List<Color> colors;
@@ -80,7 +100,9 @@ class _ScaleStrip extends StatelessWidget {
                 height: 32,
                 decoration: BoxDecoration(
                   color: colors[i],
-                  border: colors[i] == main ? Border.all(color: c.strokeTertiary, width: 2) : null,
+                  border: colors[i] == main
+                      ? Border.all(color: c.strokeTertiary, width: 2)
+                      : null,
                 ),
               ),
             ),

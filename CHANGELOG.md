@@ -1,3 +1,21 @@
+## Belum dirilis
+
+- `LICENSE` kini hanya berisi teks MIT standar agar dikenali pub.dev sebagai
+  lisensi OSI. Catatan pihak ketiga (token `@idds/styles`, Tabler Icons,
+  nama/logo instansi) dipindah ke berkas `NOTICE`.
+- Seluruh kode diformat dengan `dart format` (lebar baris bawaan 80) agar
+  lolos pemeriksaan analisis statis pub.dev. Tidak ada perubahan perilaku.
+- `showIddsDrawer`: parameter baru `bottomOnSmallScreens` (bawaan `true`,
+  sesuai IDDS). Isi `false` agar drawer kiri/kanan tetap muncul dari samping
+  di layar ≤ 640px, untuk menu navigasi aplikasi mobile.
+- Drawer: isi panel kini diberi jarak aman (status bar, notch, indikator
+  beranda) di sisi yang menempel tepi layar.
+- `IddsTabMenu` mendatar: tab yang tidak muat kini bisa digeser ke samping,
+  bukan meluap (mis. 4 tab atau lebih di layar HP).
+- Galeri: satu halaman per komponen (41 halaman, sebelumnya 19 halaman
+  gabungan), kotak pencarian di menu, dan menu di HP berupa drawer samping.
+  Alamat lama seperti `#/content` dialihkan ke komponen pertamanya.
+
 ## 0.2.2
 
 - `IddsButton`: isi tombol kini di tengah saat tombol dibuat selebar induk

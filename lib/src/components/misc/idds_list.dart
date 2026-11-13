@@ -45,7 +45,8 @@ class IddsList extends StatelessWidget {
           children: <Widget>[
             if (subheader != null) subheader!,
             for (int i = 0; i < children.length; i++) ...<Widget>[
-              if (dividers && i > 0) Container(height: 1, color: c.strokePrimary),
+              if (dividers && i > 0)
+                Container(height: 1, color: c.strokePrimary),
               children[i],
             ],
           ],
@@ -76,7 +77,8 @@ class IddsListSubheader extends StatelessWidget {
       label: label,
       excludeSemantics: true,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(inset ? IddsSpacing.s32 : IddsSpacing.s16, IddsSpacing.s4, IddsSpacing.s16, IddsSpacing.s4),
+        padding: EdgeInsets.fromLTRB(inset ? IddsSpacing.s32 : IddsSpacing.s16,
+            IddsSpacing.s4, IddsSpacing.s16, IddsSpacing.s4),
         child: Text(
           label.toUpperCase(),
           style: theme.textStyle(
@@ -147,7 +149,9 @@ class IddsListItem extends StatelessWidget {
         opacity: enabled ? 1 : 0.5,
         child: AnimatedContainer(
           duration: IddsDuration.fast,
-          padding: EdgeInsets.symmetric(horizontal: IddsSpacing.s16, vertical: dense ? IddsSpacing.s4 : IddsSpacing.s8),
+          padding: EdgeInsets.symmetric(
+              horizontal: IddsSpacing.s16,
+              vertical: dense ? IddsSpacing.s4 : IddsSpacing.s8),
           constraints: BoxConstraints(minHeight: dense ? 36 : 48),
           color: pressed
               ? c.backgroundTertiary
@@ -156,7 +160,8 @@ class IddsListItem extends StatelessWidget {
                   : null,
           // React: ikon/avatar mr-3 (12px).
           child: Row(
-            crossAxisAlignment: alignTop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+            crossAxisAlignment:
+                alignTop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
             spacing: IddsSpacing.s12,
             children: <Widget>[
               if (leading != null)
@@ -173,22 +178,30 @@ class IddsListItem extends StatelessWidget {
                     DefaultTextStyle(
                       style: theme.textStyle(
                         fontSize: dense ? IddsFontSize.xs : IddsFontSize.sm,
-                        lineHeight: dense ? IddsLineHeight.xs : IddsLineHeight.sm,
-                        fontWeight: selected ? IddsFontWeight.semibold : IddsFontWeight.normal,
+                        lineHeight:
+                            dense ? IddsLineHeight.xs : IddsLineHeight.sm,
+                        fontWeight: selected
+                            ? IddsFontWeight.semibold
+                            : IddsFontWeight.normal,
                         color: c.contentPrimary,
                       ),
                       child: title,
                     ),
                     if (subtitle != null)
                       DefaultTextStyle(
-                        style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary),
+                        style: theme.textStyle(
+                            fontSize: IddsFontSize.xs,
+                            lineHeight: IddsLineHeight.xs,
+                            color: c.contentSecondary),
                         child: subtitle!,
                       ),
                   ],
                 ),
               ),
               if (trailing != null)
-                IconTheme(data: IconThemeData(size: 20, color: c.contentSecondary), child: trailing!),
+                IconTheme(
+                    data: IconThemeData(size: 20, color: c.contentSecondary),
+                    child: trailing!),
             ],
           ),
         ),
@@ -202,7 +215,8 @@ class IddsListItem extends StatelessWidget {
       enabled: enabled,
       child: IddsInteractive(
         onTap: enabled ? onTap : null,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: BorderRadius.zero,
           rings: <(double, Color)>[(2.0, c.primary.shade500)],

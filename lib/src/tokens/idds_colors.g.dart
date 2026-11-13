@@ -341,12 +341,17 @@ class IddsColors {
       primaryMain: Color.lerp(primaryMain, other.primaryMain, t)!,
       onPrimary: Color.lerp(onPrimary, other.onPrimary, t)!,
       secondary: IddsColorScale.lerp(secondary, other.secondary, t),
-      backgroundPrimary: Color.lerp(backgroundPrimary, other.backgroundPrimary, t)!,
-      backgroundSecondary: Color.lerp(backgroundSecondary, other.backgroundSecondary, t)!,
-      backgroundTertiary: Color.lerp(backgroundTertiary, other.backgroundTertiary, t)!,
-      backgroundOverlay: Color.lerp(backgroundOverlay, other.backgroundOverlay, t)!,
+      backgroundPrimary:
+          Color.lerp(backgroundPrimary, other.backgroundPrimary, t)!,
+      backgroundSecondary:
+          Color.lerp(backgroundSecondary, other.backgroundSecondary, t)!,
+      backgroundTertiary:
+          Color.lerp(backgroundTertiary, other.backgroundTertiary, t)!,
+      backgroundOverlay:
+          Color.lerp(backgroundOverlay, other.backgroundOverlay, t)!,
       contentPrimary: Color.lerp(contentPrimary, other.contentPrimary, t)!,
-      contentSecondary: Color.lerp(contentSecondary, other.contentSecondary, t)!,
+      contentSecondary:
+          Color.lerp(contentSecondary, other.contentSecondary, t)!,
       contentTertiary: Color.lerp(contentTertiary, other.contentTertiary, t)!,
       contentGuide: Color.lerp(contentGuide, other.contentGuide, t)!,
       contentNegative: Color.lerp(contentNegative, other.contentNegative, t)!,

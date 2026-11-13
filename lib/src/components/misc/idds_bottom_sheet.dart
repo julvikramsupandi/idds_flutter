@@ -49,9 +49,15 @@ Future<T?> showIddsBottomSheet<T>({
           child: Builder(builder: builder),
         ),
       ),
-      transitionBuilder: (BuildContext context, Animation<double> animation, Widget child) => SlideTransition(
-        position: Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero).animate(
-          CurvedAnimation(parent: animation, curve: const Cubic(0.16, 1, 0.3, 1), reverseCurve: const Cubic(0.4, 0, 0.2, 1)),
+      transitionBuilder:
+          (BuildContext context, Animation<double> animation, Widget child) =>
+              SlideTransition(
+        position:
+            Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero).animate(
+          CurvedAnimation(
+              parent: animation,
+              curve: const Cubic(0.16, 1, 0.3, 1),
+              reverseCurve: const Cubic(0.4, 0, 0.2, 1)),
         ),
         child: child,
       ),
@@ -61,7 +67,11 @@ Future<T?> showIddsBottomSheet<T>({
 }
 
 class _BottomSheet extends StatefulWidget {
-  const _BottomSheet({required this.locked, required this.maxHeightFactor, required this.showHandle, required this.child});
+  const _BottomSheet(
+      {required this.locked,
+      required this.maxHeightFactor,
+      required this.showHandle,
+      required this.child});
 
   final bool locked;
   final double maxHeightFactor;
@@ -72,16 +82,19 @@ class _BottomSheet extends StatefulWidget {
   State<_BottomSheet> createState() => _BottomSheetState();
 }
 
-class _BottomSheetState extends State<_BottomSheet> with SingleTickerProviderStateMixin {
+class _BottomSheetState extends State<_BottomSheet>
+    with SingleTickerProviderStateMixin {
   final GlobalKey _panelKey = GlobalKey();
-  late final AnimationController _settle = AnimationController(vsync: this, duration: IddsDuration.base);
+  late final AnimationController _settle =
+      AnimationController(vsync: this, duration: IddsDuration.base);
   double _drag = 0;
   double _settleFrom = 0;
 
   @override
   void initState() {
     super.initState();
-    _settle.addListener(() => setState(() => _drag = _settleFrom * (1 - Curves.easeOut.transform(_settle.value))));
+    _settle.addListener(() => setState(() =>
+        _drag = _settleFrom * (1 - Curves.easeOut.transform(_settle.value))));
   }
 
   @override
@@ -90,7 +103,11 @@ class _BottomSheetState extends State<_BottomSheet> with SingleTickerProviderSta
     super.dispose();
   }
 
-  double get _height => (_panelKey.currentContext?.findRenderObject() as RenderBox?)?.size.height ?? 1;
+  double get _height =>
+      (_panelKey.currentContext?.findRenderObject() as RenderBox?)
+          ?.size
+          .height ??
+      1;
 
   void _onDragUpdate(DragUpdateDetails d) {
     if (widget.locked) return;
@@ -114,13 +131,18 @@ class _BottomSheetState extends State<_BottomSheet> with SingleTickerProviderSta
     final IddsColors c = IddsTheme.of(context).colors;
     final Size screen = MediaQuery.sizeOf(context);
     final EdgeInsets padding = MediaQuery.paddingOf(context);
-    const BorderRadius radius = BorderRadius.vertical(top: Radius.circular(IddsRadius.xl));
+    const BorderRadius radius =
+        BorderRadius.vertical(top: Radius.circular(IddsRadius.xl));
 
     final Widget panel = Container(
       key: _panelKey,
       width: double.infinity,
-      constraints: BoxConstraints(maxHeight: screen.height * widget.maxHeightFactor, maxWidth: 640),
-      decoration: BoxDecoration(color: c.backgroundPrimary, borderRadius: radius, boxShadow: IddsShadow.xl),
+      constraints: BoxConstraints(
+          maxHeight: screen.height * widget.maxHeightFactor, maxWidth: 640),
+      decoration: BoxDecoration(
+          color: c.backgroundPrimary,
+          borderRadius: radius,
+          boxShadow: IddsShadow.xl),
       child: ClipRRect(
         borderRadius: radius,
         child: Column(
@@ -131,12 +153,15 @@ class _BottomSheetState extends State<_BottomSheet> with SingleTickerProviderSta
               Semantics(
                 label: widget.locked ? null : 'Tarik ke bawah untuk menutup',
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: IddsSpacing.s12),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: IddsSpacing.s12),
                   child: Center(
                     child: Container(
                       width: 40,
                       height: 4,
-                      decoration: BoxDecoration(color: c.strokeSecondary, borderRadius: BorderRadius.circular(2)),
+                      decoration: BoxDecoration(
+                          color: c.strokeSecondary,
+                          borderRadius: BorderRadius.circular(2)),
                     ),
                   ),
                 ),
@@ -173,6 +198,7 @@ class _BottomSheetState extends State<_BottomSheet> with SingleTickerProviderSta
     );
 
     if (widget.locked) return content;
-    return IddsDismissOnEscape(onDismiss: () => Navigator.maybePop(context), child: content);
+    return IddsDismissOnEscape(
+        onDismiss: () => Navigator.maybePop(context), child: content);
   }
 }

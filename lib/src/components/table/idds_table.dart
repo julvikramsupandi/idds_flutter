@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:flutter/services.dart' show MouseCursor, SystemMouseCursors, TextInputFormatter, TextInputType;
+import 'package:flutter/services.dart'
+    show MouseCursor, SystemMouseCursors, TextInputFormatter, TextInputType;
 import 'package:flutter/widgets.dart';
 
 import '../../foundation/idds_icon.dart';
@@ -102,7 +103,8 @@ class IddsTableCellEditor<T> {
 
   /// Isian kustom (mis. dropdown) sebagai ganti [IddsTableFieldInput].
   /// Panggil `close` setelah menyimpan atau membatalkan.
-  final Widget Function(BuildContext context, T row, VoidCallback close)? builder;
+  final Widget Function(BuildContext context, T row, VoidCallback close)?
+      builder;
 }
 
 /// Urutan tabel saat ini.
@@ -118,7 +120,10 @@ class IddsTableSort {
   final bool ascending;
 
   @override
-  bool operator ==(Object other) => other is IddsTableSort && other.key == key && other.ascending == ascending;
+  bool operator ==(Object other) =>
+      other is IddsTableSort &&
+      other.key == key &&
+      other.ascending == ascending;
 
   @override
   int get hashCode => Object.hash(key, ascending);
@@ -296,7 +301,8 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
       _editing = (_key(row), column);
       _editError = null;
       _draft.text = editor.value(row);
-      _draft.selection = TextSelection(baseOffset: 0, extentOffset: _draft.text.length);
+      _draft.selection =
+          TextSelection(baseOffset: 0, extentOffset: _draft.text.length);
     });
   }
 
@@ -322,7 +328,8 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
 
   Object _key(T row) => widget.rowKey?.call(row) ?? row as Object;
 
-  bool get _selectable => widget.selectedKeys != null && widget.onSelectionChanged != null;
+  bool get _selectable =>
+      widget.selectedKeys != null && widget.onSelectionChanged != null;
 
   bool get _sticky => widget.stickyLastColumn && widget.columns.isNotEmpty;
 
@@ -343,7 +350,8 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
 
   void _sortBy(String key) {
     final IddsTableSort? current = widget.sort;
-    final bool ascending = !(current != null && current.key == key && current.ascending);
+    final bool ascending =
+        !(current != null && current.key == key && current.ascending);
     widget.onSortChanged?.call(IddsTableSort(key, ascending: ascending));
   }
 
@@ -355,7 +363,8 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
     // CSS: padding 8px dan font 12px; 12px/16px dan font 14px di ≥ 1280px.
     final bool wide = screen >= IddsBreakpoint.xl;
     final EdgeInsets cellPadding = wide
-        ? const EdgeInsets.symmetric(horizontal: IddsSpacing.s16, vertical: IddsSpacing.s12)
+        ? const EdgeInsets.symmetric(
+            horizontal: IddsSpacing.s16, vertical: IddsSpacing.s12)
         : const EdgeInsets.all(IddsSpacing.s8);
     final double fontSize = wide ? IddsFontSize.sm : IddsFontSize.xs;
     final double lineHeight = wide ? IddsLineHeight.sm : IddsLineHeight.xs;
@@ -369,7 +378,8 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
 
     final List<T> rows = widget.rows;
     final Set<Object> selected = widget.selectedKeys ?? const <Object>{};
-    final int selectedOnPage = rows.where((T r) => selected.contains(_key(r))).length;
+    final int selectedOnPage =
+        rows.where((T r) => selected.contains(_key(r))).length;
     final bool allSelected = rows.isNotEmpty && selectedOnPage == rows.length;
 
     // Sel kolom terakhir yang menempel: digeser ke kiri sejauh sisa geseran
@@ -381,7 +391,8 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
         verticalAlignment: TableCellVerticalAlignment.intrinsicHeight,
         child: ValueListenableBuilder<double>(
           valueListenable: _stickyShift,
-          builder: (BuildContext context, double shift, Widget? child) => Transform.translate(
+          builder: (BuildContext context, double shift, Widget? child) =>
+              Transform.translate(
             offset: Offset(-shift, 0),
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -392,13 +403,21 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
                   bottom: line,
                 ),
                 boxShadow: shift > 0
-                    ? const <BoxShadow>[BoxShadow(color: Color(0x140A0D12), blurRadius: 8, offset: Offset(-4, 0))]
+                    ? const <BoxShadow>[
+                        BoxShadow(
+                            color: Color(0x140A0D12),
+                            blurRadius: 8,
+                            offset: Offset(-4, 0))
+                      ]
                     : null,
               ),
               child: child,
             ),
           ),
-          child: Align(alignment: AlignmentDirectional.centerStart, widthFactor: 1, child: child),
+          child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              widthFactor: 1,
+              child: child),
         ),
       );
     }
@@ -409,7 +428,8 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
       final bool descending = sorted && !(widget.sort!.ascending);
       final bool hovered = sortable && _hoveredHeader == index;
       // CSS: judul yang bisa diurutkan berlatar primary-500 saat disorot.
-      final Color foreground = hovered ? c.backgroundPrimary : c.contentSecondary;
+      final Color foreground =
+          hovered ? c.backgroundPrimary : c.contentSecondary;
       final Widget content = Container(
         color: hovered ? c.primary.shade500 : null,
         padding: cellPadding,
@@ -423,7 +443,10 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
                 col.header,
                 softWrap: false,
                 overflow: TextOverflow.ellipsis,
-                style: theme.textStyle(fontSize: fontSize, lineHeight: lineHeight, color: foreground),
+                style: theme.textStyle(
+                    fontSize: fontSize,
+                    lineHeight: lineHeight,
+                    color: foreground),
               ),
             ),
             if (sortable)
@@ -431,7 +454,9 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
                 descending ? IddsIcons.arrowDown : IddsIcons.arrowUp,
                 size: 16,
                 strokeWidth: sorted ? 3 : 2,
-                color: hovered ? foreground : (sorted ? c.primary.shade600 : c.contentSecondary),
+                color: hovered
+                    ? foreground
+                    : (sorted ? c.primary.shade600 : c.contentSecondary),
               ),
           ],
         ),
@@ -448,7 +473,8 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
           onExit: (_) => setState(() => _hoveredHeader = null),
           child: IddsInteractive(
             onTap: () => _sortBy(col.sortKey!),
-            builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+            builder: (BuildContext context, IddsInteractionState state) =>
+                IddsInsetRing(
               visible: state.focused,
               borderRadius: BorderRadius.zero,
               rings: <(double, Color)>[(2.0, c.primary.shade500)],
@@ -476,7 +502,9 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
           ),
         for (int i = 0; i < widget.columns.length; i++)
           _sticky && i == widget.columns.length - 1
-              ? stickyCell(headerCell(i, widget.columns[i]), widget.striped ? c.backgroundSecondary : c.backgroundPrimary, header: true)
+              ? stickyCell(headerCell(i, widget.columns[i]),
+                  widget.striped ? c.backgroundSecondary : c.backgroundPrimary,
+                  header: true)
               : headerCell(i, widget.columns[i]),
       ],
     );
@@ -492,11 +520,13 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
     TableRow dataRow(int index, T row) {
       final bool hovered = _hoveredRow == index;
       final bool pressed = _pressedRow == index;
-      Color? background = widget.striped && index.isOdd ? c.backgroundSecondary : null;
+      Color? background =
+          widget.striped && index.isOdd ? c.backgroundSecondary : null;
       if (pressed && clickable) {
         background = c.backgroundTertiary;
       } else if (hovered) {
-        background = widget.striped ? c.backgroundTertiary : c.backgroundSecondary;
+        background =
+            widget.striped ? c.backgroundTertiary : c.backgroundSecondary;
       }
 
       Widget wrap(Widget child) {
@@ -510,9 +540,12 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: clickable ? () => widget.onRowTap!(row) : null,
-            onTapDown: clickable ? (_) => setState(() => _pressedRow = index) : null,
-            onTapUp: clickable ? (_) => setState(() => _pressedRow = null) : null,
-            onTapCancel: clickable ? () => setState(() => _pressedRow = null) : null,
+            onTapDown:
+                clickable ? (_) => setState(() => _pressedRow = index) : null,
+            onTapUp:
+                clickable ? (_) => setState(() => _pressedRow = null) : null,
+            onTapCancel:
+                clickable ? () => setState(() => _pressedRow = null) : null,
             child: child,
           ),
         );
@@ -521,14 +554,19 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
       Widget dataCell(T row, int ci) {
         final IddsTableColumn<T> col = widget.columns[ci];
         final IddsTableCellEditor<T>? editor = col.editor;
-        final bool editable = editor != null && (editor.enabled?.call(row) ?? true);
+        final bool editable =
+            editor != null && (editor.enabled?.call(row) ?? true);
         final (Object, int)? current = _editing;
-        if (editable && current != null && current.$1 == _key(row) && current.$2 == ci) {
+        if (editable &&
+            current != null &&
+            current.$1 == _key(row) &&
+            current.$2 == ci) {
           final IddsTableCellEditor<T> ed = editor;
           // CSS: primary-50; di dark mode latar sekunder agar tidak silau.
           return Container(
             color: theme.isDark ? c.backgroundSecondary : c.primary.shade50,
-            padding: EdgeInsets.symmetric(horizontal: cellPadding.left, vertical: IddsSpacing.s4),
+            padding: EdgeInsets.symmetric(
+                horizontal: cellPadding.left, vertical: IddsSpacing.s4),
             alignment: col.alignment,
             child: SizedBox(
               width: math.max(col.width ?? 0, 240),
@@ -546,16 +584,19 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
             ),
           );
         }
-        final Widget content = DefaultTextStyle(style: cellStyle, softWrap: false, child: col.cell(context, row));
+        final Widget content = DefaultTextStyle(
+            style: cellStyle, softWrap: false, child: col.cell(context, row));
         if (!editable) {
-          return wrap(Container(padding: cellPadding, alignment: col.alignment, child: content));
+          return wrap(Container(
+              padding: cellPadding, alignment: col.alignment, child: content));
         }
         return wrap(Semantics(
           button: true,
           hint: 'Ketuk untuk mengedit ${col.header}',
           child: IddsInteractive(
             onTap: () => _startEdit(row, ci),
-            builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+            builder: (BuildContext context, IddsInteractionState state) =>
+                IddsInsetRing(
               visible: state.focused,
               borderRadius: BorderRadius.zero,
               rings: <(double, Color)>[(2.0, c.primary.shade500)],
@@ -565,7 +606,9 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
                 // Garis putus-putus tidak ada di Flutter; garis bawah tipis
                 // saat disorot menandai sel bisa diedit.
                 foregroundDecoration: state.hovered
-                    ? BoxDecoration(border: Border(bottom: BorderSide(color: c.strokeSecondary)))
+                    ? BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(color: c.strokeSecondary)))
                     : null,
                 child: content,
               ),
@@ -575,16 +618,20 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
       }
 
       return TableRow(
-        decoration: BoxDecoration(color: background, border: Border(bottom: line)),
+        decoration:
+            BoxDecoration(color: background, border: Border(bottom: line)),
         children: <Widget>[
           if (_selectable)
             wrap(Padding(
               padding: cellPadding,
-              child: IddsCheckbox(value: selected.contains(_key(row)), onChanged: (_) => _toggleRow(row)),
+              child: IddsCheckbox(
+                  value: selected.contains(_key(row)),
+                  onChanged: (_) => _toggleRow(row)),
             )),
           for (int ci = 0; ci < widget.columns.length; ci++)
             _sticky && ci == widget.columns.length - 1
-                ? stickyCell(dataCell(row, ci), background ?? c.backgroundPrimary)
+                ? stickyCell(
+                    dataCell(row, ci), background ?? c.backgroundPrimary)
                 : dataCell(row, ci),
         ],
       );
@@ -597,7 +644,8 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
             ? FixedColumnWidth(widget.columns[i].width!)
             : _sticky && i == widget.columns.length - 1
                 // CSS: kolom menempel minimal 120px.
-                ? const MaxColumnWidth(IntrinsicColumnWidth(flex: 1), FixedColumnWidth(120))
+                ? const MaxColumnWidth(
+                    IntrinsicColumnWidth(flex: 1), FixedColumnWidth(120))
                 : const IntrinsicColumnWidth(flex: 1),
     };
 
@@ -611,23 +659,28 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
     );
 
     Widget body = LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) => NotificationListener<ScrollMetricsNotification>(
+      builder: (BuildContext context, BoxConstraints constraints) =>
+          NotificationListener<ScrollMetricsNotification>(
         onNotification: (_) {
           _updateShift();
           return false;
         },
         child: SingleChildScrollView(
-        controller: _hScroll,
-        scrollDirection: Axis.horizontal,
-        child: ConstrainedBox(
-          // Selebar wadah bila muat; bila tidak, tabel bisa digeser.
-          constraints: BoxConstraints(minWidth: constraints.hasBoundedWidth ? constraints.maxWidth : 0),
-          child: IntrinsicWidth(child: table),
+          controller: _hScroll,
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            // Selebar wadah bila muat; bila tidak, tabel bisa digeser.
+            constraints: BoxConstraints(
+                minWidth:
+                    constraints.hasBoundedWidth ? constraints.maxWidth : 0),
+            child: IntrinsicWidth(child: table),
+          ),
         ),
       ),
-      ),
     );
-    if (widget.loading) body = Opacity(opacity: 0.6, child: IgnorePointer(child: body));
+    if (widget.loading) {
+      body = Opacity(opacity: 0.6, child: IgnorePointer(child: body));
+    }
 
     final Widget empty = Container(
       padding: const EdgeInsets.all(IddsSpacing.s16),
@@ -636,11 +689,16 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
       child: widget.emptyState ??
           Text(
             widget.emptyText,
-            style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary),
+            style: theme.textStyle(
+                fontSize: IddsFontSize.xs,
+                lineHeight: IddsLineHeight.xs,
+                color: c.contentSecondary),
           ),
     );
 
-    final bool showPagination = widget.page != null && widget.totalPages != null && widget.onPageChanged != null;
+    final bool showPagination = widget.page != null &&
+        widget.totalPages != null &&
+        widget.onPageChanged != null;
     final bool small = screen < IddsBreakpoint.sm;
 
     return Semantics(
@@ -672,7 +730,9 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
                       ),
                       IddsButton(
                         size: IddsButtonSize.sm,
-                        onPressed: widget.loading || widget.onSearch == null ? null : () => widget.onSearch!(_search.text),
+                        onPressed: widget.loading || widget.onSearch == null
+                            ? null
+                            : () => widget.onSearch!(_search.text),
                         child: Text(widget.searchButtonLabel),
                       ),
                     ],
@@ -681,7 +741,9 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
               ),
             ),
           // Ruang bilah memuat selalu ada agar tabel tidak melompat.
-          SizedBox(height: 4, child: widget.loading ? const IddsProgressBar() : null),
+          SizedBox(
+              height: 4,
+              child: widget.loading ? const IddsProgressBar() : null),
           body,
           if (rows.isEmpty && !widget.loading) empty,
           if (showPagination)
@@ -695,7 +757,8 @@ class _IddsTableState<T> extends State<IddsTable<T>> {
                   onPageChanged: widget.loading ? null : widget.onPageChanged,
                   pageSize: widget.pageSize,
                   pageSizeOptions: widget.pageSizeOptions,
-                  onPageSizeChanged: widget.loading ? null : widget.onPageSizeChanged,
+                  onPageSizeChanged:
+                      widget.loading ? null : widget.onPageSizeChanged,
                 ),
               ),
             ),

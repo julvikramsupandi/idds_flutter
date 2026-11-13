@@ -114,7 +114,10 @@ class IddsTooltip extends StatefulWidget {
     this.closeLabel = 'Tutup',
     this.nextLabel = 'Lanjut',
     this.touchDuration = const Duration(milliseconds: 1500),
-  }) : assert(variant != IddsTooltipVariant.basic || message != null || title != null || content != null);
+  }) : assert(variant != IddsTooltipVariant.basic ||
+            message != null ||
+            title != null ||
+            content != null);
 
   /// Widget yang diberi tooltip.
   final Widget child;
@@ -164,10 +167,12 @@ class IddsTooltip extends StatefulWidget {
   State<IddsTooltip> createState() => _IddsTooltipState();
 }
 
-class _IddsTooltipState extends State<IddsTooltip> with SingleTickerProviderStateMixin {
+class _IddsTooltipState extends State<IddsTooltip>
+    with SingleTickerProviderStateMixin {
   final OverlayPortalController _portal = OverlayPortalController();
   final LayerLink _link = LayerLink();
-  late final AnimationController _fade = AnimationController(vsync: this, duration: IddsDuration.base);
+  late final AnimationController _fade =
+      AnimationController(vsync: this, duration: IddsDuration.base);
   Timer? _hideTimer;
   bool _hovering = false;
   bool _focused = false;
@@ -272,7 +277,10 @@ class _IddsTooltipState extends State<IddsTooltip> with SingleTickerProviderStat
             // Gelembung biasa tidak menghalangi ketukan; kartu bisa disorot
             // dan ditekan tombolnya.
             child: _interactive
-                ? MouseRegion(onEnter: (_) => _enter(), onExit: (_) => _exit(), child: body)
+                ? MouseRegion(
+                    onEnter: (_) => _enter(),
+                    onExit: (_) => _exit(),
+                    child: body)
                 : IgnorePointer(child: body),
           ),
         ),
@@ -298,7 +306,9 @@ class _IddsTooltipState extends State<IddsTooltip> with SingleTickerProviderStat
               skipTraversal: true,
               onFocusChange: (bool focused) {
                 // Fokus keyboard pada widget di dalamnya.
-                _focused = focused && FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
+                _focused = focused &&
+                    FocusManager.instance.highlightMode ==
+                        FocusHighlightMode.traditional;
                 _focused ? _show() : _scheduleHide();
               },
               child: GestureDetector(
@@ -351,31 +361,47 @@ class _TooltipBody extends StatelessWidget {
     if (v == IddsTooltipVariant.basic) {
       card = Container(
         constraints: const BoxConstraints(maxWidth: 320),
-        padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s12, vertical: IddsSpacing.s8),
+        padding: const EdgeInsets.symmetric(
+            horizontal: IddsSpacing.s12, vertical: IddsSpacing.s8),
         decoration: BoxDecoration(
           color: bubbleColor,
           borderRadius: BorderRadius.circular(IddsRadius.md),
-          boxShadow: const <BoxShadow>[BoxShadow(color: Color(0x26000000), offset: Offset(0, 2), blurRadius: 8)],
+          boxShadow: const <BoxShadow>[
+            BoxShadow(
+                color: Color(0x26000000), offset: Offset(0, 2), blurRadius: 8)
+          ],
         ),
         child: widget.content ??
             Text(
               widget.message ?? widget.title ?? '',
               textAlign: TextAlign.center,
-              style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.white),
+              style: theme.textStyle(
+                  fontSize: IddsFontSize.xs,
+                  lineHeight: IddsLineHeight.xs,
+                  color: c.white),
             ),
       );
     } else {
       final bool dark = v == IddsTooltipVariant.dark;
       final Color titleColor = dark ? c.white : c.contentPrimary;
-      final Color descColor = dark ? c.white.withValues(alpha: 0.7) : c.contentSecondary;
+      final Color descColor =
+          dark ? c.white.withValues(alpha: 0.7) : c.contentSecondary;
       card = Container(
         width: 320,
         decoration: BoxDecoration(
           color: bubbleColor,
           borderRadius: BorderRadius.circular(IddsRadius.lg),
           boxShadow: const <BoxShadow>[
-            BoxShadow(color: Color(0x140A0D12), offset: Offset(0, 12), blurRadius: 16, spreadRadius: -4),
-            BoxShadow(color: Color(0x080A0D12), offset: Offset(0, 4), blurRadius: 6, spreadRadius: -2),
+            BoxShadow(
+                color: Color(0x140A0D12),
+                offset: Offset(0, 12),
+                blurRadius: 16,
+                spreadRadius: -4),
+            BoxShadow(
+                color: Color(0x080A0D12),
+                offset: Offset(0, 4),
+                blurRadius: 6,
+                spreadRadius: -2),
           ],
         ),
         child: ClipRRect(
@@ -387,7 +413,10 @@ class _TooltipBody extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   if (v == IddsTooltipVariant.media && widget.image != null)
-                    Container(height: 200, color: c.backgroundTertiary, child: widget.image),
+                    Container(
+                        height: 200,
+                        color: c.backgroundTertiary,
+                        child: widget.image),
                   Padding(
                     padding: const EdgeInsets.all(IddsSpacing.s16),
                     child: Column(
@@ -398,7 +427,10 @@ class _TooltipBody extends StatelessWidget {
                         if (widget.title != null)
                           Padding(
                             // Ruang untuk tombol X.
-                            padding: EdgeInsets.only(right: onClose != null && widget.image == null ? 28 : 0),
+                            padding: EdgeInsets.only(
+                                right: onClose != null && widget.image == null
+                                    ? 28
+                                    : 0),
                             child: Text(
                               widget.title!,
                               style: theme.textStyle(
@@ -412,7 +444,10 @@ class _TooltipBody extends StatelessWidget {
                         if (widget.description != null)
                           Text(
                             widget.description!,
-                            style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: descColor),
+                            style: theme.textStyle(
+                                fontSize: IddsFontSize.xs,
+                                lineHeight: IddsLineHeight.xs,
+                                color: descColor),
                           ),
                         if (widget.content != null) widget.content!,
                         if (onClose != null || onNext != null)
@@ -423,9 +458,17 @@ class _TooltipBody extends StatelessWidget {
                               spacing: IddsSpacing.s8,
                               children: <Widget>[
                                 if (onClose != null)
-                                  _CardAction(label: widget.closeLabel, primary: false, dark: dark, onTap: onClose!),
+                                  _CardAction(
+                                      label: widget.closeLabel,
+                                      primary: false,
+                                      dark: dark,
+                                      onTap: onClose!),
                                 if (onNext != null)
-                                  _CardAction(label: widget.nextLabel, primary: true, dark: dark, onTap: onNext!),
+                                  _CardAction(
+                                      label: widget.nextLabel,
+                                      primary: true,
+                                      dark: dark,
+                                      onTap: onNext!),
                               ],
                             ),
                           ),
@@ -438,7 +481,8 @@ class _TooltipBody extends StatelessWidget {
                 Positioned(
                   top: IddsSpacing.s12,
                   right: IddsSpacing.s12,
-                  child: _RoundClose(label: widget.closeLabel, dark: dark, onTap: onClose!),
+                  child: _RoundClose(
+                      label: widget.closeLabel, dark: dark, onTap: onClose!),
                 ),
             ],
           ),
@@ -450,11 +494,19 @@ class _TooltipBody extends StatelessWidget {
 
     final Widget arrow = Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: (side == AxisDirection.up || side == AxisDirection.down) && align != 0 ? 12 : 0,
-        vertical: (side == AxisDirection.left || side == AxisDirection.right) && align != 0 ? 12 : 0,
+        horizontal: (side == AxisDirection.up || side == AxisDirection.down) &&
+                align != 0
+            ? 12
+            : 0,
+        vertical: (side == AxisDirection.left || side == AxisDirection.right) &&
+                align != 0
+            ? 12
+            : 0,
       ),
       child: CustomPaint(
-        size: side == AxisDirection.up || side == AxisDirection.down ? const Size(10, 5) : const Size(5, 10),
+        size: side == AxisDirection.up || side == AxisDirection.down
+            ? const Size(10, 5)
+            : const Size(5, 10),
         painter: _ArrowPainter(color: bubbleColor, side: side),
       ),
     );
@@ -467,10 +519,22 @@ class _TooltipBody extends StatelessWidget {
     return Semantics(
       container: true,
       child: switch (side) {
-        AxisDirection.up => Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: crossAlign, children: <Widget>[card, arrow]),
-        AxisDirection.down => Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: crossAlign, children: <Widget>[arrow, card]),
-        AxisDirection.left => Row(mainAxisSize: MainAxisSize.min, crossAxisAlignment: crossAlign, children: <Widget>[card, arrow]),
-        AxisDirection.right => Row(mainAxisSize: MainAxisSize.min, crossAxisAlignment: crossAlign, children: <Widget>[arrow, card]),
+        AxisDirection.up => Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: crossAlign,
+            children: <Widget>[card, arrow]),
+        AxisDirection.down => Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: crossAlign,
+            children: <Widget>[arrow, card]),
+        AxisDirection.left => Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: crossAlign,
+            children: <Widget>[card, arrow]),
+        AxisDirection.right => Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: crossAlign,
+            children: <Widget>[arrow, card]),
       },
     );
   }
@@ -510,11 +574,16 @@ class _ArrowPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_ArrowPainter oldDelegate) => oldDelegate.color != color || oldDelegate.side != side;
+  bool shouldRepaint(_ArrowPainter oldDelegate) =>
+      oldDelegate.color != color || oldDelegate.side != side;
 }
 
 class _CardAction extends StatelessWidget {
-  const _CardAction({required this.label, required this.primary, required this.dark, required this.onTap});
+  const _CardAction(
+      {required this.label,
+      required this.primary,
+      required this.dark,
+      required this.onTap});
 
   final String label;
   final bool primary;
@@ -539,7 +608,9 @@ class _CardAction extends StatelessWidget {
           if (primary) {
             // CSS: primary-primary, hover primary-700; teks memakai onPrimary
             // agar terbaca di semua brand.
-            background = state.hovered && !theme.isDark ? c.primary.shade700 : c.primaryMain;
+            background = state.hovered && !theme.isDark
+                ? c.primary.shade700
+                : c.primaryMain;
             foreground = c.onPrimary;
           } else if (dark) {
             background = c.white.withValues(alpha: state.hovered ? 0.2 : 0.1);
@@ -555,7 +626,9 @@ class _CardAction extends StatelessWidget {
             borderRadius: BorderRadius.circular(IddsRadius.md),
             rings: <(double, Color)>[(2.0, foreground)],
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: IddsSpacing.s16, vertical: IddsSpacing.s8 - (border == null ? 0 : 1)),
+              padding: EdgeInsets.symmetric(
+                  horizontal: IddsSpacing.s16,
+                  vertical: IddsSpacing.s8 - (border == null ? 0 : 1)),
               decoration: BoxDecoration(
                 color: background,
                 borderRadius: BorderRadius.circular(IddsRadius.md),
@@ -579,7 +652,8 @@ class _CardAction extends StatelessWidget {
 }
 
 class _RoundClose extends StatelessWidget {
-  const _RoundClose({required this.label, required this.dark, required this.onTap});
+  const _RoundClose(
+      {required this.label, required this.dark, required this.onTap});
 
   final String label;
   final bool dark;
@@ -596,7 +670,8 @@ class _RoundClose extends StatelessWidget {
       excludeSemantics: true,
       child: IddsInteractive(
         onTap: onTap,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: BorderRadius.circular(12),
           rings: <(double, Color)>[(2.0, tint)],

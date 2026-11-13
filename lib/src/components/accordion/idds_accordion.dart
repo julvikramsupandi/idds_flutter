@@ -43,20 +43,24 @@ class IddsCollapse extends StatefulWidget {
   State<IddsCollapse> createState() => _IddsCollapseState();
 }
 
-class _IddsCollapseState extends State<IddsCollapse> with SingleTickerProviderStateMixin {
+class _IddsCollapseState extends State<IddsCollapse>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: widget.duration,
     value: widget.open ? 1 : 0,
   );
-  late final CurvedAnimation _curved = CurvedAnimation(parent: _controller, curve: widget.curve);
+  late final CurvedAnimation _curved =
+      CurvedAnimation(parent: _controller, curve: widget.curve);
 
   @override
   void didUpdateWidget(IddsCollapse oldWidget) {
     super.didUpdateWidget(oldWidget);
     _controller.duration = widget.duration;
     _curved.curve = widget.curve;
-    if (widget.open != oldWidget.open) widget.open ? _controller.forward() : _controller.reverse();
+    if (widget.open != oldWidget.open) {
+      widget.open ? _controller.forward() : _controller.reverse();
+    }
   }
 
   @override
@@ -79,7 +83,9 @@ class _IddsCollapseState extends State<IddsCollapse> with SingleTickerProviderSt
             child: Visibility(
               visible: !closed,
               maintainState: true,
-              child: widget.fade ? Opacity(opacity: _curved.value, child: child) : child!,
+              child: widget.fade
+                  ? Opacity(opacity: _curved.value, child: child)
+                  : child!,
             ),
           ),
         );
@@ -146,7 +152,8 @@ class _IddsAccordionState extends State<IddsAccordion> {
     final IddsColors c = theme.colors;
     final double screen = iddsScreenWidth(context);
     final bool open = _isOpen;
-    final double titleSize = screen >= IddsBreakpoint.md ? IddsFontSize.sm : IddsFontSize.xs;
+    final double titleSize =
+        screen >= IddsBreakpoint.md ? IddsFontSize.sm : IddsFontSize.xs;
     final double iconSize = screen >= IddsBreakpoint.xl
         ? 24
         : screen >= IddsBreakpoint.lg
@@ -159,7 +166,8 @@ class _IddsAccordionState extends State<IddsAccordion> {
     final bool large = screen >= IddsBreakpoint.lg;
 
     return Container(
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: c.strokePrimary))),
+      decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: c.strokePrimary))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -170,9 +178,11 @@ class _IddsAccordionState extends State<IddsAccordion> {
             child: IddsInteractive(
               onTap: widget.enabled ? _toggle : null,
               builder: (BuildContext context, IddsInteractionState state) {
-                final Color color = widget.enabled ? c.contentPrimary : c.contentTertiary;
+                final Color color =
+                    widget.enabled ? c.contentPrimary : c.contentTertiary;
                 final Widget header = Padding(
-                  padding: const EdgeInsets.symmetric(vertical: IddsSpacing.s16),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: IddsSpacing.s16),
                   child: Row(
                     spacing: IddsSpacing.s12,
                     children: <Widget>[
@@ -186,7 +196,9 @@ class _IddsAccordionState extends State<IddsAccordion> {
                                 color: color,
                               )
                               .copyWith(
-                                decoration: state.hovered ? TextDecoration.underline : TextDecoration.none,
+                                decoration: state.hovered
+                                    ? TextDecoration.underline
+                                    : TextDecoration.none,
                                 decorationColor: color,
                               ),
                           child: widget.title,
@@ -195,7 +207,8 @@ class _IddsAccordionState extends State<IddsAccordion> {
                       AnimatedRotation(
                         turns: open ? 0.5 : 0,
                         duration: IddsDuration.base,
-                        child: IddsIcon(IddsIcons.chevronDown, size: iconSize, color: color),
+                        child: IddsIcon(IddsIcons.chevronDown,
+                            size: iconSize, color: color),
                       ),
                     ],
                   ),
@@ -213,7 +226,8 @@ class _IddsAccordionState extends State<IddsAccordion> {
                         color: state.focused ? c.backgroundTertiary : null,
                         borderRadius: BorderRadius.circular(IddsRadius.lg),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: state.focused ? IddsSpacing.s8 : 0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: state.focused ? IddsSpacing.s8 : 0),
                       child: header,
                     ),
                   ),
@@ -245,7 +259,8 @@ class _IddsAccordionState extends State<IddsAccordion> {
 @immutable
 class IddsAccordionItem {
   /// Membuat item.
-  const IddsAccordionItem({required this.title, required this.child, this.enabled = true});
+  const IddsAccordionItem(
+      {required this.title, required this.child, this.enabled = true});
 
   /// Judul.
   final Widget title;
@@ -400,7 +415,8 @@ class _IddsAccordionCardState extends State<IddsAccordionCard> {
             expanded: open,
             child: IddsInteractive(
               onTap: _toggle,
-              builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+              builder: (BuildContext context, IddsInteractionState state) =>
+                  IddsInsetRing(
                 visible: state.focused,
                 borderRadius: BorderRadius.circular(IddsRadius.base),
                 // CSS: outline 2px guide-500.
@@ -413,13 +429,16 @@ class _IddsAccordionCardState extends State<IddsAccordionCard> {
                       height: 32,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: state.hovered ? c.backgroundTertiary : c.backgroundSecondary,
+                        color: state.hovered
+                            ? c.backgroundTertiary
+                            : c.backgroundSecondary,
                         borderRadius: BorderRadius.circular(IddsRadius.lg),
                       ),
                       child: AnimatedRotation(
                         turns: open ? 0 : 0.5,
                         duration: IddsDuration.base,
-                        child: IddsIcon(IddsIcons.chevronUp, size: 20, color: c.contentSecondary),
+                        child: IddsIcon(IddsIcons.chevronUp,
+                            size: 20, color: c.contentSecondary),
                       ),
                     ),
                     const SizedBox(width: IddsSpacing.s16),
@@ -427,10 +446,13 @@ class _IddsAccordionCardState extends State<IddsAccordionCard> {
                       child: DefaultTextStyle(
                         style: theme.textStyle(
                           fontSize: wide ? IddsFontSize.base : IddsFontSize.sm,
-                          lineHeight: wide ? IddsLineHeight.base : IddsLineHeight.sm,
+                          lineHeight:
+                              wide ? IddsLineHeight.base : IddsLineHeight.sm,
                           fontWeight: IddsFontWeight.semibold,
                           // CSS hover: warna secondary brand.
-                          color: state.hovered ? c.secondary.shade600 : c.contentPrimary,
+                          color: state.hovered
+                              ? c.secondary.shade600
+                              : c.contentPrimary,
                         ),
                         child: widget.title,
                       ),
@@ -445,9 +467,13 @@ class _IddsAccordionCardState extends State<IddsAccordionCard> {
             duration: const Duration(milliseconds: 500),
             fade: false,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s16, vertical: IddsSpacing.s12),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: IddsSpacing.s16, vertical: IddsSpacing.s12),
               child: DefaultTextStyle(
-                style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentPrimary),
+                style: theme.textStyle(
+                    fontSize: IddsFontSize.sm,
+                    lineHeight: IddsLineHeight.sm,
+                    color: c.contentPrimary),
                 child: widget.child,
               ),
             ),

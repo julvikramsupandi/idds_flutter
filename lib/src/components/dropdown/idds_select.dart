@@ -1,7 +1,14 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart' show InputDecoration, TextField, VisualDensity;
-import 'package:flutter/services.dart' show KeyDownEvent, KeyEvent, KeyRepeatEvent, LogicalKeyboardKey, SystemMouseCursors;
+import 'package:flutter/material.dart'
+    show InputDecoration, TextField, VisualDensity;
+import 'package:flutter/services.dart'
+    show
+        KeyDownEvent,
+        KeyEvent,
+        KeyRepeatEvent,
+        LogicalKeyboardKey,
+        SystemMouseCursors;
 import 'package:flutter/widgets.dart';
 
 import '../../foundation/idds_icon.dart';
@@ -31,7 +38,11 @@ enum IddsSelectIndicator {
 @immutable
 class IddsSelectOption<T> {
   /// Membuat opsi.
-  const IddsSelectOption({required this.value, required this.label, this.enabled = true, this.leading});
+  const IddsSelectOption(
+      {required this.value,
+      required this.label,
+      this.enabled = true,
+      this.leading});
 
   /// Nilai opsi.
   final T value;
@@ -189,7 +200,8 @@ class IddsSelect<T> extends StatelessWidget {
                 onChanged(v);
               }
             },
-      displayText: (List<String> labels) => labels.isEmpty ? null : labels.first,
+      displayText: (List<String> labels) =>
+          labels.isEmpty ? null : labels.first,
       placeholder: placeholder,
       size: size,
       label: label,
@@ -359,7 +371,8 @@ class IddsMultiSelect<T> extends StatelessWidget {
       displayText: (List<String> labels) {
         if (labels.isEmpty) return null;
         if (labels.length <= 3) return labels.join(', ');
-        return selectionText?.call(labels.length) ?? '${labels.length} data terpilih';
+        return selectionText?.call(labels.length) ??
+            '${labels.length} data terpilih';
       },
       placeholder: placeholder,
       size: size,
@@ -530,7 +543,9 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
   final Map<T, String> _labels = <T, String>{};
   List<GlobalKey> _optionKeys = <GlobalKey>[];
 
-  FocusNode get _triggerFocus => widget.focusNode ?? (_ownTriggerFocus ??= FocusNode(debugLabel: 'IddsSelect'));
+  FocusNode get _triggerFocus =>
+      widget.focusNode ??
+      (_ownTriggerFocus ??= FocusNode(debugLabel: 'IddsSelect'));
 
   bool get _enabled => widget.onToggle != null;
 
@@ -565,8 +580,11 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
   void _openPanel() {
     if (!_enabled) return;
     final List<IddsSelectOption<T>> options = _filtered;
-    int highlight = options.indexWhere((IddsSelectOption<T> o) => widget.selected.contains(o.value));
-    if (highlight < 0) highlight = options.indexWhere((IddsSelectOption<T> o) => o.enabled);
+    int highlight = options.indexWhere(
+        (IddsSelectOption<T> o) => widget.selected.contains(o.value));
+    if (highlight < 0) {
+      highlight = options.indexWhere((IddsSelectOption<T> o) => o.enabled);
+    }
     setState(() {
       _open = true;
       _highlight = highlight;
@@ -594,7 +612,8 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
     });
     if (widget.onSearch != null) {
       _debounce?.cancel();
-      _debounce = Timer(const Duration(milliseconds: 300), () => widget.onSearch?.call(value));
+      _debounce = Timer(const Duration(milliseconds: 300),
+          () => widget.onSearch?.call(value));
     }
   }
 
@@ -623,14 +642,21 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
     });
     if (keyboard) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        final BuildContext? ctx = index >= 0 && index < _optionKeys.length ? _optionKeys[index].currentContext : null;
-        if (ctx != null) Scrollable.ensureVisible(ctx, alignment: 0.5, duration: IddsDuration.fast);
+        final BuildContext? ctx = index >= 0 && index < _optionKeys.length
+            ? _optionKeys[index].currentContext
+            : null;
+        if (ctx != null) {
+          Scrollable.ensureVisible(ctx,
+              alignment: 0.5, duration: IddsDuration.fast);
+        }
       });
     }
   }
 
   KeyEventResult _onPanelKey(FocusNode node, KeyEvent event) {
-    if (event is! KeyDownEvent && event is! KeyRepeatEvent) return KeyEventResult.ignored;
+    if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
+      return KeyEventResult.ignored;
+    }
     final LogicalKeyboardKey key = event.logicalKey;
     if (key == LogicalKeyboardKey.arrowDown) {
       _move(1);
@@ -647,7 +673,9 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
     // Saat kolom pencarian aktif, Enter ditangani onSubmitted dan Spasi
     // dipakai untuk mengetik.
     if (!_searchFocus.hasFocus &&
-        (key == LogicalKeyboardKey.enter || key == LogicalKeyboardKey.numpadEnter || key == LogicalKeyboardKey.space)) {
+        (key == LogicalKeyboardKey.enter ||
+            key == LogicalKeyboardKey.numpadEnter ||
+            key == LogicalKeyboardKey.space)) {
       _chooseHighlighted();
       return KeyEventResult.handled;
     }
@@ -656,11 +684,16 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
 
   void _chooseHighlighted() {
     final List<IddsSelectOption<T>> options = _filtered;
-    if (_highlight >= 0 && _highlight < options.length) _choose(options[_highlight]);
+    if (_highlight >= 0 && _highlight < options.length) {
+      _choose(options[_highlight]);
+    }
   }
 
   bool _onScroll(ScrollNotification n) {
-    if (widget.hasMore && !widget.loading && widget.onLoadMore != null && n.metrics.extentAfter < 40) {
+    if (widget.hasMore &&
+        !widget.loading &&
+        widget.onLoadMore != null &&
+        n.metrics.extentAfter < 40) {
       widget.onLoadMore!();
     }
     return false;
@@ -690,13 +723,17 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
       child: IddsInteractive(
         focusNode: _triggerFocus,
         onTap: _enabled ? _toggleOpen : null,
-        builder: (BuildContext context, IddsInteractionState state) => IddsDropdownTriggerBox(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsDropdownTriggerBox(
           state: state,
           open: _open,
           metrics: m,
           error: hasError,
           prefix: widget.prefix,
-          child: text == null ? Text(widget.placeholder, style: TextStyle(color: c.contentTertiary)) : Text(text),
+          child: text == null
+              ? Text(widget.placeholder,
+                  style: TextStyle(color: c.contentTertiary))
+              : Text(text),
         ),
       ),
     );
@@ -715,7 +752,9 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        if (widget.label != null) IddsFieldLabel(label: widget.label!, required: widget.required, small: m.small),
+        if (widget.label != null)
+          IddsFieldLabel(
+              label: widget.label!, required: widget.required, small: m.small),
         popover,
         if (message != null)
           Padding(
@@ -725,18 +764,24 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
               style: theme.textStyle(
                 fontSize: IddsFontSize.xs,
                 lineHeight: IddsLineHeight.xs,
-                color: widget.errorText != null ? c.negative.shade500 : c.contentSecondary,
+                color: widget.errorText != null
+                    ? c.negative.shade500
+                    : c.contentSecondary,
               ),
             ),
           ),
       ],
     );
 
-    if (widget.width != null) return SizedBox(width: widget.width, child: field);
+    if (widget.width != null) {
+      return SizedBox(width: widget.width, child: field);
+    }
     // Di dalam Row tanpa batas lebar, pakai lebar 240px.
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) =>
-          constraints.hasBoundedWidth ? field : SizedBox(width: 240, child: field),
+          constraints.hasBoundedWidth
+              ? field
+              : SizedBox(width: 240, child: field),
     );
   }
 
@@ -745,14 +790,19 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
     final IddsColors c = theme.colors;
     final List<IddsSelectOption<T>> options = _filtered;
     if (_optionKeys.length != options.length) {
-      _optionKeys = List<GlobalKey>.generate(options.length, (_) => GlobalKey());
+      _optionKeys =
+          List<GlobalKey>.generate(options.length, (_) => GlobalKey());
     }
-    final TextStyle textStyle = theme.textStyle(fontSize: m.fontSize, lineHeight: m.lineHeight, color: c.contentPrimary);
+    final TextStyle textStyle = theme.textStyle(
+        fontSize: m.fontSize,
+        lineHeight: m.lineHeight,
+        color: c.contentPrimary);
     final BorderSide divider = BorderSide(color: c.strokePrimary);
 
     Widget statusRow(Widget child, {VoidCallback? onTap}) {
       final Widget row = Container(
-        padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s12, vertical: IddsSpacing.s8),
+        padding: const EdgeInsets.symmetric(
+            horizontal: IddsSpacing.s12, vertical: IddsSpacing.s8),
         decoration: BoxDecoration(border: Border(top: divider)),
         alignment: Alignment.center,
         child: child,
@@ -780,12 +830,14 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
               children: <Widget>[
                 if (widget.searchable)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s12, vertical: IddsSpacing.s8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: IddsSpacing.s12, vertical: IddsSpacing.s8),
                     decoration: BoxDecoration(border: Border(bottom: divider)),
                     child: Row(
                       spacing: IddsSpacing.s8,
                       children: <Widget>[
-                        IddsIcon(IddsIcons.search, size: 16, color: c.contentSecondary),
+                        IddsIcon(IddsIcons.search,
+                            size: 16, color: c.contentSecondary),
                         Expanded(
                           child: iddsMaterialShim(
                             context,
@@ -803,7 +855,8 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
                               onTapOutside: (_) {},
                               decoration: InputDecoration.collapsed(
                                 hintText: widget.searchPlaceholder,
-                                hintStyle: textStyle.copyWith(color: c.contentTertiary),
+                                hintStyle: textStyle.copyWith(
+                                    color: c.contentTertiary),
                               ).copyWith(visualDensity: VisualDensity.standard),
                             ),
                           ),
@@ -822,9 +875,13 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
                         for (final T v in selected.take(3))
                           _PreviewChip(
                             label: _labels[v] ?? '$v',
-                            onRemove: _enabled ? () => widget.onToggle!(v) : null,
+                            onRemove:
+                                _enabled ? () => widget.onToggle!(v) : null,
                           ),
-                        if (selected.length > 3) _PreviewChip(label: '+${selected.length - 3} ${widget.moreLabel}'),
+                        if (selected.length > 3)
+                          _PreviewChip(
+                              label:
+                                  '+${selected.length - 3} ${widget.moreLabel}'),
                       ],
                     ),
                   ),
@@ -836,11 +893,14 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
                       padding: const EdgeInsets.all(IddsSpacing.s4),
                       child: options.isEmpty && !widget.loading
                           ? Padding(
-                              padding: const EdgeInsets.all(IddsSpacing.s12 - IddsSpacing.s4),
+                              padding: const EdgeInsets.all(
+                                  IddsSpacing.s12 - IddsSpacing.s4),
                               child: Text(
                                 widget.emptyText,
                                 textAlign: TextAlign.center,
-                                style: textStyle.copyWith(color: c.contentSecondary, fontStyle: FontStyle.italic),
+                                style: textStyle.copyWith(
+                                    color: c.contentSecondary,
+                                    fontStyle: FontStyle.italic),
                               ),
                             )
                           : Column(
@@ -853,13 +913,16 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
                                     label: options[i].label,
                                     leading: options[i].leading,
                                     enabled: _enabled && options[i].enabled,
-                                    selected: selected.contains(options[i].value),
+                                    selected:
+                                        selected.contains(options[i].value),
                                     highlighted: i == _highlight,
                                     focusRing: i == _highlight && _keyboardNav,
                                     indicator: widget.indicator,
                                     minHeight: m.optionMinHeight,
                                     onHover: () {
-                                      if (_highlight != i || _keyboardNav) _setHighlight(i, keyboard: false);
+                                      if (_highlight != i || _keyboardNav) {
+                                        _setHighlight(i, keyboard: false);
+                                      }
                                     },
                                     onTap: () => _choose(options[i]),
                                   ),
@@ -869,15 +932,17 @@ class _IddsSelectFieldState<T> extends State<IddsSelectField<T>> {
                   ),
                 ),
                 if (widget.loading)
-                  statusRow(Text(widget.loadingText, style: textStyle.copyWith(color: c.contentSecondary)))
+                  statusRow(Text(widget.loadingText,
+                      style: textStyle.copyWith(color: c.contentSecondary)))
                 else if (widget.hasMore && widget.onLoadMore != null)
                   statusRow(
-                    Text(widget.loadMoreText, style: theme.textStyle(
-                      fontSize: m.fontSize,
-                      lineHeight: m.lineHeight,
-                      fontWeight: IddsFontWeight.medium,
-                      color: c.contentPrimary,
-                    )),
+                    Text(widget.loadMoreText,
+                        style: theme.textStyle(
+                          fontSize: m.fontSize,
+                          lineHeight: m.lineHeight,
+                          fontWeight: IddsFontWeight.medium,
+                          color: c.contentPrimary,
+                        )),
                     onTap: widget.onLoadMore,
                   ),
               ],
@@ -958,7 +1023,8 @@ class _OptionRow extends StatelessWidget {
       onTap: enabled ? onTap : null,
       excludeSemantics: true,
       child: MouseRegion(
-        cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.forbidden,
+        cursor:
+            enabled ? SystemMouseCursors.click : SystemMouseCursors.forbidden,
         onEnter: enabled ? (_) => onHover() : null,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -969,15 +1035,20 @@ class _OptionRow extends StatelessWidget {
             rings: <(double, Color)>[(2.0, c.contentTertiary)],
             child: Container(
               constraints: BoxConstraints(minHeight: minHeight),
-              padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s12, vertical: 10),
-              decoration: BoxDecoration(color: background, borderRadius: radius),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: IddsSpacing.s12, vertical: 10),
+              decoration:
+                  BoxDecoration(color: background, borderRadius: radius),
               child: IconTheme(
                 data: IconThemeData(size: 16, color: foreground),
                 child: Row(
                   spacing: IddsSpacing.s12,
                   children: <Widget>[
                     if (indicator != IddsSelectIndicator.none)
-                      _Indicator(type: indicator, selected: selected, enabled: enabled),
+                      _Indicator(
+                          type: indicator,
+                          selected: selected,
+                          enabled: enabled),
                     if (leading != null) leading!,
                     Expanded(
                       child: Text(label, style: TextStyle(color: foreground)),
@@ -994,7 +1065,8 @@ class _OptionRow extends StatelessWidget {
 }
 
 class _Indicator extends StatelessWidget {
-  const _Indicator({required this.type, required this.selected, required this.enabled});
+  const _Indicator(
+      {required this.type, required this.selected, required this.enabled});
 
   final IddsSelectIndicator type;
   final bool selected;
@@ -1015,7 +1087,8 @@ class _Indicator extends StatelessWidget {
           color: selected && !radio ? c.contentPrimary : c.backgroundPrimary,
           shape: radio ? BoxShape.circle : BoxShape.rectangle,
           borderRadius: radio ? null : BorderRadius.circular(IddsRadius.base),
-          border: Border.all(color: selected ? c.contentPrimary : c.strokeSecondary),
+          border: Border.all(
+              color: selected ? c.contentPrimary : c.strokeSecondary),
         ),
         child: !selected
             ? null
@@ -1023,9 +1096,11 @@ class _Indicator extends StatelessWidget {
                 ? Container(
                     width: 8,
                     height: 8,
-                    decoration: BoxDecoration(color: c.contentPrimary, shape: BoxShape.circle),
+                    decoration: BoxDecoration(
+                        color: c.contentPrimary, shape: BoxShape.circle),
                   )
-                : IddsIcon(IddsIcons.check, size: 12, strokeWidth: 2.5, color: c.backgroundPrimary),
+                : IddsIcon(IddsIcons.check,
+                    size: 12, strokeWidth: 2.5, color: c.backgroundPrimary),
       ),
     );
   }
@@ -1042,15 +1117,21 @@ class _PreviewChip extends StatelessWidget {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s8, vertical: IddsSpacing.s4),
-      decoration: BoxDecoration(color: c.backgroundSecondary, borderRadius: BorderRadius.circular(IddsRadius.md)),
+      padding: const EdgeInsets.symmetric(
+          horizontal: IddsSpacing.s8, vertical: IddsSpacing.s4),
+      decoration: BoxDecoration(
+          color: c.backgroundSecondary,
+          borderRadius: BorderRadius.circular(IddsRadius.md)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         spacing: IddsSpacing.s4,
         children: <Widget>[
           Text(
             label,
-            style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentPrimary),
+            style: theme.textStyle(
+                fontSize: IddsFontSize.xs,
+                lineHeight: IddsLineHeight.xs,
+                color: c.contentPrimary),
           ),
           if (onRemove != null)
             Semantics(
@@ -1061,7 +1142,8 @@ class _PreviewChip extends StatelessWidget {
               child: IddsInteractive(
                 onTap: onRemove,
                 canRequestFocus: false,
-                builder: (BuildContext context, IddsInteractionState state) => IddsIcon(
+                builder: (BuildContext context, IddsInteractionState state) =>
+                    IddsIcon(
                   IddsIcons.x,
                   size: 12,
                   color: state.hovered ? c.contentPrimary : c.contentSecondary,

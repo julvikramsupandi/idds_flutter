@@ -37,10 +37,12 @@ class IddsDropdown extends StatefulWidget {
   });
 
   /// Membangun pemicu. [toggle] `null` bila [enabled] `false`.
-  final Widget Function(BuildContext context, bool open, VoidCallback? toggle) triggerBuilder;
+  final Widget Function(BuildContext context, bool open, VoidCallback? toggle)
+      triggerBuilder;
 
   /// Membangun isi panel. Panggil [close] untuk menutup.
-  final Widget Function(BuildContext context, VoidCallback close) contentBuilder;
+  final Widget Function(BuildContext context, VoidCallback close)
+      contentBuilder;
 
   /// Status terbuka (mode terkendali).
   final bool? open;
@@ -92,10 +94,12 @@ class _IddsDropdownState extends State<IddsDropdown> {
       width: widget.width,
       maxHeight: widget.maxHeight,
       panelBuilder: (BuildContext context) {
-        final Widget content = widget.contentBuilder(context, () => _set(false));
+        final Widget content =
+            widget.contentBuilder(context, () => _set(false));
         return widget.surface ? IddsPopoverSurface(child: content) : content;
       },
-      child: widget.triggerBuilder(context, open, widget.enabled ? () => _set(!open) : null),
+      child: widget.triggerBuilder(
+          context, open, widget.enabled ? () => _set(!open) : null),
     );
   }
 }

@@ -14,7 +14,8 @@ void main() {
     expect(iddsCompactNumber(-2500), '-2,5 rb');
   });
 
-  testWidgets('IddsLineChart: legenda untuk 2 seri dan tooltip saat diketuk', (WidgetTester tester) async {
+  testWidgets('IddsLineChart: legenda untuk 2 seri dan tooltip saat diketuk',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testApp(const SizedBox(
       width: 400,
       child: IddsLineChart(
@@ -38,19 +39,23 @@ void main() {
     expect(find.text('Selesai'), findsOneWidget);
   });
 
-  testWidgets('IddsLineChart satu seri tanpa legenda', (WidgetTester tester) async {
+  testWidgets('IddsLineChart satu seri tanpa legenda',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testApp(const SizedBox(
       width: 300,
       child: IddsLineChart(
         labels: <String>['A', 'B'],
-        series: <IddsChartSeries>[IddsChartSeries(name: 'Tunggal', values: <double?>[1, 2])],
+        series: <IddsChartSeries>[
+          IddsChartSeries(name: 'Tunggal', values: <double?>[1, 2])
+        ],
       ),
     )));
     await tester.pumpAndSettle();
     expect(find.text('Tunggal'), findsNothing);
   });
 
-  testWidgets('IddsBarChart mendatar & bertumpuk menampilkan tooltip', (WidgetTester tester) async {
+  testWidgets('IddsBarChart mendatar & bertumpuk menampilkan tooltip',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testApp(const SizedBox(
       width: 400,
       child: IddsBarChart(
@@ -82,7 +87,8 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('IddsPieChart donat: total di tengah dan persen di legenda', (WidgetTester tester) async {
+  testWidgets('IddsPieChart donat: total di tengah dan persen di legenda',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testApp(const SizedBox(
       width: 500,
       child: IddsPieChart(
@@ -108,7 +114,9 @@ void main() {
         child: IddsBarChart(
           showValues: true,
           labels: <String>['A', 'B'],
-          series: <IddsChartSeries>[IddsChartSeries(name: 'X', values: <double?>[3, -2])],
+          series: <IddsChartSeries>[
+            IddsChartSeries(name: 'X', values: <double?>[3, -2])
+          ],
         ),
       ),
       theme: IddsThemeData(brightness: Brightness.dark),

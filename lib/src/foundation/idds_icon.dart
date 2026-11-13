@@ -15,7 +15,8 @@ class IddsIconData {
   final List<String> paths;
 
   @override
-  bool operator ==(Object other) => other is IddsIconData && listEquals(other.paths, paths);
+  bool operator ==(Object other) =>
+      other is IddsIconData && listEquals(other.paths, paths);
 
   @override
   int get hashCode => Object.hashAll(paths);
@@ -30,19 +31,24 @@ abstract final class IddsIcons {
   static const IddsIconData minus = IddsIconData(<String>['M5 12l14 0']);
 
   /// `x`.
-  static const IddsIconData x = IddsIconData(<String>['M18 6l-12 12', 'M6 6l12 12']);
+  static const IddsIconData x =
+      IddsIconData(<String>['M18 6l-12 12', 'M6 6l12 12']);
 
   /// `chevron-left`.
-  static const IddsIconData chevronLeft = IddsIconData(<String>['M15 6l-6 6l6 6']);
+  static const IddsIconData chevronLeft =
+      IddsIconData(<String>['M15 6l-6 6l6 6']);
 
   /// `chevron-right`.
-  static const IddsIconData chevronRight = IddsIconData(<String>['M9 6l6 6l-6 6']);
+  static const IddsIconData chevronRight =
+      IddsIconData(<String>['M9 6l6 6l-6 6']);
 
   /// `chevron-down`.
-  static const IddsIconData chevronDown = IddsIconData(<String>['M6 9l6 6l6 -6']);
+  static const IddsIconData chevronDown =
+      IddsIconData(<String>['M6 9l6 6l6 -6']);
 
   /// `chevron-up`.
-  static const IddsIconData chevronUp = IddsIconData(<String>['M6 15l6 -6l6 6']);
+  static const IddsIconData chevronUp =
+      IddsIconData(<String>['M6 15l6 -6l6 6']);
 
   /// `search`.
   static const IddsIconData search = IddsIconData(<String>[
@@ -77,7 +83,8 @@ abstract final class IddsIcons {
   ]);
 
   /// `refresh`.
-  static const IddsIconData refresh = IddsIconData(<String>['M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5']);
+  static const IddsIconData refresh =
+      IddsIconData(<String>['M4.05 11a8 8 0 1 1 .5 4m-.5 5v-5h5']);
 
   /// `circle-check`.
   static const IddsIconData circleCheck = IddsIconData(<String>[
@@ -98,10 +105,12 @@ abstract final class IddsIcons {
   ]);
 
   /// `arrow-up`.
-  static const IddsIconData arrowUp = IddsIconData(<String>['M12 5l0 14', 'M16 9l-4 -4', 'M8 9l4 -4']);
+  static const IddsIconData arrowUp =
+      IddsIconData(<String>['M12 5l0 14', 'M16 9l-4 -4', 'M8 9l4 -4']);
 
   /// `arrow-down`.
-  static const IddsIconData arrowDown = IddsIconData(<String>['M12 5l0 14', 'M16 15l-4 4', 'M8 15l4 4']);
+  static const IddsIconData arrowDown =
+      IddsIconData(<String>['M12 5l0 14', 'M16 15l-4 4', 'M8 15l4 4']);
 
   /// `eye`.
   static const IddsIconData eye = IddsIconData(<String>[
@@ -134,10 +143,12 @@ abstract final class IddsIcons {
   ]);
 
   /// `chevrons-left`.
-  static const IddsIconData chevronsLeft = IddsIconData(<String>['M11 7l-5 5l5 5', 'M17 7l-5 5l5 5']);
+  static const IddsIconData chevronsLeft =
+      IddsIconData(<String>['M11 7l-5 5l5 5', 'M17 7l-5 5l5 5']);
 
   /// `chevrons-right`.
-  static const IddsIconData chevronsRight = IddsIconData(<String>['M7 7l5 5l-5 5', 'M13 7l5 5l-5 5']);
+  static const IddsIconData chevronsRight =
+      IddsIconData(<String>['M7 7l5 5l-5 5', 'M13 7l5 5l-5 5']);
 
   /// `info-circle`.
   static const IddsIconData infoCircle = IddsIconData(<String>[
@@ -259,10 +270,11 @@ class _IconPainter extends CustomPainter {
 /// garis seperti Tabler.
 Path parseSvgPath(String d) {
   final Path path = Path();
-  final List<String> tokens = RegExp(r'[MmLlHhVvCcAaZz]|-?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?')
-      .allMatches(d)
-      .map((Match m) => m.group(0)!)
-      .toList();
+  final List<String> tokens =
+      RegExp(r'[MmLlHhVvCcAaZz]|-?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?')
+          .allMatches(d)
+          .map((Match m) => m.group(0)!)
+          .toList();
   int i = 0;
   String command = 'M';
   double x = 0;

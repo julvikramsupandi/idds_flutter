@@ -35,7 +35,8 @@ enum IddsRadioLabelPosition {
 @immutable
 class IddsRadioOption<T> {
   /// Membuat pilihan.
-  const IddsRadioOption({required this.value, required this.label, this.enabled = true});
+  const IddsRadioOption(
+      {required this.value, required this.label, this.enabled = true});
 
   /// Nilai yang dikirim ke `onChanged`.
   final T value;
@@ -160,10 +161,13 @@ class IddsRadio<T> extends StatelessWidget {
                   ? <BoxShadow>[
                       // CSS: 0 0 0 1px #fff, 0 0 0 2px content-primary.
                       BoxShadow(color: c.contentPrimary, spreadRadius: 2),
-                      const BoxShadow(color: Color(0xFFFFFFFF), spreadRadius: 1),
+                      const BoxShadow(
+                          color: Color(0xFFFFFFFF), spreadRadius: 1),
                     ]
                   : state.hovered
-                      ? const <BoxShadow>[BoxShadow(color: Color(0xFF737373), blurRadius: 3)]
+                      ? const <BoxShadow>[
+                          BoxShadow(color: Color(0xFF737373), blurRadius: 3)
+                        ]
                       : null,
             ),
             child: AnimatedScale(
@@ -185,7 +189,8 @@ class IddsRadio<T> extends StatelessWidget {
 
           final Widget text = Text(
             label!,
-            style: theme.textStyle(fontSize: m.fontSize, lineHeight: m.fontSize * 1.5),
+            style: theme.textStyle(
+                fontSize: m.fontSize, lineHeight: m.fontSize * 1.5),
           );
           final bool reversed = labelPosition != IddsRadioLabelPosition.right;
           final bool between = labelPosition == IddsRadioLabelPosition.between;
@@ -203,12 +208,18 @@ class IddsRadio<T> extends StatelessWidget {
               builder: (BuildContext context, BoxConstraints constraints) {
                 // Flexible hanya aman bila lebar dibatasi.
                 final bool bounded = constraints.hasBoundedWidth;
-                final Widget textWidget = bounded ? Flexible(child: text) : text;
+                final Widget textWidget =
+                    bounded ? Flexible(child: text) : text;
                 return Row(
-                  mainAxisSize: between && bounded ? MainAxisSize.max : MainAxisSize.min,
-                  mainAxisAlignment: between ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
+                  mainAxisSize:
+                      between && bounded ? MainAxisSize.max : MainAxisSize.min,
+                  mainAxisAlignment: between
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.start,
                   spacing: IddsSpacing.s8,
-                  children: reversed ? <Widget>[textWidget, field] : <Widget>[field, textWidget],
+                  children: reversed
+                      ? <Widget>[textWidget, field]
+                      : <Widget>[field, textWidget],
                 );
               },
             ),
@@ -312,7 +323,10 @@ class IddsRadioGroup<T> extends StatelessWidget {
                 TextSpan(
                   text: label,
                   children: <InlineSpan>[
-                    if (required) TextSpan(text: ' *', style: TextStyle(color: c.negative.shade500)),
+                    if (required)
+                      TextSpan(
+                          text: ' *',
+                          style: TextStyle(color: c.negative.shade500)),
                   ],
                 ),
                 style: theme.textStyle(

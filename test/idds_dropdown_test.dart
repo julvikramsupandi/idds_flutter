@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:idds_flutter/idds_flutter.dart';
-import 'package:idds_flutter/src/foundation/idds_interactive.dart' show IddsInsetRing;
+import 'package:idds_flutter/src/foundation/idds_interactive.dart'
+    show IddsInsetRing;
 
 import 'test_app.dart';
 
@@ -72,9 +73,11 @@ class _MultiHarnessState extends State<_MultiHarness> {
 
 void main() {
   group('IddsSelect', () {
-    testWidgets('membuka panel, memilih, lalu menutup', (WidgetTester tester) async {
+    testWidgets('membuka panel, memilih, lalu menutup',
+        (WidgetTester tester) async {
       String? changed;
-      await tester.pumpWidget(testApp(_SelectHarness(onChanged: (String? v) => changed = v)));
+      await tester.pumpWidget(
+          testApp(_SelectHarness(onChanged: (String? v) => changed = v)));
       expect(find.text('Pilih...'), findsOneWidget);
       expect(find.text('Jawa Tengah'), findsNothing);
 
@@ -90,9 +93,11 @@ void main() {
       expect(find.text('Jawa Barat'), findsNothing);
     });
 
-    testWidgets('opsi nonaktif tidak bisa dipilih', (WidgetTester tester) async {
+    testWidgets('opsi nonaktif tidak bisa dipilih',
+        (WidgetTester tester) async {
       String? changed;
-      await tester.pumpWidget(testApp(_SelectHarness(onChanged: (String? v) => changed = v)));
+      await tester.pumpWidget(
+          testApp(_SelectHarness(onChanged: (String? v) => changed = v)));
       await tester.tap(find.text('Pilih...'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Bali'));
@@ -101,7 +106,8 @@ void main() {
       expect(find.text('Bali'), findsOneWidget);
     });
 
-    testWidgets('menekan di luar dan Esc menutup panel', (WidgetTester tester) async {
+    testWidgets('menekan di luar dan Esc menutup panel',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testApp(const _SelectHarness()));
       await tester.tap(find.text('Pilih...'));
       await tester.pumpAndSettle();
@@ -125,7 +131,11 @@ void main() {
       (WidgetTester tester) async {
         bool active() => tester
             .widget<IddsInsetRing>(
-              find.descendant(of: find.byType(IddsSelect<String>), matching: find.byType(IddsInsetRing)).first,
+              find
+                  .descendant(
+                      of: find.byType(IddsSelect<String>),
+                      matching: find.byType(IddsInsetRing))
+                  .first,
             )
             .visible;
         await tester.pumpWidget(testApp(const _SelectHarness()));
@@ -133,7 +143,8 @@ void main() {
         // Pilih opsi: panel tertutup, pemicu tetap aktif (fokus kembali).
         await tester.tap(find.text('Pilih...'), kind: PointerDeviceKind.mouse);
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Jawa Tengah'), kind: PointerDeviceKind.mouse);
+        await tester.tap(find.text('Jawa Tengah'),
+            kind: PointerDeviceKind.mouse);
         await tester.pumpAndSettle();
         expect(active(), isTrue);
 
@@ -143,7 +154,8 @@ void main() {
         expect(active(), isFalse);
 
         // Menekan di luar saat panel terbuka: panel tertutup dan tidak aktif.
-        await tester.tap(find.text('Jawa Tengah'), kind: PointerDeviceKind.mouse);
+        await tester.tap(find.text('Jawa Tengah'),
+            kind: PointerDeviceKind.mouse);
         await tester.pumpAndSettle();
         expect(find.text('Jawa Barat'), findsOneWidget);
         await tester.tapAt(const Offset(5, 5), kind: PointerDeviceKind.mouse);
@@ -155,7 +167,8 @@ void main() {
 
     testWidgets('panah dan Enter memilih opsi', (WidgetTester tester) async {
       String? changed;
-      await tester.pumpWidget(testApp(_SelectHarness(onChanged: (String? v) => changed = v)));
+      await tester.pumpWidget(
+          testApp(_SelectHarness(onChanged: (String? v) => changed = v)));
       await tester.tap(find.text('Pilih...'));
       await tester.pumpAndSettle();
       // Sorotan awal di opsi pertama; dua kali turun = Jawa Timur.
@@ -166,7 +179,8 @@ void main() {
       expect(changed, 'jatim');
     });
 
-    testWidgets('pencarian menyaring opsi dan menampilkan teks kosong', (WidgetTester tester) async {
+    testWidgets('pencarian menyaring opsi dan menampilkan teks kosong',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testApp(const _SelectHarness(searchable: true)));
       await tester.tap(find.text('Pilih...'));
       await tester.pumpAndSettle();
@@ -185,7 +199,8 @@ void main() {
       await tester.pumpWidget(testApp(
         const SizedBox(
           width: 300,
-          child: IddsSelect<String>(options: _provinces, value: null, onChanged: null),
+          child: IddsSelect<String>(
+              options: _provinces, value: null, onChanged: null),
         ),
       ));
       await tester.tap(find.text('Pilih...'));
@@ -193,7 +208,8 @@ void main() {
       expect(find.text('Jawa Barat'), findsNothing);
     });
 
-    testWidgets('label, tanda wajib, dan pesan error', (WidgetTester tester) async {
+    testWidgets('label, tanda wajib, dan pesan error',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testApp(
         SizedBox(
           width: 300,
@@ -212,13 +228,15 @@ void main() {
       expect(find.text('Wajib diisi'), findsOneWidget);
     });
 
-    testWidgets('panel pindah ke atas bila ruang di bawah sempit', (WidgetTester tester) async {
+    testWidgets('panel pindah ke atas bila ruang di bawah sempit',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testApp(
         Align(
           alignment: Alignment.bottomCenter,
           child: SizedBox(
             width: 300,
-            child: IddsSelect<String>(options: _provinces, value: null, onChanged: (_) {}),
+            child: IddsSelect<String>(
+                options: _provinces, value: null, onChanged: (_) {}),
           ),
         ),
       ));
@@ -231,7 +249,8 @@ void main() {
   });
 
   group('IddsMultiSelect', () {
-    testWidgets('panel tetap terbuka dan teks pemicu mengikuti pilihan', (WidgetTester tester) async {
+    testWidgets('panel tetap terbuka dan teks pemicu mengikuti pilihan',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testApp(const _MultiHarness()));
       await tester.tap(find.text('Pilih...'));
       await tester.pumpAndSettle();
@@ -268,7 +287,10 @@ void main() {
             IddsActionMenuItem(label: 'Ubah', onTap: () => edits++),
             const IddsActionMenuItem(label: 'Arsipkan', onTap: null),
             const IddsActionMenuDivider(),
-            IddsActionMenuItem(label: 'Hapus', onTap: () {}, type: IddsActionMenuItemType.danger),
+            IddsActionMenuItem(
+                label: 'Hapus',
+                onTap: () {},
+                type: IddsActionMenuItemType.danger),
           ],
         ),
       ));
@@ -287,7 +309,8 @@ void main() {
       expect(find.text('Ubah'), findsNothing);
     });
 
-    testWidgets('navigasi keyboard melewati aksi nonaktif', (WidgetTester tester) async {
+    testWidgets('navigasi keyboard melewati aksi nonaktif',
+        (WidgetTester tester) async {
       String? last;
       await tester.pumpWidget(testApp(
         IddsActionMenu(
@@ -311,11 +334,14 @@ void main() {
   testWidgets('IddsDropdown terkendali sendiri', (WidgetTester tester) async {
     await tester.pumpWidget(testApp(
       IddsDropdown(
-        triggerBuilder: (BuildContext context, bool open, VoidCallback? toggle) => GestureDetector(
+        triggerBuilder:
+            (BuildContext context, bool open, VoidCallback? toggle) =>
+                GestureDetector(
           onTap: toggle,
           child: Text(open ? 'Tutup' : 'Buka'),
         ),
-        contentBuilder: (BuildContext context, VoidCallback close) => GestureDetector(
+        contentBuilder: (BuildContext context, VoidCallback close) =>
+            GestureDetector(
           onTap: close,
           child: const Text('Isi panel'),
         ),
@@ -331,7 +357,8 @@ void main() {
     expect(find.text('Isi panel'), findsNothing);
   });
 
-  testWidgets('IddsPagination menampilkan pilihan jumlah baris', (WidgetTester tester) async {
+  testWidgets('IddsPagination menampilkan pilihan jumlah baris',
+      (WidgetTester tester) async {
     int? size;
     await tester.pumpWidget(testApp(
       IddsPagination(

@@ -1,6 +1,17 @@
-import 'package:flutter/material.dart' show InputDecoration, TextField, VisualDensity;
+import 'package:flutter/material.dart'
+    show InputDecoration, TextField, VisualDensity;
 import 'package:flutter/services.dart'
-    show AutofillHints, KeyDownEvent, KeyEvent, KeyRepeatEvent, LogicalKeyboardKey, SystemMouseCursors, TextEditingValue, TextInputFormatter, TextInputType, TextSelection;
+    show
+        AutofillHints,
+        KeyDownEvent,
+        KeyEvent,
+        KeyRepeatEvent,
+        LogicalKeyboardKey,
+        SystemMouseCursors,
+        TextEditingValue,
+        TextInputFormatter,
+        TextInputType,
+        TextSelection;
 import 'package:flutter/widgets.dart';
 
 import '../../foundation/idds_icon.dart';
@@ -20,7 +31,8 @@ part 'idds_countries.g.dart';
 @immutable
 class IddsCountry {
   /// Membuat data negara.
-  const IddsCountry({required this.code, required this.name, required this.dialCode});
+  const IddsCountry(
+      {required this.code, required this.name, required this.dialCode});
 
   /// Kode ISO 3166-1 alpha-2, misalnya `ID`.
   final String code;
@@ -33,7 +45,8 @@ class IddsCountry {
 
   /// Bendera emoji dari [code] (tampil sebagai huruf bila platform tidak
   /// punya font emoji bendera).
-  String get flag => String.fromCharCodes(code.toUpperCase().codeUnits.map((int u) => 0x1F1E6 + u - 65));
+  String get flag => String.fromCharCodes(
+      code.toUpperCase().codeUnits.map((int u) => 0x1F1E6 + u - 65));
 
   /// Semua negara (239), Indonesia di urutan pertama.
   static const List<IddsCountry> all = _iddsCountries;
@@ -143,7 +156,9 @@ class _IddsPhoneInputState extends State<IddsPhoneInput> {
   @override
   void didUpdateWidget(IddsPhoneInput oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.value != oldWidget.value && widget.value != _lastEmitted) _syncFromValue();
+    if (widget.value != oldWidget.value && widget.value != _lastEmitted) {
+      _syncFromValue();
+    }
   }
 
   @override
@@ -163,8 +178,9 @@ class _IddsPhoneInputState extends State<IddsPhoneInput> {
       return;
     }
     // Cocokkan kode negara terpanjang lebih dulu (+1684 sebelum +1).
-    final List<IddsCountry> byLength = <IddsCountry>[...widget.countries]
-      ..sort((IddsCountry a, IddsCountry b) => b.dialCode.length.compareTo(a.dialCode.length));
+    final List<IddsCountry> byLength = <IddsCountry>[...widget.countries]..sort(
+        (IddsCountry a, IddsCountry b) =>
+            b.dialCode.length.compareTo(a.dialCode.length));
     String digits = value;
     if (!value.startsWith(_country.dialCode)) {
       for (final IddsCountry c in byLength) {
@@ -174,8 +190,11 @@ class _IddsPhoneInputState extends State<IddsPhoneInput> {
         }
       }
     }
-    if (digits.startsWith(_country.dialCode)) digits = digits.substring(_country.dialCode.length);
-    _controller.text = iddsFormatPhoneDigits(digits.replaceAll(RegExp(r'\D'), ''));
+    if (digits.startsWith(_country.dialCode)) {
+      digits = digits.substring(_country.dialCode.length);
+    }
+    _controller.text =
+        iddsFormatPhoneDigits(digits.replaceAll(RegExp(r'\D'), ''));
   }
 
   void _emit() {
@@ -216,7 +235,10 @@ class _IddsPhoneInputState extends State<IddsPhoneInput> {
     if (q.isEmpty) return widget.countries;
     return <IddsCountry>[
       for (final IddsCountry c in widget.countries)
-        if (c.name.toLowerCase().contains(q) || c.dialCode.contains(q) || c.code.toLowerCase().contains(q)) c,
+        if (c.name.toLowerCase().contains(q) ||
+            c.dialCode.contains(q) ||
+            c.code.toLowerCase().contains(q))
+          c,
     ];
   }
 
@@ -238,7 +260,8 @@ class _IddsPhoneInputState extends State<IddsPhoneInput> {
       excludeSemantics: true,
       child: IddsInteractive(
         onTap: _interactive ? _toggle : null,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: BorderRadius.circular(IddsRadius.sm),
           rings: <(double, Color)>[(2.0, c.contentPrimary)],
@@ -259,7 +282,8 @@ class _IddsPhoneInputState extends State<IddsPhoneInput> {
               AnimatedRotation(
                 turns: _open ? 0.5 : 0,
                 duration: IddsDuration.base,
-                child: IddsIcon(IddsIcons.chevronDown, size: 16, color: c.contentSecondary),
+                child: IddsIcon(IddsIcons.chevronDown,
+                    size: 16, color: c.contentSecondary),
               ),
               Container(width: 1, height: 20, color: c.strokePrimary),
             ],
@@ -304,11 +328,17 @@ class _IddsPhoneInputState extends State<IddsPhoneInput> {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
     final List<IddsCountry> countries = _filtered;
-    final TextStyle small = theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentPrimary);
+    final TextStyle small = theme.textStyle(
+        fontSize: IddsFontSize.xs,
+        lineHeight: IddsLineHeight.xs,
+        color: c.contentPrimary);
 
     KeyEventResult onKey(FocusNode node, KeyEvent event) {
-      if (event is! KeyDownEvent && event is! KeyRepeatEvent) return KeyEventResult.ignored;
-      if (event.logicalKey == LogicalKeyboardKey.enter && countries.isNotEmpty) {
+      if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
+        return KeyEventResult.ignored;
+      }
+      if (event.logicalKey == LogicalKeyboardKey.enter &&
+          countries.isNotEmpty) {
         _select(countries.first);
         return KeyEventResult.handled;
       }
@@ -325,10 +355,15 @@ class _IddsPhoneInputState extends State<IddsPhoneInput> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s8 - 1, vertical: IddsSpacing.s4 - 1),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: IddsSpacing.s8 - 1,
+                    vertical: IddsSpacing.s4 - 1),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(IddsRadius.md),
-                  border: Border.all(color: _searchFocus.hasFocus ? c.contentPrimary : c.strokePrimary),
+                  border: Border.all(
+                      color: _searchFocus.hasFocus
+                          ? c.contentPrimary
+                          : c.strokePrimary),
                 ),
                 child: Focus(
                   onKeyEvent: onKey,
@@ -354,7 +389,9 @@ class _IddsPhoneInputState extends State<IddsPhoneInput> {
                 child: countries.isEmpty
                     ? Padding(
                         padding: const EdgeInsets.all(IddsSpacing.s12),
-                        child: Text(widget.emptyText, textAlign: TextAlign.center, style: small.copyWith(color: c.contentSecondary)),
+                        child: Text(widget.emptyText,
+                            textAlign: TextAlign.center,
+                            style: small.copyWith(color: c.contentSecondary)),
                       )
                     : ListView.builder(
                         shrinkWrap: true,
@@ -375,16 +412,22 @@ class _IddsPhoneInputState extends State<IddsPhoneInput> {
                               child: Row(
                                 spacing: IddsSpacing.s8,
                                 children: <Widget>[
-                                  Text(country.flag, style: textStyle.copyWith(fontSize: 16, color: c.contentPrimary)),
+                                  Text(country.flag,
+                                      style: textStyle.copyWith(
+                                          fontSize: 16,
+                                          color: c.contentPrimary)),
                                   Expanded(
                                     child: Text(
                                       country.name,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: textStyle.copyWith(color: c.contentPrimary),
+                                      style: textStyle.copyWith(
+                                          color: c.contentPrimary),
                                     ),
                                   ),
-                                  Text(country.dialCode, style: textStyle.copyWith(color: c.contentSecondary)),
+                                  Text(country.dialCode,
+                                      style: textStyle.copyWith(
+                                          color: c.contentSecondary)),
                                 ],
                               ),
                             ),
@@ -403,8 +446,12 @@ class _IddsPhoneInputState extends State<IddsPhoneInput> {
 /// Mengelompokkan angka telepon seperti versi web: `812`, `812-3456`,
 /// `812-3456-7890`.
 String iddsFormatPhoneDigits(String digits) {
-  if (digits.length > 7) return '${digits.substring(0, 3)}-${digits.substring(3, 7)}-${digits.substring(7)}';
-  if (digits.length > 3) return '${digits.substring(0, 3)}-${digits.substring(3)}';
+  if (digits.length > 7) {
+    return '${digits.substring(0, 3)}-${digits.substring(3, 7)}-${digits.substring(7)}';
+  }
+  if (digits.length > 3) {
+    return '${digits.substring(0, 3)}-${digits.substring(3)}';
+  }
   return digits;
 }
 
@@ -412,15 +459,19 @@ class _PhoneFormatter extends TextInputFormatter {
   const _PhoneFormatter();
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     final String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
-    final String text = iddsFormatPhoneDigits(digits.length > 15 ? digits.substring(0, 15) : digits);
-    return TextEditingValue(text: text, selection: TextSelection.collapsed(offset: text.length));
+    final String text = iddsFormatPhoneDigits(
+        digits.length > 15 ? digits.substring(0, 15) : digits);
+    return TextEditingValue(
+        text: text, selection: TextSelection.collapsed(offset: text.length));
   }
 }
 
 class _HoverRow extends StatefulWidget {
-  const _HoverRow({required this.selected, required this.onTap, required this.child});
+  const _HoverRow(
+      {required this.selected, required this.onTap, required this.child});
 
   final bool selected;
   final VoidCallback onTap;

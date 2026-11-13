@@ -42,7 +42,8 @@ class BrandLogo extends StatelessWidget {
         semanticsLabel: 'Logo ${brand.name}',
         // Teks logo PANRB hampir hitam (#231F20) dan tidak terbaca di mode
         // gelap, jadi diganti warna teks utama.
-        colorMapper: theme.isDark ? _DarkTextMapper(theme.colors.contentPrimary) : null,
+        colorMapper:
+            theme.isDark ? _DarkTextMapper(theme.colors.contentPrimary) : null,
       ),
     );
   }
@@ -55,13 +56,16 @@ class _DarkTextMapper extends ColorMapper {
   final Color color;
 
   @override
-  Color substitute(String? id, String elementName, String attributeName, Color original) {
-    final bool nearBlack = original.r < 0.2 && original.g < 0.2 && original.b < 0.2;
+  Color substitute(
+      String? id, String elementName, String attributeName, Color original) {
+    final bool nearBlack =
+        original.r < 0.2 && original.g < 0.2 && original.b < 0.2;
     return nearBlack ? color.withValues(alpha: original.a) : original;
   }
 
   @override
-  bool operator ==(Object other) => other is _DarkTextMapper && other.color == color;
+  bool operator ==(Object other) =>
+      other is _DarkTextMapper && other.color == color;
 
   @override
   int get hashCode => color.hashCode;

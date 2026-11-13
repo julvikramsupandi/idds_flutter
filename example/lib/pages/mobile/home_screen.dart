@@ -8,7 +8,8 @@ import 'phone_frame.dart';
 
 /// Satu layanan di grid Beranda.
 class _Service {
-  const _Service(this.name, this.icon, this.description, this.requirements, this.duration);
+  const _Service(
+      this.name, this.icon, this.description, this.requirements, this.duration);
 
   final String name;
   final IconData icon;
@@ -18,21 +19,53 @@ class _Service {
 }
 
 const List<_Service> _services = <_Service>[
-  _Service('KTP-el', TablerIcons.id, 'Rekam baru, cetak ulang karena rusak atau hilang, dan perubahan data KTP-el.',
-      <String>['Kartu Keluarga', 'Surat kehilangan dari kepolisian (bila hilang)'], '1–3 hari kerja'),
-  _Service('Kartu Keluarga', TablerIcons.users, 'Penerbitan KK baru, penambahan anggota, atau perubahan data keluarga.',
-      <String>['KK lama', 'Akta kelahiran / buku nikah'], '1–3 hari kerja'),
-  _Service('Akta Kelahiran', TablerIcons.baby_carriage, 'Pencatatan kelahiran dan penerbitan akta kelahiran anak.',
-      <String>['Surat keterangan lahir', 'KK dan KTP-el orang tua'], '1–2 hari kerja'),
-  _Service('Pindah Domisili', TablerIcons.home_move, 'Surat keterangan pindah datang dan pindah keluar daerah.',
-      <String>['KK dan KTP-el', 'Alamat tujuan lengkap'], '2–5 hari kerja'),
-  _Service('Pajak Daerah', TablerIcons.receipt_tax, 'Cek tagihan dan bayar PBB serta pajak kendaraan bermotor.',
-      <String>['NOP PBB atau nomor polisi kendaraan'], 'Langsung'),
-  _Service('Kesehatan', TablerIcons.stethoscope, 'Daftar antrean puskesmas dan cek status kepesertaan jaminan kesehatan.',
-      <String>['NIK', 'Nomor kartu jaminan kesehatan'], 'Langsung'),
-  _Service('Bantuan Sosial', TablerIcons.heart_handshake, 'Cek penerima dan ajukan usulan bantuan sosial.',
-      <String>['NIK dan KK'], '5–14 hari kerja'),
-  _Service('Lainnya', TablerIcons.layout_grid, 'Lihat semua layanan yang tersedia di daerah Anda.', <String>[], '-'),
+  _Service(
+      'KTP-el',
+      TablerIcons.id,
+      'Rekam baru, cetak ulang karena rusak atau hilang, dan perubahan data KTP-el.',
+      <String>[
+        'Kartu Keluarga',
+        'Surat kehilangan dari kepolisian (bila hilang)'
+      ],
+      '1–3 hari kerja'),
+  _Service(
+      'Kartu Keluarga',
+      TablerIcons.users,
+      'Penerbitan KK baru, penambahan anggota, atau perubahan data keluarga.',
+      <String>['KK lama', 'Akta kelahiran / buku nikah'],
+      '1–3 hari kerja'),
+  _Service(
+      'Akta Kelahiran',
+      TablerIcons.baby_carriage,
+      'Pencatatan kelahiran dan penerbitan akta kelahiran anak.',
+      <String>['Surat keterangan lahir', 'KK dan KTP-el orang tua'],
+      '1–2 hari kerja'),
+  _Service(
+      'Pindah Domisili',
+      TablerIcons.home_move,
+      'Surat keterangan pindah datang dan pindah keluar daerah.',
+      <String>['KK dan KTP-el', 'Alamat tujuan lengkap'],
+      '2–5 hari kerja'),
+  _Service(
+      'Pajak Daerah',
+      TablerIcons.receipt_tax,
+      'Cek tagihan dan bayar PBB serta pajak kendaraan bermotor.',
+      <String>['NOP PBB atau nomor polisi kendaraan'],
+      'Langsung'),
+  _Service(
+      'Kesehatan',
+      TablerIcons.stethoscope,
+      'Daftar antrean puskesmas dan cek status kepesertaan jaminan kesehatan.',
+      <String>['NIK', 'Nomor kartu jaminan kesehatan'],
+      'Langsung'),
+  _Service(
+      'Bantuan Sosial',
+      TablerIcons.heart_handshake,
+      'Cek penerima dan ajukan usulan bantuan sosial.',
+      <String>['NIK dan KK'],
+      '5–14 hari kerja'),
+  _Service('Lainnya', TablerIcons.layout_grid,
+      'Lihat semua layanan yang tersedia di daerah Anda.', <String>[], '-'),
 ];
 
 /// Beranda aplikasi layanan publik: sapaan, pencarian, status pengajuan,
@@ -46,8 +79,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  void _notAvailable(String page) =>
-      showPhoneToast(context, title: Text('Halaman $page tidak ada di contoh ini'));
+  void _notAvailable(String page) => showPhoneToast(context,
+      title: Text('Halaman $page tidak ada di contoh ini'));
 
   void _openService(_Service service) {
     showIddsBottomSheet<void>(
@@ -59,12 +92,16 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.pop(sheetContext);
           Navigator.of(context).push(
             PageRouteBuilder<void>(
-              pageBuilder: (BuildContext context, Animation<double> a, Animation<double> b) =>
+              pageBuilder: (BuildContext context, Animation<double> a,
+                      Animation<double> b) =>
                   ApplicationFormScreen(serviceName: service.name),
-              transitionsBuilder: (BuildContext context, Animation<double> a, Animation<double> b, Widget child) =>
+              transitionsBuilder: (BuildContext context, Animation<double> a,
+                      Animation<double> b, Widget child) =>
                   SlideTransition(
-                position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
-                    .animate(CurvedAnimation(parent: a, curve: Curves.easeOutCubic)),
+                position: Tween<Offset>(
+                        begin: const Offset(1, 0), end: Offset.zero)
+                    .animate(
+                        CurvedAnimation(parent: a, curve: Curves.easeOutCubic)),
                 child: child,
               ),
             ),
@@ -81,7 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final EdgeInsets safe = MediaQuery.paddingOf(context);
 
     final Widget header = Padding(
-      padding: EdgeInsets.fromLTRB(IddsSpacing.s16, safe.top + IddsSpacing.s8, IddsSpacing.s8, IddsSpacing.s8),
+      padding: EdgeInsets.fromLTRB(IddsSpacing.s16, safe.top + IddsSpacing.s8,
+          IddsSpacing.s8, IddsSpacing.s8),
       child: Row(
         spacing: IddsSpacing.s12,
         children: <Widget>[
@@ -92,7 +130,10 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 Text(
                   'Selamat pagi,',
-                  style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary),
+                  style: theme.textStyle(
+                      fontSize: IddsFontSize.xs,
+                      lineHeight: IddsLineHeight.xs,
+                      color: c.contentSecondary),
                 ),
                 Text(
                   'Siti Rahmawati',
@@ -111,7 +152,8 @@ class _HomeScreenState extends State<HomeScreen> {
           IddsButton(
             hierarchy: IddsButtonHierarchy.tertiary,
             semanticLabel: 'Notifikasi, 3 belum dibaca',
-            onPressed: () => showPhoneToast(context, title: const Text('3 notifikasi belum dibaca')),
+            onPressed: () => showPhoneToast(context,
+                title: const Text('3 notifikasi belum dibaca')),
             // Angka menempel di sudut ikon, sehingga posisinya tetap benar
             // walau tombol mengecil di layar < 640px.
             child: Stack(
@@ -124,12 +166,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     constraints: const BoxConstraints(minWidth: 16),
                     height: 16,
-                    padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: IddsSpacing.s4),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: c.negative.shade500,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: c.backgroundPrimary, width: 1.5),
+                      border:
+                          Border.all(color: c.backgroundPrimary, width: 1.5),
                     ),
                     child: Text(
                       '3',
@@ -155,11 +199,13 @@ class _HomeScreenState extends State<HomeScreen> {
         header,
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(IddsSpacing.s16, IddsSpacing.s8, IddsSpacing.s16, IddsSpacing.s24),
+            padding: const EdgeInsets.fromLTRB(IddsSpacing.s16, IddsSpacing.s8,
+                IddsSpacing.s16, IddsSpacing.s24),
             children: <Widget>[
               const IddsSearchField(placeholder: 'Cari layanan'),
               const SizedBox(height: IddsSpacing.s16),
-              _ActiveApplicationCard(onTap: () => _notAvailable('detail pengajuan')),
+              _ActiveApplicationCard(
+                  onTap: () => _notAvailable('detail pengajuan')),
               const SizedBox(height: IddsSpacing.s24),
               const MobileSectionTitle('Layanan'),
               const SizedBox(height: IddsSpacing.s12),
@@ -172,7 +218,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     runSpacing: IddsSpacing.s16,
                     children: <Widget>[
                       for (final _Service s in _services)
-                        SizedBox(width: width, child: _ServiceTile(service: s, onTap: () => _openService(s))),
+                        SizedBox(
+                            width: width,
+                            child: _ServiceTile(
+                                service: s, onTap: () => _openService(s))),
                     ],
                   );
                 },
@@ -182,21 +231,36 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Informasi Terbaru',
                 action: IddsButton(
                   hierarchy: IddsButtonHierarchy.link,
-                  onPressed: () => showPhoneToast(context, title: const Text('Membuka semua informasi')),
+                  onPressed: () => showPhoneToast(context,
+                      title: const Text('Membuka semua informasi')),
                   child: const Text('Lihat semua'),
                 ),
               ),
               IddsList(
                 padding: EdgeInsets.zero,
                 children: <Widget>[
-                  for (final (String title, String date, IconData icon) in const <(String, String, IconData)>[
-                    ('Perekaman KTP-el keliling di Kecamatan Kota Barat', '12 Nov 2026', TablerIcons.speakerphone),
-                    ('Jadwal layanan libur akhir tahun', '10 Nov 2026', TablerIcons.calendar_event),
-                    ('Pembayaran PBB kini bisa lewat aplikasi', '5 Nov 2026', TablerIcons.news),
+                  for (final (String title, String date, IconData icon)
+                      in const <(String, String, IconData)>[
+                    (
+                      'Perekaman KTP-el keliling di Kecamatan Kota Barat',
+                      '12 Nov 2026',
+                      TablerIcons.speakerphone
+                    ),
+                    (
+                      'Jadwal layanan libur akhir tahun',
+                      '10 Nov 2026',
+                      TablerIcons.calendar_event
+                    ),
+                    (
+                      'Pembayaran PBB kini bisa lewat aplikasi',
+                      '5 Nov 2026',
+                      TablerIcons.news
+                    ),
                   ])
                     IddsListItem(
                       leading: Icon(icon),
-                      title: Text(title, maxLines: 2, overflow: TextOverflow.ellipsis),
+                      title: Text(title,
+                          maxLines: 2, overflow: TextOverflow.ellipsis),
                       subtitle: Text(date),
                       trailing: const Icon(TablerIcons.chevron_right),
                       alignTop: true,
@@ -207,9 +271,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        _BottomNavigation(current: 0, onChanged: (int i) {
-          if (i != 0) _notAvailable(_BottomNavigation.items[i].$1);
-        }),
+        _BottomNavigation(
+            current: 0,
+            onChanged: (int i) {
+              if (i != 0) _notAvailable(_BottomNavigation.items[i].$1);
+            }),
       ],
     );
   }
@@ -235,10 +301,16 @@ class _ActiveApplicationCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Pengajuan Aktif',
-                  style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary),
+                  style: theme.textStyle(
+                      fontSize: IddsFontSize.xs,
+                      lineHeight: IddsLineHeight.xs,
+                      color: c.contentSecondary),
                 ),
               ),
-              const IddsBadge(variant: IddsBadgeVariant.warning, size: IddsBadgeSize.sm, child: Text('Diproses')),
+              const IddsBadge(
+                  variant: IddsBadgeVariant.warning,
+                  size: IddsBadgeSize.sm,
+                  child: Text('Diproses')),
             ],
           ),
           Text(
@@ -251,13 +323,17 @@ class _ActiveApplicationCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: IddsSpacing.s4),
-          const IddsProgressBar(value: 0.6, semanticLabel: 'Kemajuan pengajuan'),
+          const IddsProgressBar(
+              value: 0.6, semanticLabel: 'Kemajuan pengajuan'),
           Row(
             children: <Widget>[
               Expanded(
                 child: Text(
                   'Verifikasi berkas · langkah 3 dari 5',
-                  style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary),
+                  style: theme.textStyle(
+                      fontSize: IddsFontSize.xs,
+                      lineHeight: IddsLineHeight.xs,
+                      color: c.contentSecondary),
                 ),
               ),
               IddsButton(
@@ -300,14 +376,20 @@ class _ServiceTile extends StatelessWidget {
                 color: theme.isDark ? c.primary.shade900 : c.primary.shade50,
                 borderRadius: BorderRadius.circular(IddsRadius.xl),
               ),
-              child: Icon(service.icon, size: 24, color: theme.isDark ? c.primary.shade200 : c.primary.shade600),
+              child: Icon(service.icon,
+                  size: 24,
+                  color:
+                      theme.isDark ? c.primary.shade200 : c.primary.shade600),
             ),
             Text(
               service.name,
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentPrimary),
+              style: theme.textStyle(
+                  fontSize: IddsFontSize.xs,
+                  lineHeight: IddsLineHeight.xs,
+                  color: c.contentPrimary),
             ),
           ],
         ),
@@ -349,7 +431,10 @@ class _ServiceSheet extends StatelessWidget {
           ),
           Text(
             service.description,
-            style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentSecondary),
+            style: theme.textStyle(
+                fontSize: IddsFontSize.sm,
+                lineHeight: IddsLineHeight.sm,
+                color: c.contentSecondary),
           ),
           if (service.requirements.isNotEmpty)
             IddsList(
@@ -357,17 +442,24 @@ class _ServiceSheet extends StatelessWidget {
               subheader: const IddsListSubheader('Persyaratan'),
               children: <Widget>[
                 for (final String r in service.requirements)
-                  IddsListItem(dense: true, leading: const Icon(TablerIcons.circle_check), title: Text(r)),
+                  IddsListItem(
+                      dense: true,
+                      leading: const Icon(TablerIcons.circle_check),
+                      title: Text(r)),
               ],
             ),
           Row(
             spacing: IddsSpacing.s8,
             children: <Widget>[
-              Icon(TablerIcons.clock_hour_4, size: 16, color: c.contentSecondary),
+              Icon(TablerIcons.clock_hour_4,
+                  size: 16, color: c.contentSecondary),
               Flexible(
                 child: Text(
                   'Perkiraan selesai: ${service.duration}',
-                  style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary),
+                  style: theme.textStyle(
+                      fontSize: IddsFontSize.xs,
+                      lineHeight: IddsLineHeight.xs,
+                      color: c.contentSecondary),
                 ),
               ),
             ],
@@ -423,14 +515,22 @@ class _BottomNavigation extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       spacing: IddsSpacing.s2,
                       children: <Widget>[
-                        Icon(items[i].$2, size: 22, color: i == current ? c.primaryMain : c.contentTertiary),
+                        Icon(items[i].$2,
+                            size: 22,
+                            color: i == current
+                                ? c.primaryMain
+                                : c.contentTertiary),
                         Text(
                           items[i].$1,
                           style: theme.textStyle(
                             fontSize: IddsFontSize.xs2,
                             lineHeight: IddsLineHeight.xs,
-                            fontWeight: i == current ? IddsFontWeight.semibold : IddsFontWeight.normal,
-                            color: i == current ? c.primaryMain : c.contentTertiary,
+                            fontWeight: i == current
+                                ? IddsFontWeight.semibold
+                                : IddsFontWeight.normal,
+                            color: i == current
+                                ? c.primaryMain
+                                : c.contentTertiary,
                           ),
                         ),
                       ],

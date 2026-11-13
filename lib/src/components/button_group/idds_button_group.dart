@@ -11,7 +11,8 @@ import '../../tokens/idds_typography_tokens.g.dart';
 @immutable
 class IddsButtonGroupOption<T> {
   /// Membuat pilihan.
-  const IddsButtonGroupOption({required this.value, required this.label, this.enabled = true});
+  const IddsButtonGroupOption(
+      {required this.value, required this.label, this.enabled = true});
 
   /// Nilai pilihan.
   final T value;
@@ -85,7 +86,9 @@ class IddsButtonGroup<T> extends StatelessWidget {
                 _Segment<T>(
                   option: options[i],
                   selected: options[i].value == value,
-                  onTap: groupEnabled && options[i].enabled ? () => onChanged!(options[i].value) : null,
+                  onTap: groupEnabled && options[i].enabled
+                      ? () => onChanged!(options[i].value)
+                      : null,
                   height: height,
                   paddingH: paddingH,
                   fontSize: small ? IddsFontSize.xs : IddsFontSize.sm,
@@ -103,7 +106,8 @@ class IddsButtonGroup<T> extends StatelessWidget {
       explicitChildNodes: true,
       child: Opacity(
         opacity: groupEnabled ? 1 : 0.6,
-        child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: group),
+        child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal, child: group),
       ),
     );
   }
@@ -165,7 +169,9 @@ class _Segment<T> extends StatelessWidget {
               decoration: BoxDecoration(
                 color: background,
                 border: state.focused
-                    ? Border.all(color: dark ? c.primary.shade25 : c.primary.shade600, width: 2)
+                    ? Border.all(
+                        color: dark ? c.primary.shade25 : c.primary.shade600,
+                        width: 2)
                     : null,
               ),
               child: Center(

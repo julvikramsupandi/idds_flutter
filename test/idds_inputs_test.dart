@@ -5,11 +5,14 @@ import 'package:idds_flutter/idds_flutter.dart';
 
 import 'test_app.dart';
 
-Finder _icon(IddsIconData data) => find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == data);
+Finder _icon(IddsIconData data) =>
+    find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == data);
 
 void main() {
-  testWidgets('IddsTextArea tumbuh mengikuti baris', (WidgetTester tester) async {
-    await tester.pumpWidget(testApp(const SizedBox(width: 300, child: IddsTextArea(minLines: 3, maxLines: 6))));
+  testWidgets('IddsTextArea tumbuh mengikuti baris',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(testApp(const SizedBox(
+        width: 300, child: IddsTextArea(minLines: 3, maxLines: 6))));
     final double h3 = tester.getSize(find.byType(IddsTextArea)).height;
     await tester.enterText(find.byType(EditableText), 'a\nb\nc\nd\ne');
     await tester.pump();
@@ -18,18 +21,24 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('IddsPasswordField menyembunyikan dan menampilkan', (WidgetTester tester) async {
-    await tester.pumpWidget(testApp(const SizedBox(width: 300, child: IddsPasswordField())));
-    expect(tester.widget<EditableText>(find.byType(EditableText)).obscureText, isTrue);
+  testWidgets('IddsPasswordField menyembunyikan dan menampilkan',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+        testApp(const SizedBox(width: 300, child: IddsPasswordField())));
+    expect(tester.widget<EditableText>(find.byType(EditableText)).obscureText,
+        isTrue);
     await tester.tap(_icon(IddsIcons.eye));
     await tester.pump();
-    expect(tester.widget<EditableText>(find.byType(EditableText)).obscureText, isFalse);
+    expect(tester.widget<EditableText>(find.byType(EditableText)).obscureText,
+        isFalse);
     expect(_icon(IddsIcons.eyeOff), findsOneWidget);
   });
 
-  testWidgets('IddsSearchField memanggil onSearch setelah jeda', (WidgetTester tester) async {
+  testWidgets('IddsSearchField memanggil onSearch setelah jeda',
+      (WidgetTester tester) async {
     final List<String> searches = <String>[];
-    await tester.pumpWidget(testApp(SizedBox(width: 300, child: IddsSearchField(onSearch: searches.add))));
+    await tester.pumpWidget(testApp(
+        SizedBox(width: 300, child: IddsSearchField(onSearch: searches.add))));
     await tester.enterText(find.byType(EditableText), 'ktp');
     await tester.pump(const Duration(milliseconds: 100));
     expect(searches, isEmpty);
@@ -37,9 +46,12 @@ void main() {
     expect(searches, <String>['ktp']);
   });
 
-  testWidgets('tombol hapus: area tekan ≥ 40 dp dan mengosongkan pencarian (#17)', (WidgetTester tester) async {
+  testWidgets(
+      'tombol hapus: area tekan ≥ 40 dp dan mengosongkan pencarian (#17)',
+      (WidgetTester tester) async {
     final List<String> searches = <String>[];
-    await tester.pumpWidget(testApp(SizedBox(width: 300, child: IddsSearchField(onSearch: searches.add))));
+    await tester.pumpWidget(testApp(
+        SizedBox(width: 300, child: IddsSearchField(onSearch: searches.add))));
     await tester.enterText(find.byType(EditableText), 'ktp');
     await tester.pump(const Duration(milliseconds: 400));
 
@@ -53,13 +65,18 @@ void main() {
     await tester.tapAt(tester.getTopLeft(clear) + const Offset(2, 2));
     await tester.pump();
     expect(searches.last, '');
-    expect(tester.widget<EditableText>(find.byType(EditableText)).controller.text, isEmpty);
+    expect(
+        tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+        isEmpty);
   });
 
   group('IddsPhoneInput', () {
-    testWidgets('memformat angka dan mengirim nomor lengkap', (WidgetTester tester) async {
+    testWidgets('memformat angka dan mengirim nomor lengkap',
+        (WidgetTester tester) async {
       String? value;
-      await tester.pumpWidget(testApp(SizedBox(width: 360, child: IddsPhoneInput(onChanged: (String v) => value = v))));
+      await tester.pumpWidget(testApp(SizedBox(
+          width: 360,
+          child: IddsPhoneInput(onChanged: (String v) => value = v))));
       expect(find.text('+62'), findsOneWidget);
       await tester.enterText(find.byType(EditableText), '081234567890');
       await tester.pump();
@@ -71,7 +88,8 @@ void main() {
       String? value;
       await tester.pumpWidget(testApp(SizedBox(
         width: 360,
-        child: IddsPhoneInput(value: '+62812', onChanged: (String v) => value = v),
+        child:
+            IddsPhoneInput(value: '+62812', onChanged: (String v) => value = v),
       )));
       expect(find.text('812'), findsOneWidget);
       await tester.tap(find.text('+62'));
@@ -85,7 +103,8 @@ void main() {
     });
   });
 
-  testWidgets('IddsOtpInput mengisi kotak dan memanggil onCompleted', (WidgetTester tester) async {
+  testWidgets('IddsOtpInput mengisi kotak dan memanggil onCompleted',
+      (WidgetTester tester) async {
     String code = '';
     String? completed;
     await tester.pumpWidget(testApp(StatefulBuilder(
@@ -104,11 +123,13 @@ void main() {
   });
 
   group('IddsTimePicker', () {
-    testWidgets('memilih jam dan menit lalu Pilih', (WidgetTester tester) async {
+    testWidgets('memilih jam dan menit lalu Pilih',
+        (WidgetTester tester) async {
       IddsTime? time;
       await tester.pumpWidget(testApp(SizedBox(
         width: 280,
-        child: IddsTimePicker(value: null, minuteStep: 15, onChanged: (IddsTime? t) => time = t),
+        child: IddsTimePicker(
+            value: null, minuteStep: 15, onChanged: (IddsTime? t) => time = t),
       )));
       await tester.tap(find.text('Pilih waktu'));
       await tester.pumpAndSettle();
@@ -125,7 +146,10 @@ void main() {
       IddsTime? time = const IddsTime(13, 5);
       await tester.pumpWidget(testApp(SizedBox(
         width: 280,
-        child: IddsTimePicker(value: time, use12Hours: true, onChanged: (IddsTime? t) => time = t),
+        child: IddsTimePicker(
+            value: time,
+            use12Hours: true,
+            onChanged: (IddsTime? t) => time = t),
       )));
       expect(find.text('1:05 PM'), findsOneWidget);
       await tester.tap(_icon(IddsIcons.x));
@@ -140,7 +164,8 @@ void main() {
     });
   });
 
-  testWidgets('IddsOtpInput 6 kotak tetap satu baris di lebar 264', (WidgetTester tester) async {
+  testWidgets('IddsOtpInput 6 kotak tetap satu baris di lebar 264',
+      (WidgetTester tester) async {
     tester.view
       ..physicalSize = const Size(320, 640)
       ..devicePixelRatio = 1;
@@ -158,20 +183,27 @@ void main() {
 
   test('IddsOtpInput.codeFromText mengambil kode dari teks papan klip', () {
     expect(IddsOtpInput.codeFromText('123456'), '123456');
-    expect(IddsOtpInput.codeFromText('Kode Anda 123 456, berlaku 5 menit'), '123456');
+    expect(IddsOtpInput.codeFromText('Kode Anda 123 456, berlaku 5 menit'),
+        '123456');
     expect(IddsOtpInput.codeFromText('Berlaku 2 menit: 654321'), '654321');
     expect(IddsOtpInput.codeFromText('123-456'), '123456');
     expect(IddsOtpInput.codeFromText('kode 12a3'), '123');
     expect(IddsOtpInput.codeFromText('tanpa kode'), '');
-    expect(IddsOtpInput.codeFromText('Token: AB12CD ok', numeric: false), 'AB12CD');
+    expect(IddsOtpInput.codeFromText('Token: AB12CD ok', numeric: false),
+        'AB12CD');
   });
 
-  testWidgets('IddsOtpInput tekan lama → Tempel mengisi kotak', (WidgetTester tester) async {
-    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, (MethodCall call) async {
-      if (call.method == 'Clipboard.getData') return <String, dynamic>{'text': 'Kode Godigi Anda 482 913'};
+  testWidgets('IddsOtpInput tekan lama → Tempel mengisi kotak',
+      (WidgetTester tester) async {
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform, (MethodCall call) async {
+      if (call.method == 'Clipboard.getData') {
+        return <String, dynamic>{'text': 'Kode Godigi Anda 482 913'};
+      }
       return null;
     });
-    addTearDown(() => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, null));
+    addTearDown(() => tester.binding.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, null));
     String code = '';
     String? completed;
     await tester.pumpWidget(testApp(StatefulBuilder(
@@ -187,7 +219,11 @@ void main() {
     await tester.pumpAndSettle();
     // Menu setinggi isinya (48), bukan memanjang ke atas layar.
     expect(
-      tester.getSize(find.ancestor(of: find.text('Tempel kode'), matching: find.byType(IddsPopoverSurface))).height,
+      tester
+          .getSize(find.ancestor(
+              of: find.text('Tempel kode'),
+              matching: find.byType(IddsPopoverSurface)))
+          .height,
       lessThanOrEqualTo(56),
     );
     await tester.tap(find.text('Tempel kode'));

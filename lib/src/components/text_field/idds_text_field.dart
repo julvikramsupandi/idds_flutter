@@ -10,7 +10,12 @@ import 'package:flutter/material.dart'
         TextSelectionThemeData,
         VisualDensity;
 import 'package:flutter/services.dart'
-    show LengthLimitingTextInputFormatter, SystemMouseCursors, TextInputAction, TextInputFormatter, TextInputType;
+    show
+        LengthLimitingTextInputFormatter,
+        SystemMouseCursors,
+        TextInputAction,
+        TextInputFormatter,
+        TextInputType;
 import 'package:flutter/widgets.dart';
 
 import '../../foundation/idds_icon.dart';
@@ -104,7 +109,8 @@ class IddsTextField extends StatefulWidget {
     this.clearLabel = 'Hapus input',
     this.minLines = 1,
     this.maxLines = 1,
-  })  : assert(controller == null || initialValue == null, 'Pakai controller atau initialValue, bukan keduanya'),
+  })  : assert(controller == null || initialValue == null,
+            'Pakai controller atau initialValue, bukan keduanya'),
         assert(maxLines == null || maxLines >= minLines);
 
   /// Controller teks. Bila `null`, controller internal dibuat.
@@ -212,7 +218,9 @@ class _IddsTextFieldState extends State<IddsTextField> {
   @override
   void initState() {
     super.initState();
-    if (widget.controller == null) _ownController = TextEditingController(text: widget.initialValue);
+    if (widget.controller == null) {
+      _ownController = TextEditingController(text: widget.initialValue);
+    }
     if (widget.focusNode == null) _ownFocusNode = FocusNode();
     _controller.addListener(_rebuild);
     _focusNode.addListener(_rebuild);
@@ -224,7 +232,8 @@ class _IddsTextFieldState extends State<IddsTextField> {
     if (oldWidget.controller != widget.controller) {
       (oldWidget.controller ?? _ownController)?.removeListener(_rebuild);
       if (widget.controller == null) {
-        _ownController ??= TextEditingController(text: oldWidget.controller?.text);
+        _ownController ??=
+            TextEditingController(text: oldWidget.controller?.text);
       } else {
         _ownController?.dispose();
         _ownController = null;
@@ -278,7 +287,8 @@ class _IddsTextFieldState extends State<IddsTextField> {
     final bool enabled = widget.enabled;
     final bool focused = _focusNode.hasFocus;
     final _StatusColors sc = _StatusColors.of(widget.status, c);
-    final Color border = !enabled ? c.strokePrimary : (focused ? sc.focusBorder : sc.border);
+    final Color border =
+        !enabled ? c.strokePrimary : (focused ? sc.focusBorder : sc.border);
     final Color background = !enabled
         ? c.backgroundTertiary
         : _hovered
@@ -286,7 +296,10 @@ class _IddsTextFieldState extends State<IddsTextField> {
             : c.backgroundPrimary;
     final BorderRadius radius = BorderRadius.circular(IddsRadius.lg);
     final String text = _controller.text;
-    final bool showClear = widget.showClearButton && enabled && !widget.readOnly && text.isNotEmpty;
+    final bool showClear = widget.showClearButton &&
+        enabled &&
+        !widget.readOnly &&
+        text.isNotEmpty;
 
     // CSS text area: line-height 1.5.
     final TextStyle inputStyle = theme.textStyle(
@@ -308,19 +321,26 @@ class _IddsTextFieldState extends State<IddsTextField> {
         obscureText: widget.obscureText,
         minLines: widget._multiline ? widget.minLines : null,
         maxLines: widget.maxLines,
-        keyboardType: widget.keyboardType ?? (widget._multiline ? TextInputType.multiline : null),
+        keyboardType: widget.keyboardType ??
+            (widget._multiline ? TextInputType.multiline : null),
         textInputAction: widget.textInputAction,
         autofillHints: widget.autofillHints,
         onChanged: widget.onChanged,
         onSubmitted: widget.onSubmitted,
         inputFormatters: <TextInputFormatter>[
           ...?widget.inputFormatters,
-          if (widget.maxLength != null) LengthLimitingTextInputFormatter(widget.maxLength),
+          if (widget.maxLength != null)
+            LengthLimitingTextInputFormatter(widget.maxLength),
         ],
-        style: inputStyle.copyWith(color: enabled ? c.contentPrimary : c.contentPrimary.withValues(alpha: 0.6)),
+        style: inputStyle.copyWith(
+            color: enabled
+                ? c.contentPrimary
+                : c.contentPrimary.withValues(alpha: 0.6)),
         cursorColor: c.contentPrimary,
         cursorHeight: widget._multiline ? null : lineHeight,
-        textAlignVertical: widget._multiline ? TextAlignVertical.top : TextAlignVertical.center,
+        textAlignVertical: widget._multiline
+            ? TextAlignVertical.top
+            : TextAlignVertical.center,
         decoration: InputDecoration.collapsed(
           hintText: widget.placeholder,
           hintStyle: inputStyle.copyWith(color: c.contentTertiary),
@@ -346,45 +366,54 @@ class _IddsTextFieldState extends State<IddsTextField> {
         excludeFromSemantics: true,
         onTap: enabled && !_focusNode.hasFocus ? _focusNode.requestFocus : null,
         child: IddsInsetRing(
-        visible: enabled && focused,
-        borderRadius: radius,
-        inset: 1,
-        // CSS: inset 0 0 0 2px background-primary, inset 0 0 0 3px <warna status>.
-        rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, sc.ring)],
-        child: AnimatedContainer(
-          duration: IddsDuration.base,
-          curve: IddsCurves.standard,
-          // Text area: tinggi mengikuti jumlah baris, padding 8px/12px.
-          height: widget._multiline ? null : height,
-          padding: widget._multiline
-              ? const EdgeInsets.symmetric(horizontal: IddsSpacing.s12 - 1, vertical: IddsSpacing.s8 - 1)
-              : const EdgeInsets.symmetric(horizontal: IddsSpacing.s12 - 1),
-          decoration: BoxDecoration(
-            color: background,
-            borderRadius: radius,
-            border: Border.all(color: border),
-          ),
-          child: IconTheme(
-            data: IconThemeData(size: 20, color: c.contentSecondary),
-            child: Row(
-              spacing: IddsSpacing.s8,
-              crossAxisAlignment: widget._multiline ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-              children: <Widget>[
-                if (widget.prefixIcon != null) widget.prefixIcon!,
-                Expanded(child: field),
-                if (showClear) _ClearButton(onPressed: _clear, label: widget.clearLabel, height: height - 2),
-                if (widget.suffixIcon != null) widget.suffixIcon!,
-              ],
+          visible: enabled && focused,
+          borderRadius: radius,
+          inset: 1,
+          // CSS: inset 0 0 0 2px background-primary, inset 0 0 0 3px <warna status>.
+          rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, sc.ring)],
+          child: AnimatedContainer(
+            duration: IddsDuration.base,
+            curve: IddsCurves.standard,
+            // Text area: tinggi mengikuti jumlah baris, padding 8px/12px.
+            height: widget._multiline ? null : height,
+            padding: widget._multiline
+                ? const EdgeInsets.symmetric(
+                    horizontal: IddsSpacing.s12 - 1,
+                    vertical: IddsSpacing.s8 - 1)
+                : const EdgeInsets.symmetric(horizontal: IddsSpacing.s12 - 1),
+            decoration: BoxDecoration(
+              color: background,
+              borderRadius: radius,
+              border: Border.all(color: border),
+            ),
+            child: IconTheme(
+              data: IconThemeData(size: 20, color: c.contentSecondary),
+              child: Row(
+                spacing: IddsSpacing.s8,
+                crossAxisAlignment: widget._multiline
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.center,
+                children: <Widget>[
+                  if (widget.prefixIcon != null) widget.prefixIcon!,
+                  Expanded(child: field),
+                  if (showClear)
+                    _ClearButton(
+                        onPressed: _clear,
+                        label: widget.clearLabel,
+                        height: height - 2),
+                  if (widget.suffixIcon != null) widget.suffixIcon!,
+                ],
+              ),
             ),
           ),
         ),
-      ),
       ),
     );
 
     final String? message = widget.statusMessage ?? widget.helperText;
     final bool showCount = widget.showCharCount && widget.maxLength != null;
-    final TextStyle smallStyle = theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs);
+    final TextStyle smallStyle = theme.textStyle(
+        fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs);
     final Widget? bottom = message == null && !showCount
         ? null
         : Padding(
@@ -397,8 +426,11 @@ class _IddsTextFieldState extends State<IddsTextField> {
               children: <Widget>[
                 if (message != null)
                   small
-                      ? Text(message, style: smallStyle.copyWith(color: sc.message))
-                      : Expanded(child: Text(message, style: smallStyle.copyWith(color: sc.message))),
+                      ? Text(message,
+                          style: smallStyle.copyWith(color: sc.message))
+                      : Expanded(
+                          child: Text(message,
+                              style: smallStyle.copyWith(color: sc.message))),
                 if (message == null && !small) const Spacer(),
                 if (showCount)
                   Text(
@@ -443,7 +475,8 @@ class _IddsTextFieldState extends State<IddsTextField> {
 }
 
 class _ClearButton extends StatelessWidget {
-  const _ClearButton({required this.onPressed, required this.label, required this.height});
+  const _ClearButton(
+      {required this.onPressed, required this.label, required this.height});
 
   final VoidCallback onPressed;
   final String label;
@@ -494,16 +527,16 @@ class _StatusColors {
 
   factory _StatusColors.of(IddsTextFieldStatus status, IddsColors c) {
     return switch (status) {
-      IddsTextFieldStatus.neutral =>
-        _StatusColors(c.strokePrimary, c.strokeTertiary, c.contentPrimary, c.contentSecondary),
-      IddsTextFieldStatus.error =>
-        _StatusColors(c.negative.shade500, c.negative.shade600, c.negative.shade500, c.negative.shade500),
+      IddsTextFieldStatus.neutral => _StatusColors(c.strokePrimary,
+          c.strokeTertiary, c.contentPrimary, c.contentSecondary),
+      IddsTextFieldStatus.error => _StatusColors(c.negative.shade500,
+          c.negative.shade600, c.negative.shade500, c.negative.shade500),
       // Pesan memakai warning-600: CSS memakai warning-500 (kontras ±1,8:1
       // di atas putih).
-      IddsTextFieldStatus.warning =>
-        _StatusColors(c.warning.shade500, c.warning.shade600, c.warning.shade500, c.warning.shade600),
-      IddsTextFieldStatus.success =>
-        _StatusColors(c.positive.shade600, c.positive.shade600, c.positive.shade500, c.positive.shade600),
+      IddsTextFieldStatus.warning => _StatusColors(c.warning.shade500,
+          c.warning.shade600, c.warning.shade500, c.warning.shade600),
+      IddsTextFieldStatus.success => _StatusColors(c.positive.shade600,
+          c.positive.shade600, c.positive.shade500, c.positive.shade600),
     };
   }
 

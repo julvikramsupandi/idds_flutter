@@ -108,7 +108,9 @@ class IddsStepper extends StatelessWidget {
           step: steps[i],
           status: _status(i),
           horizontal: horizontal,
-          onTap: onStepTap != null && steps[i].enabled ? () => onStepTap!(i) : null,
+          onTap: onStepTap != null && steps[i].enabled
+              ? () => onStepTap!(i)
+              : null,
         ),
         if (i < steps.length - 1) separator(i),
       ],
@@ -122,7 +124,9 @@ class IddsStepper extends StatelessWidget {
               constraints: const BoxConstraints(minHeight: 80),
               padding: const EdgeInsets.symmetric(horizontal: 20),
               alignment: Alignment.center,
-              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: children),
+              child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: children),
             )
           : Column(
               mainAxisSize: MainAxisSize.min,
@@ -153,12 +157,29 @@ class _StepItem extends StatelessWidget {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
     final (Color border, Color foreground, Color background) = switch (status) {
-      _StepStatus.active => (c.guide.shade500, c.guide.shade500, c.guide.shade50),
-      _StepStatus.completed => (c.positive.shade600, c.positive.shade600, c.positive.shade50),
-      _StepStatus.error => (c.negative.shade500, c.negative.shade500, c.negative.shade50),
-      _StepStatus.upcoming => (c.strokePrimary, c.contentTertiary, c.backgroundSecondary),
+      _StepStatus.active => (
+          c.guide.shade500,
+          c.guide.shade500,
+          c.guide.shade50
+        ),
+      _StepStatus.completed => (
+          c.positive.shade600,
+          c.positive.shade600,
+          c.positive.shade50
+        ),
+      _StepStatus.error => (
+          c.negative.shade500,
+          c.negative.shade500,
+          c.negative.shade50
+        ),
+      _StepStatus.upcoming => (
+          c.strokePrimary,
+          c.contentTertiary,
+          c.backgroundSecondary
+        ),
     };
-    final Color labelColor = status == _StepStatus.upcoming ? c.contentTertiary : c.contentPrimary;
+    final Color labelColor =
+        status == _StepStatus.upcoming ? c.contentTertiary : c.contentPrimary;
 
     Widget content(bool hovered) {
       final Widget box = AnimatedContainer(
@@ -172,7 +193,8 @@ class _StepItem extends StatelessWidget {
           border: Border.all(color: hovered ? c.guide.shade500 : border),
         ),
         child: status == _StepStatus.completed
-            ? IddsIcon(IddsIcons.check, size: 16, strokeWidth: 2.5, color: foreground)
+            ? IddsIcon(IddsIcons.check,
+                size: 16, strokeWidth: 2.5, color: foreground)
             : IconTheme(
                 data: IconThemeData(size: 16, color: foreground),
                 child: DefaultTextStyle(
@@ -190,7 +212,10 @@ class _StepItem extends StatelessWidget {
         step.label,
         maxLines: 1,
         softWrap: false,
-        style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: labelColor),
+        style: theme.textStyle(
+            fontSize: IddsFontSize.xs,
+            lineHeight: IddsLineHeight.xs,
+            color: labelColor),
       );
 
       return Opacity(
@@ -218,7 +243,8 @@ class _StepItem extends StatelessWidget {
                   children: <Widget>[
                     box,
                     const SizedBox(width: IddsSpacing.s12),
-                    Padding(padding: const EdgeInsets.only(top: 4), child: label),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 4), child: label),
                   ],
                 ),
               ),
@@ -241,7 +267,8 @@ class _StepItem extends StatelessWidget {
           ? content(false)
           : IddsInteractive(
               onTap: onTap,
-              builder: (BuildContext context, IddsInteractionState state) => content(state.hovered),
+              builder: (BuildContext context, IddsInteractionState state) =>
+                  content(state.hovered),
             ),
     );
   }

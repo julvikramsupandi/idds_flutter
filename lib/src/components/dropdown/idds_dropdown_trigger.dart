@@ -41,7 +41,8 @@ class IddsDropdownMetrics {
     final bool medium = iddsIsCompact(context, IddsBreakpoint.md);
     return IddsDropdownMetrics._(
       height: size.height,
-      horizontalPadding: size == IddsDropdownSize.sm ? IddsSpacing.s12 : IddsSpacing.s16,
+      horizontalPadding:
+          size == IddsDropdownSize.sm ? IddsSpacing.s12 : IddsSpacing.s16,
       fontSize: medium ? IddsFontSize.xs : IddsFontSize.sm,
       lineHeight: medium ? IddsLineHeight.xs : IddsLineHeight.sm,
       iconSize: size == IddsDropdownSize.sm ? 16 : 20,
@@ -145,14 +146,18 @@ class IddsDropdownTriggerBox extends StatelessWidget {
           duration: IddsDuration.base,
           curve: IddsCurves.standard,
           height: metrics.height,
-          padding: EdgeInsets.symmetric(horizontal: metrics.horizontalPadding - 1),
+          padding:
+              EdgeInsets.symmetric(horizontal: metrics.horizontalPadding - 1),
           decoration: BoxDecoration(
-            color: state.hovered && !open ? c.backgroundSecondary : c.backgroundPrimary,
+            color: state.hovered && !open
+                ? c.backgroundSecondary
+                : c.backgroundPrimary,
             borderRadius: radius,
             border: Border.all(color: border),
           ),
           child: IconTheme(
-            data: IconThemeData(size: metrics.iconSize, color: c.contentSecondary),
+            data: IconThemeData(
+                size: metrics.iconSize, color: c.contentSecondary),
             child: Row(
               spacing: IddsSpacing.s8,
               children: <Widget>[
@@ -174,7 +179,8 @@ class IddsDropdownTriggerBox extends StatelessWidget {
                   turns: open ? 0.5 : 0,
                   duration: IddsDuration.base,
                   curve: IddsCurves.standard,
-                  child: IddsIcon(IddsIcons.chevronDown, size: metrics.iconSize, color: c.contentSecondary),
+                  child: IddsIcon(IddsIcons.chevronDown,
+                      size: metrics.iconSize, color: c.contentSecondary),
                 ),
               ],
             ),
@@ -188,7 +194,11 @@ class IddsDropdownTriggerBox extends StatelessWidget {
 /// Label di atas kolom, dengan tanda wajib (*). Internal.
 class IddsFieldLabel extends StatelessWidget {
   /// Membuat label.
-  const IddsFieldLabel({super.key, required this.label, required this.required, required this.small});
+  const IddsFieldLabel(
+      {super.key,
+      required this.label,
+      required this.required,
+      required this.small});
 
   /// Isi label.
   final Widget label;
@@ -216,7 +226,8 @@ class IddsFieldLabel extends StatelessWidget {
             Flexible(child: label),
             if (required) ...<Widget>[
               const SizedBox(width: IddsSpacing.s4),
-              Text('*', style: TextStyle(color: theme.colors.negative.shade500)),
+              Text('*',
+                  style: TextStyle(color: theme.colors.negative.shade500)),
             ],
           ],
         ),

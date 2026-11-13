@@ -15,18 +15,19 @@ const List<IddsSelectOption<String>> _provinces = <IddsSelectOption<String>>[
   IddsSelectOption<String>(value: 'diy', label: 'DI Yogyakarta'),
   IddsSelectOption<String>(value: 'jatim', label: 'Jawa Timur'),
   IddsSelectOption<String>(value: 'bali', label: 'Bali'),
-  IddsSelectOption<String>(value: 'ntt', label: 'Nusa Tenggara Timur', enabled: false),
+  IddsSelectOption<String>(
+      value: 'ntt', label: 'Nusa Tenggara Timur', enabled: false),
   IddsSelectOption<String>(value: 'papua', label: 'Papua'),
 ];
 
-class DropdownSection extends StatefulWidget {
-  const DropdownSection({super.key});
+class SelectSection extends StatefulWidget {
+  const SelectSection({super.key});
 
   @override
-  State<DropdownSection> createState() => _DropdownSectionState();
+  State<SelectSection> createState() => _SelectSectionState();
 }
 
-class _DropdownSectionState extends State<DropdownSection> {
+class _SelectSectionState extends State<SelectSection> {
   String? _province;
   String? _status = 'aktif';
   Set<String> _services = <String>{'ktp'};
@@ -34,14 +35,15 @@ class _DropdownSectionState extends State<DropdownSection> {
 
   @override
   Widget build(BuildContext context) {
-    final IddsColors c = IddsTheme.of(context).colors;
     return GallerySection(
-      title: 'Dropdown',
-      subtitle: 'Select satu/banyak pilihan dengan pencarian, menu aksi, dan dropdown dasar. '
-          'Contoh memakai tiga ukuran: sm 40px, md 44px (bawaan), lg 48px; di layar < 768px masing-masing 4px lebih pendek. '
+      title: 'Select',
+      subtitle:
+          'Satu pilihan dan banyak pilihan (Multi Select), dengan pencarian. '
+          'Tiga ukuran: sm 40px, md 44px (bawaan), lg 48px; di layar < 768px masing-masing 4px lebih pendek. '
           'Gunakan panah atas/bawah, Enter, dan Esc untuk navigasi keyboard.',
-      usage: 'IddsSelect untuk satu pilihan dan IddsMultiSelect untuk banyak pilihan; aktifkan searchable untuk daftar panjang (atau onSearch untuk pencarian di server). IddsActionMenu untuk daftar aksi, IddsDropdown untuk panel berisi bebas.',
-      code: _dropdownCode,
+      usage:
+          'IddsSelect untuk satu pilihan dan IddsMultiSelect untuk banyak pilihan; aktifkan searchable untuk daftar panjang (atau onSearch untuk pencarian di server). errorText menampilkan pesan validasi.',
+      code: _selectCode,
       children: <Widget>[
         Wrap(
           spacing: IddsSpacing.s24,
@@ -55,7 +57,9 @@ class _DropdownSectionState extends State<DropdownSection> {
                 searchable: true,
                 options: _provinces,
                 value: _province,
-                errorText: _submitted && _province == null ? 'Provinsi wajib dipilih' : null,
+                errorText: _submitted && _province == null
+                    ? 'Provinsi wajib dipilih'
+                    : null,
                 helperText: 'Ketik untuk mencari',
                 onChanged: (String? v) => setState(() => _province = v),
               ),
@@ -83,9 +87,12 @@ class _DropdownSectionState extends State<DropdownSection> {
                 showPreview: true,
                 searchable: true,
                 options: const <IddsSelectOption<String>>[
-                  IddsSelectOption<String>(value: 'ktp', label: 'KTP Elektronik'),
-                  IddsSelectOption<String>(value: 'kk', label: 'Kartu Keluarga'),
-                  IddsSelectOption<String>(value: 'akta', label: 'Akta Kelahiran'),
+                  IddsSelectOption<String>(
+                      value: 'ktp', label: 'KTP Elektronik'),
+                  IddsSelectOption<String>(
+                      value: 'kk', label: 'Kartu Keluarga'),
+                  IddsSelectOption<String>(
+                      value: 'akta', label: 'Akta Kelahiran'),
                   IddsSelectOption<String>(value: 'paspor', label: 'Paspor'),
                   IddsSelectOption<String>(value: 'sim', label: 'SIM'),
                   IddsSelectOption<String>(value: 'npwp', label: 'NPWP'),
@@ -112,9 +119,24 @@ class _DropdownSectionState extends State<DropdownSection> {
           onPressed: () => setState(() => _submitted = !_submitted),
           child: Text(_submitted ? 'Sembunyikan error' : 'Tampilkan error'),
         ),
-        const SizedBox(height: IddsSpacing.s24),
-        const GalleryCaption('Menu aksi'),
-        const SizedBox(height: IddsSpacing.s8),
+      ],
+    );
+  }
+}
+
+class ActionMenuSection extends StatelessWidget {
+  const ActionMenuSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GallerySection(
+      title: 'Action Menu',
+      subtitle: 'Daftar aksi dengan judul kelompok, pemisah, dan aksi berwarna '
+          '(berhasil, peringatan, bahaya).',
+      usage:
+          'IddsActionMenu menampilkan tombol pemicu dan daftar IddsActionMenuItem. Label pemicu bawaan "Aksi"; isi triggerBuilder untuk pemicu sendiri (mis. tombol ikon). Item dengan onTap null tampil nonaktif.',
+      code: _actionMenuCode,
+      children: <Widget>[
         Wrap(
           spacing: IddsSpacing.s16,
           runSpacing: IddsSpacing.s16,
@@ -122,9 +144,14 @@ class _DropdownSectionState extends State<DropdownSection> {
             IddsActionMenu(
               items: <IddsActionMenuEntry>[
                 const IddsActionMenuHeader('Dokumen'),
-                IddsActionMenuItem(label: 'Lihat detail', onTap: () => showGallerySnack(context, 'Lihat detail')),
-                IddsActionMenuItem(label: 'Unduh', onTap: () => showGallerySnack(context, 'Unduh')),
-                const IddsActionMenuItem(label: 'Bagikan (nonaktif)', onTap: null),
+                IddsActionMenuItem(
+                    label: 'Lihat detail',
+                    onTap: () => showGallerySnack(context, 'Lihat detail')),
+                IddsActionMenuItem(
+                    label: 'Unduh',
+                    onTap: () => showGallerySnack(context, 'Unduh')),
+                const IddsActionMenuItem(
+                    label: 'Bagikan (nonaktif)', onTap: null),
                 const IddsActionMenuDivider(),
                 IddsActionMenuItem(
                   label: 'Setujui',
@@ -148,20 +175,46 @@ class _DropdownSectionState extends State<DropdownSection> {
               placement: IddsPopoverPlacement.bottomEnd,
               width: IddsActionMenuWidth.lg,
               items: <IddsActionMenuEntry>[
-                IddsActionMenuItem(label: 'PDF', onTap: () => showGallerySnack(context, 'PDF')),
-                IddsActionMenuItem(label: 'Excel (.xlsx)', onTap: () => showGallerySnack(context, 'Excel')),
-                IddsActionMenuItem(label: 'CSV', onTap: () => showGallerySnack(context, 'CSV')),
+                IddsActionMenuItem(
+                    label: 'PDF',
+                    onTap: () => showGallerySnack(context, 'PDF')),
+                IddsActionMenuItem(
+                    label: 'Excel (.xlsx)',
+                    onTap: () => showGallerySnack(context, 'Excel')),
+                IddsActionMenuItem(
+                    label: 'CSV',
+                    onTap: () => showGallerySnack(context, 'CSV')),
               ],
             ),
-            const IddsActionMenu(label: 'Nonaktif', enabled: false, items: <IddsActionMenuEntry>[]),
+            const IddsActionMenu(
+                label: 'Nonaktif',
+                enabled: false,
+                items: <IddsActionMenuEntry>[]),
           ],
         ),
-        const SizedBox(height: IddsSpacing.s24),
-        const GalleryCaption('Dropdown dasar (konten bebas)'),
-        const SizedBox(height: IddsSpacing.s8),
+      ],
+    );
+  }
+}
+
+class DropdownSection extends StatelessWidget {
+  const DropdownSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final IddsColors c = IddsTheme.of(context).colors;
+    return GallerySection(
+      title: 'Dropdown',
+      subtitle: 'Panel melayang berisi konten bebas di bawah tombol pemicu.',
+      usage:
+          'IddsDropdown untuk panel berisi bebas: triggerBuilder membangun pemicu (dengan fungsi buka/tutup) dan contentBuilder membangun isi (dengan fungsi close). Untuk daftar pilihan pakai Select, untuk daftar aksi pakai Action Menu.',
+      code: _dropdownCode,
+      children: <Widget>[
         IddsDropdown(
           width: 260,
-          triggerBuilder: (BuildContext context, bool open, VoidCallback? toggle) => IddsButton(
+          triggerBuilder:
+              (BuildContext context, bool open, VoidCallback? toggle) =>
+                  IddsButton(
             hierarchy: IddsButtonHierarchy.secondary,
             onPressed: toggle,
             child: Text(open ? 'Tutup info' : 'Info layanan'),
@@ -181,7 +234,10 @@ class _DropdownSectionState extends State<DropdownSection> {
                   ),
                 ),
                 const SizedBox(height: IddsSpacing.s12),
-                IddsButton(size: IddsButtonSize.sm, onPressed: close, child: const Text('Mengerti')),
+                IddsButton(
+                    size: IddsButtonSize.sm,
+                    onPressed: close,
+                    child: const Text('Mengerti')),
               ],
             ),
           ),
@@ -191,7 +247,7 @@ class _DropdownSectionState extends State<DropdownSection> {
   }
 }
 
-const String _dropdownCode = r'''
+const String _selectCode = r'''
 const List<IddsSelectOption<String>> provinces = [
   IddsSelectOption(value: 'gorontalo', label: 'Gorontalo'),
   IddsSelectOption(value: 'sulut', label: 'Sulawesi Utara'),
@@ -214,7 +270,9 @@ IddsMultiSelect<String>(
   values: _destinations, // Set<String>
   onChanged: (Set<String> v) => setState(() => _destinations = v),
 )
+''';
 
+const String _actionMenuCode = r'''
 IddsActionMenu(
   label: 'Ekspor',
   items: [
@@ -223,5 +281,17 @@ IddsActionMenu(
     const IddsActionMenuDivider(),
     IddsActionMenuItem(label: 'Hapus', type: IddsActionMenuItemType.danger, onTap: deleteItem),
   ],
+)
+''';
+
+const String _dropdownCode = r'''
+IddsDropdown(
+  width: 260,
+  triggerBuilder: (BuildContext context, bool open, VoidCallback? toggle) =>
+      IddsButton(onPressed: toggle, child: Text(open ? 'Tutup' : 'Info layanan')),
+  contentBuilder: (BuildContext context, VoidCallback close) => Padding(
+    padding: const EdgeInsets.all(16),
+    child: IddsButton(onPressed: close, child: const Text('Mengerti')),
+  ),
 )
 ''';

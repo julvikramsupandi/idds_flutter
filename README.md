@@ -318,6 +318,16 @@ showIddsDrawer(
   builder: (context) => IddsDrawer(title: const Text('Filter'), child: FilterForm()),
 );
 
+// Menu navigasi aplikasi mobile: tetap dari samping di layar HP
+// (bawaan IDDS memindahkan drawer kiri/kanan ke bawah di layar ≤ 640px).
+showIddsDrawer(
+  context: context,
+  position: IddsDrawerPosition.left,
+  width: 300,
+  bottomOnSmallScreens: false,
+  builder: (context) => IddsDrawer(title: const Text('Menu'), child: AppMenu()),
+);
+
 showIddsToast(
   context: context, // boleh context Navigator root (navigatorKey)
   title: Text('Data berhasil disimpan'),
@@ -510,6 +520,7 @@ diubah karena di CSS aslinya tidak terbaca atau hilang di dark mode:
 | Chip, dark mode | Teks `content-primary` di atas latar terang, latar outline `neutral-25` | Teks gelap tetap, latar `background-primary` |
 | Chip filled terpilih | Teks putih di atas `primary-300` (tidak terbaca di brand terang) | Putih/hitam sesuai kontras |
 | Button Group & Tab Menu, dark mode | Teks `primary-25`/warna utama di atas latar yang sama terang | `onPrimary` / warna utama mode terang |
+| Tab Menu mendatar yang tidak muat | Meluap ke luar wadah (hanya `full-width` yang bisa digeser) | Bisa digeser ke samping, misalnya 4+ tab di layar HP |
 | Pagination & Breadcrumb, fokus | Latar `neutral-100` (terang di dark mode) | `background-tertiary` |
 | Chip Kustomisasi | Label tetap "Kustomisasi"; lebar isian 25% wadah | Label menampilkan nilai ("Kustomisasi: 45 hari", bisa dimatikan); lebar isian minimal 200px |
 | Date Picker satu tanggal | Panel tetap terbuka setelah memilih | Panel tertutup setelah memilih |
@@ -520,6 +531,7 @@ diubah karena di CSS aslinya tidak terbaca atau hilang di dark mode:
 | File Upload, pesan error & "Lihat Selengkapnya", dark mode | Latar `error-25` terang, teks `primary-500` | Latar biasa, warna versi gelap |
 | Modal, lebar bawaan | Mengikuti isi, minimal 480px | Tetap 480px (`IddsModalSize.sm`), dibatasi lebar layar |
 | Drawer kiri/kanan, sudut | Sudut membulat di sisi yang menempel tepi layar | Sudut membulat di sisi yang menghadap halaman |
+| Drawer kiri/kanan di layar ≤ 640px | Selalu menjadi panel dari bawah | Sama secara bawaan; `bottomOnSmallScreens: false` membuatnya tetap dari samping (navigation drawer aplikasi mobile). Jarak aman (status bar, notch) di sisi yang menempel tepi layar |
 | Toast gaya outline | Ikon selalu putih (tidak terlihat di latar terang) | Ikon mengikuti warna teks |
 | Alert, langkah lanjutan | Tidak ada slot aksi | `action` di bawah pesan (alert galat di mobile hampir selalu butuh "Coba lagi") |
 | Alert & Toast, tombol tutup | Area tekan seukuran ikon (14px/20px) | Area tekan 48dp tanpa mengubah tampilan (target sentuh WCAG 2.5.8) |
@@ -564,6 +576,6 @@ cd example && flutter create . && flutter run
 ## Lisensi
 
 MIT. Token diturunkan dari `@idds/styles` (MIT) milik INA Digital dan ikon
-dari Tabler Icons (MIT); lihat
-[LICENSE](LICENSE). Nama dan logo INA Digital serta lembaga pemerintah yang
+dari Tabler Icons (MIT); lihat [LICENSE](LICENSE) dan
+[NOTICE](NOTICE). Nama dan logo INA Digital serta lembaga pemerintah yang
 disebut di tema brand adalah milik pemiliknya masing-masing.

@@ -72,17 +72,22 @@ Future<T?> showIddsModal<T>({
       barrierLabel: barrierLabel,
       transitionDuration: IddsDuration.slow,
       reverseTransitionDuration: IddsDuration.slow,
-      pageBuilder: (BuildContext context) => wrapTheme(Builder(builder: builder)),
-      transitionBuilder: (BuildContext context, Animation<double> animation, Widget child) {
+      pageBuilder: (BuildContext context) =>
+          wrapTheme(Builder(builder: builder)),
+      transitionBuilder:
+          (BuildContext context, Animation<double> animation, Widget child) {
         // CSS: dari scale(.9) translateY(-20px) dan transparan.
-        final Animation<double> curved = CurvedAnimation(parent: animation, curve: Curves.ease);
+        final Animation<double> curved =
+            CurvedAnimation(parent: animation, curve: Curves.ease);
         return FadeTransition(
           opacity: curved,
           child: AnimatedBuilder(
             animation: curved,
-            builder: (BuildContext context, Widget? child) => Transform.translate(
+            builder: (BuildContext context, Widget? child) =>
+                Transform.translate(
               offset: Offset(0, -20 * (1 - curved.value)),
-              child: Transform.scale(scale: 0.9 + 0.1 * curved.value, child: child),
+              child: Transform.scale(
+                  scale: 0.9 + 0.1 * curved.value, child: child),
             ),
             child: child,
           ),
@@ -158,13 +163,15 @@ class IddsModal extends StatelessWidget {
     final bool full = size == IddsModalSize.full;
     final double maxWidth = screen.width - 2 * margin;
     final double width = full ? maxWidth : math.min(size.width, maxWidth);
-    final double maxHeight = full ? screen.height - 2 * margin : screen.height * 0.9;
+    final double maxHeight =
+        full ? screen.height - 2 * margin : screen.height * 0.9;
     final BorderSide divider = BorderSide(color: c.strokePrimary);
 
     final Widget dialog = Container(
       width: width,
       height: full ? maxHeight : null,
-      constraints: BoxConstraints(maxHeight: math.max(0, maxHeight - viewInsets.bottom)),
+      constraints:
+          BoxConstraints(maxHeight: math.max(0, maxHeight - viewInsets.bottom)),
       decoration: BoxDecoration(
         color: c.backgroundPrimary,
         borderRadius: BorderRadius.circular(IddsRadius.xl),
@@ -179,7 +186,8 @@ class IddsModal extends StatelessWidget {
           children: <Widget>[
             if (showHeader && (title != null || showCloseButton))
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s24, vertical: IddsSpacing.s16),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: IddsSpacing.s24, vertical: IddsSpacing.s16),
                 decoration: BoxDecoration(border: Border(bottom: divider)),
                 child: Row(
                   spacing: IddsSpacing.s16,
@@ -198,14 +206,18 @@ class IddsModal extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (showCloseButton) IddsCloseButton(label: closeLabel, size: 24, onTap: close),
+                    if (showCloseButton)
+                      IddsCloseButton(
+                          label: closeLabel, size: 24, onTap: close),
                   ],
                 ),
               ),
             Flexible(
               fit: full ? FlexFit.tight : FlexFit.loose,
               child: SingleChildScrollView(
-                padding: bodyPadding ?? const EdgeInsets.symmetric(horizontal: IddsSpacing.s24, vertical: IddsSpacing.s16),
+                padding: bodyPadding ??
+                    const EdgeInsets.symmetric(
+                        horizontal: IddsSpacing.s24, vertical: IddsSpacing.s16),
                 child: DefaultTextStyle(
                   style: theme.textStyle(
                     fontSize: IddsFontSize.sm,
@@ -218,13 +230,15 @@ class IddsModal extends StatelessWidget {
             ),
             if (actions != null && actions!.isNotEmpty)
               Container(
-                padding: const EdgeInsets.fromLTRB(IddsSpacing.s24, IddsSpacing.s16, IddsSpacing.s24, IddsSpacing.s24),
+                padding: const EdgeInsets.fromLTRB(IddsSpacing.s24,
+                    IddsSpacing.s16, IddsSpacing.s24, IddsSpacing.s24),
                 decoration: BoxDecoration(border: Border(top: divider)),
                 child: Wrap(
                   alignment: switch (actionsAlignment) {
                     MainAxisAlignment.start => WrapAlignment.start,
                     MainAxisAlignment.center => WrapAlignment.center,
-                    MainAxisAlignment.spaceBetween => WrapAlignment.spaceBetween,
+                    MainAxisAlignment.spaceBetween =>
+                      WrapAlignment.spaceBetween,
                     MainAxisAlignment.spaceAround => WrapAlignment.spaceAround,
                     MainAxisAlignment.spaceEvenly => WrapAlignment.spaceEvenly,
                     MainAxisAlignment.end => WrapAlignment.end,
@@ -243,8 +257,11 @@ class IddsModal extends StatelessWidget {
       onDismiss: close,
       child: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(margin).add(EdgeInsets.only(bottom: viewInsets.bottom)),
-          child: Center(child: Semantics(namesRoute: true, explicitChildNodes: true, child: dialog)),
+          padding: EdgeInsets.all(margin)
+              .add(EdgeInsets.only(bottom: viewInsets.bottom)),
+          child: Center(
+              child: Semantics(
+                  namesRoute: true, explicitChildNodes: true, child: dialog)),
         ),
       ),
     );
@@ -255,7 +272,8 @@ class IddsModal extends StatelessWidget {
 /// agar Esc dan Tab bekerja tanpa harus mengklik lebih dulu. Internal.
 class IddsDismissOnEscape extends StatelessWidget {
   /// Membuat pembungkus.
-  const IddsDismissOnEscape({super.key, required this.onDismiss, required this.child});
+  const IddsDismissOnEscape(
+      {super.key, required this.onDismiss, required this.child});
 
   /// Dipanggil saat Esc ditekan.
   final VoidCallback onDismiss;
@@ -277,7 +295,12 @@ class IddsDismissOnEscape extends StatelessWidget {
 /// Tombol X untuk menutup modal/drawer. Internal.
 class IddsCloseButton extends StatelessWidget {
   /// Membuat tombol tutup.
-  const IddsCloseButton({super.key, required this.label, required this.onTap, this.size = 20, this.boxSize});
+  const IddsCloseButton(
+      {super.key,
+      required this.label,
+      required this.onTap,
+      this.size = 20,
+      this.boxSize});
 
   /// Label pembaca layar.
   final String label;
@@ -302,7 +325,8 @@ class IddsCloseButton extends StatelessWidget {
       excludeSemantics: true,
       child: IddsInteractive(
         onTap: onTap,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: BorderRadius.circular(IddsRadius.base),
           rings: <(double, Color)>[(2.0, c.primary.shade500)],
@@ -312,7 +336,9 @@ class IddsCloseButton extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               // CSS drawer: hover neutral-100; dark mode memakai latar tersier.
-              color: boxSize != null && (state.hovered || state.focused) ? c.backgroundTertiary : null,
+              color: boxSize != null && (state.hovered || state.focused)
+                  ? c.backgroundTertiary
+                  : null,
               borderRadius: BorderRadius.circular(IddsRadius.base),
             ),
             child: IddsIcon(

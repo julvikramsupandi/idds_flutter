@@ -19,17 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
--------------------------------------------------------------------------------
-
-Third-party notice
-
-The design tokens in lib/src/tokens/ are generated from the npm package
-@idds/styles (https://www.npmjs.com/package/@idds/styles) by INA Digital,
-which is published under the MIT License. Component specifications follow
-the same package and @idds/react. The built-in line icons in lib/src/foundation/idds_icon.dart are path data
-from Tabler Icons (https://tabler.io/icons), MIT License, Copyright (c)
-2020-2024 Paweł Kuna. The INA Digital name and logo, and the
-names and logos of the government institutions referenced by the brand
-themes, belong to their respective owners and are not covered by this
-license. This project is not affiliated with or endorsed by INA Digital.

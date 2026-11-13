@@ -19,7 +19,8 @@ class IddsHitArea extends SingleChildRenderObjectWidget {
   final double minSize;
 
   @override
-  RenderObject createRenderObject(BuildContext context) => _RenderIddsHitArea(minSize);
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderIddsHitArea(minSize);
 
   @override
   void updateRenderObject(BuildContext context, RenderObject renderObject) {
@@ -36,7 +37,8 @@ class _RenderIddsHitArea extends RenderProxyBox {
   bool hitTest(BoxHitTestResult result, {required Offset position}) {
     final double dx = math.max(0, (minSize - size.width) / 2);
     final double dy = math.max(0, (minSize - size.height) / 2);
-    final Rect area = Rect.fromLTRB(-dx, -dy, size.width + dx, size.height + dy);
+    final Rect area =
+        Rect.fromLTRB(-dx, -dy, size.width + dx, size.height + dy);
     if (!area.contains(position)) return false;
     // Titik di area tambahan dijepit ke dalam anak, agar detektor gestur anak
     // (yang hanya menerima titik di dalam ukurannya; tepi kanan/bawah

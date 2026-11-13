@@ -23,14 +23,16 @@ class IddsTime implements Comparable<IddsTime> {
         assert(second >= 0 && second < 60);
 
   /// Waktu dari [DateTime].
-  factory IddsTime.fromDateTime(DateTime t) => IddsTime(t.hour, t.minute, t.second);
+  factory IddsTime.fromDateTime(DateTime t) =>
+      IddsTime(t.hour, t.minute, t.second);
 
   /// Waktu sekarang.
   factory IddsTime.now() => IddsTime.fromDateTime(DateTime.now());
 
   /// Membaca `HH:mm` atau `HH:mm:ss`. `null` bila tidak valid.
   static IddsTime? tryParse(String text) {
-    final RegExpMatch? m = RegExp(r'^(\d{1,2}):(\d{2})(?::(\d{2}))?$').firstMatch(text.trim());
+    final RegExpMatch? m =
+        RegExp(r'^(\d{1,2}):(\d{2})(?::(\d{2}))?$').firstMatch(text.trim());
     if (m == null) return null;
     final int h = int.parse(m.group(1)!);
     final int min = int.parse(m.group(2)!);
@@ -68,7 +70,8 @@ class IddsTime implements Comparable<IddsTime> {
   int compareTo(IddsTime other) => inSeconds.compareTo(other.inSeconds);
 
   @override
-  bool operator ==(Object other) => other is IddsTime && other.inSeconds == inSeconds;
+  bool operator ==(Object other) =>
+      other is IddsTime && other.inSeconds == inSeconds;
 
   @override
   int get hashCode => inSeconds;
@@ -199,14 +202,22 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
   }
 
   bool _allowed(IddsTime t) {
-    if (widget.minTime != null && t.compareTo(widget.minTime!) < 0) return false;
-    if (widget.maxTime != null && t.compareTo(widget.maxTime!) > 0) return false;
+    if (widget.minTime != null && t.compareTo(widget.minTime!) < 0) {
+      return false;
+    }
+    if (widget.maxTime != null && t.compareTo(widget.maxTime!) > 0) {
+      return false;
+    }
     return true;
   }
 
   IddsTime _clamp(IddsTime t) {
-    if (widget.minTime != null && t.compareTo(widget.minTime!) < 0) return widget.minTime!;
-    if (widget.maxTime != null && t.compareTo(widget.maxTime!) > 0) return widget.maxTime!;
+    if (widget.minTime != null && t.compareTo(widget.minTime!) < 0) {
+      return widget.minTime!;
+    }
+    if (widget.maxTime != null && t.compareTo(widget.maxTime!) > 0) {
+      return widget.maxTime!;
+    }
     return t;
   }
 
@@ -238,7 +249,8 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
     final IddsColors c = theme.colors;
     final IddsDropdownMetrics m = IddsDropdownMetrics.of(context, widget.size);
     final IddsTime? value = widget.value;
-    final String? text = value?.format(showSeconds: widget.showSeconds, use12Hours: widget.use12Hours);
+    final String? text = value?.format(
+        showSeconds: widget.showSeconds, use12Hours: widget.use12Hours);
     final bool hasError = widget.status == IddsTextFieldStatus.error;
     final Color statusColor = switch (widget.status) {
       IddsTextFieldStatus.error => c.negative.shade600,
@@ -273,12 +285,18 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
                 inset: 1,
                 rings: <(double, Color)>[
                   (2.0, c.backgroundPrimary),
-                  (1.0, widget.status == IddsTextFieldStatus.neutral ? c.contentPrimary : statusColor),
+                  (
+                    1.0,
+                    widget.status == IddsTextFieldStatus.neutral
+                        ? c.contentPrimary
+                        : statusColor
+                  ),
                 ],
                 child: AnimatedContainer(
                   duration: IddsDuration.base,
                   height: m.height,
-                  padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s12 - 1),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: IddsSpacing.s12 - 1),
                   decoration: BoxDecoration(
                     color: !_enabled
                         ? c.backgroundSecondary
@@ -299,7 +317,9 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
                           style: theme.textStyle(
                             fontSize: m.fontSize,
                             lineHeight: m.lineHeight,
-                            color: text == null ? c.contentTertiary : c.contentPrimary,
+                            color: text == null
+                                ? c.contentTertiary
+                                : c.contentPrimary,
                           ),
                         ),
                       ),
@@ -311,14 +331,19 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
                           excludeSemantics: true,
                           child: IddsInteractive(
                             onTap: () => widget.onChanged!(null),
-                            builder: (BuildContext context, IddsInteractionState s) => IddsIcon(
+                            builder: (BuildContext context,
+                                    IddsInteractionState s) =>
+                                IddsIcon(
                               IddsIcons.x,
                               size: 16,
-                              color: s.hovered ? c.contentPrimary : c.contentSecondary,
+                              color: s.hovered
+                                  ? c.contentPrimary
+                                  : c.contentSecondary,
                             ),
                           ),
                         ),
-                      IddsIcon(IddsIcons.clock, size: 20, color: c.contentTertiary),
+                      IddsIcon(IddsIcons.clock,
+                          size: 20, color: c.contentTertiary),
                     ],
                   ),
                 ),
@@ -345,7 +370,11 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (widget.label != null) IddsFieldLabel(label: widget.label!, required: widget.required, small: m.small),
+            if (widget.label != null)
+              IddsFieldLabel(
+                  label: widget.label!,
+                  required: widget.required,
+                  small: m.small),
             fieldFor(panelWidth),
             if (message != null)
               Padding(
@@ -368,10 +397,15 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
           ],
         );
 
-    if (widget.width != null) return SizedBox(width: widget.width, child: column(math.max(widget.width!, 200)));
+    if (widget.width != null) {
+      return SizedBox(
+          width: widget.width, child: column(math.max(widget.width!, 200)));
+    }
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        if (!constraints.hasBoundedWidth) return SizedBox(width: 240, child: column(240));
+        if (!constraints.hasBoundedWidth) {
+          return SizedBox(width: 240, child: column(240));
+        }
         return column(math.max(constraints.maxWidth, 200));
       },
     );
@@ -382,11 +416,15 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
     final IddsColors c = theme.colors;
     final bool pm = _draft.hour >= 12;
 
-    List<int> range(int count, int step) => <int>[for (int i = 0; i < count; i += math.max(1, step)) i];
+    List<int> range(int count, int step) =>
+        <int>[for (int i = 0; i < count; i += math.max(1, step)) i];
     String two(int v) => v.toString().padLeft(2, '0');
 
     final List<int> hours = widget.use12Hours
-        ? <int>[for (final int h in range(24, widget.hourStep)) if ((h >= 12) == pm) h]
+        ? <int>[
+            for (final int h in range(24, widget.hourStep))
+              if ((h >= 12) == pm) h
+          ]
         : range(24, widget.hourStep);
 
     final List<Widget> columns = <Widget>[
@@ -395,10 +433,13 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
         values: hours,
         selected: _draft.hour,
         itemExtent: _itemExtent,
-        labelOf: (int h) => widget.use12Hours ? '${h % 12 == 0 ? 12 : h % 12}' : two(h),
-        enabledOf: (int h) => _allowed(_draft.copyWith(hour: h, minute: 0, second: 0)) ||
+        labelOf: (int h) =>
+            widget.use12Hours ? '${h % 12 == 0 ? 12 : h % 12}' : two(h),
+        enabledOf: (int h) =>
+            _allowed(_draft.copyWith(hour: h, minute: 0, second: 0)) ||
             _allowed(_draft.copyWith(hour: h, minute: 59, second: 59)),
-        onSelect: (int h) => setState(() => _draft = _clamp(_draft.copyWith(hour: h))),
+        onSelect: (int h) =>
+            setState(() => _draft = _clamp(_draft.copyWith(hour: h))),
       ),
       _TimeColumn(
         label: 'Menit',
@@ -406,8 +447,11 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
         selected: _draft.minute,
         itemExtent: _itemExtent,
         labelOf: two,
-        enabledOf: (int v) => _allowed(_draft.copyWith(minute: v, second: 0)) || _allowed(_draft.copyWith(minute: v, second: 59)),
-        onSelect: (int v) => setState(() => _draft = _clamp(_draft.copyWith(minute: v))),
+        enabledOf: (int v) =>
+            _allowed(_draft.copyWith(minute: v, second: 0)) ||
+            _allowed(_draft.copyWith(minute: v, second: 59)),
+        onSelect: (int v) =>
+            setState(() => _draft = _clamp(_draft.copyWith(minute: v))),
       ),
       if (widget.showSeconds)
         _TimeColumn(
@@ -417,7 +461,8 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
           itemExtent: _itemExtent,
           labelOf: two,
           enabledOf: (int v) => _allowed(_draft.copyWith(second: v)),
-          onSelect: (int v) => setState(() => _draft = _draft.copyWith(second: v)),
+          onSelect: (int v) =>
+              setState(() => _draft = _draft.copyWith(second: v)),
         ),
       if (widget.use12Hours)
         _TimeColumn(
@@ -446,28 +491,36 @@ class _IddsTimePickerState extends State<IddsTimePicker> {
           // panel meluber.
           Flexible(
             child: SizedBox(
-            height: 224,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                for (int i = 0; i < columns.length; i++) ...<Widget>[
-                  if (i > 0) Container(width: 1, color: c.strokePrimary),
-                  Expanded(child: columns[i]),
+              height: 224,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  for (int i = 0; i < columns.length; i++) ...<Widget>[
+                    if (i > 0) Container(width: 1, color: c.strokePrimary),
+                    Expanded(child: columns[i]),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
-          ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s12, vertical: IddsSpacing.s8),
-            decoration: BoxDecoration(border: Border(top: BorderSide(color: c.strokePrimary))),
+            padding: const EdgeInsets.symmetric(
+                horizontal: IddsSpacing.s12, vertical: IddsSpacing.s8),
+            decoration: BoxDecoration(
+                border: Border(top: BorderSide(color: c.strokePrimary))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               spacing: IddsSpacing.s8,
               children: <Widget>[
                 if (widget.showNowButton)
-                  _PanelButton(label: widget.nowLabel, primary: false, onTap: () => _commit(now)),
-                _PanelButton(label: widget.confirmLabel, primary: true, onTap: () => _commit(_draft)),
+                  _PanelButton(
+                      label: widget.nowLabel,
+                      primary: false,
+                      onTap: () => _commit(now)),
+                _PanelButton(
+                    label: widget.confirmLabel,
+                    primary: true,
+                    onTap: () => _commit(_draft)),
               ],
             ),
           ),
@@ -503,7 +556,8 @@ class _TimeColumn extends StatefulWidget {
 class _TimeColumnState extends State<_TimeColumn> {
   late final ScrollController _scroll = ScrollController(
     // Pilihan awal tampil di bagian atas daftar.
-    initialScrollOffset: math.max(0, widget.values.indexOf(widget.selected)) * widget.itemExtent,
+    initialScrollOffset:
+        math.max(0, widget.values.indexOf(widget.selected)) * widget.itemExtent,
   );
 
   @override
@@ -537,7 +591,11 @@ class _TimeColumnState extends State<_TimeColumn> {
 }
 
 class _TimeOption extends StatelessWidget {
-  const _TimeOption({required this.label, required this.selected, required this.enabled, required this.onTap});
+  const _TimeOption(
+      {required this.label,
+      required this.selected,
+      required this.enabled,
+      required this.onTap});
 
   final String label;
   final bool selected;
@@ -558,10 +616,14 @@ class _TimeOption extends StatelessWidget {
       child: IddsInteractive(
         onTap: enabled ? onTap : null,
         mouseCursor: SystemMouseCursors.click,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: BorderRadius.circular(IddsRadius.md),
-          rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, c.strokeTertiary)],
+          rings: <(double, Color)>[
+            (2.0, c.backgroundPrimary),
+            (1.0, c.strokeTertiary)
+          ],
           child: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -594,7 +656,8 @@ class _TimeOption extends StatelessWidget {
 }
 
 class _PanelButton extends StatelessWidget {
-  const _PanelButton({required this.label, required this.primary, required this.onTap});
+  const _PanelButton(
+      {required this.label, required this.primary, required this.onTap});
 
   final String label;
   final bool primary;
@@ -611,14 +674,20 @@ class _PanelButton extends StatelessWidget {
       excludeSemantics: true,
       child: IddsInteractive(
         onTap: onTap,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: BorderRadius.circular(IddsRadius.md),
-          rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, c.strokeTertiary)],
+          rings: <(double, Color)>[
+            (2.0, c.backgroundPrimary),
+            (1.0, c.strokeTertiary)
+          ],
           child: Opacity(
             opacity: primary && state.hovered ? 0.7 : 1,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: primary ? IddsSpacing.s12 : IddsSpacing.s8, vertical: IddsSpacing.s4),
+              padding: EdgeInsets.symmetric(
+                  horizontal: primary ? IddsSpacing.s12 : IddsSpacing.s8,
+                  vertical: IddsSpacing.s4),
               decoration: BoxDecoration(
                 color: primary
                     ? c.contentPrimary

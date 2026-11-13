@@ -66,8 +66,12 @@ class IddsChoiceGrid extends StatelessWidget {
     final IddsColors c = theme.colors;
     final double screen = iddsScreenWidth(context);
     // CSS: kolom label 200px / sel 120px; lebih kecil di layar sempit.
-    final double labelWidth = screen < IddsBreakpoint.sm ? 120 : (screen < IddsBreakpoint.md ? 150 : 200);
-    final double cellWidth = screen < IddsBreakpoint.sm ? 80 : (screen < IddsBreakpoint.md ? 100 : 120);
+    final double labelWidth = screen < IddsBreakpoint.sm
+        ? 120
+        : (screen < IddsBreakpoint.md ? 150 : 200);
+    final double cellWidth = screen < IddsBreakpoint.sm
+        ? 80
+        : (screen < IddsBreakpoint.md ? 100 : 120);
     final bool small = screen < IddsBreakpoint.md;
     final double fontSize = small ? IddsFontSize.xs : IddsFontSize.sm;
     final double lineHeight = small ? IddsLineHeight.xs : IddsLineHeight.sm;
@@ -78,12 +82,20 @@ class IddsChoiceGrid extends StatelessWidget {
       onChanged!(<String, String>{...selected, row: column});
     }
 
-    Widget cell({required Widget child, required double width, required bool header, bool last = false, bool alignStart = false}) {
+    Widget cell(
+        {required Widget child,
+        required double width,
+        required bool header,
+        bool last = false,
+        bool alignStart = false}) {
       return Container(
         width: width,
         constraints: BoxConstraints(minHeight: header ? 52 : 48),
-        padding: EdgeInsets.symmetric(horizontal: IddsSpacing.s12, vertical: header ? IddsSpacing.s16 : IddsSpacing.s12),
-        alignment: alignStart ? AlignmentDirectional.centerStart : Alignment.center,
+        padding: EdgeInsets.symmetric(
+            horizontal: IddsSpacing.s12,
+            vertical: header ? IddsSpacing.s16 : IddsSpacing.s12),
+        alignment:
+            alignStart ? AlignmentDirectional.centerStart : Alignment.center,
         decoration: BoxDecoration(border: last ? null : Border(right: line)),
         child: child,
       );
@@ -94,7 +106,8 @@ class IddsChoiceGrid extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Container(
-          decoration: BoxDecoration(color: c.backgroundSecondary, border: Border(bottom: line)),
+          decoration: BoxDecoration(
+              color: c.backgroundSecondary, border: Border(bottom: line)),
           child: IntrinsicHeight(
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -140,7 +153,10 @@ class IddsChoiceGrid extends StatelessWidget {
                       child: ExcludeSemantics(
                         child: Text(
                           row.label,
-                          style: theme.textStyle(fontSize: fontSize, lineHeight: lineHeight, color: c.contentPrimary),
+                          style: theme.textStyle(
+                              fontSize: fontSize,
+                              lineHeight: lineHeight,
+                              color: c.contentPrimary),
                         ),
                       ),
                     ),
@@ -152,7 +168,9 @@ class IddsChoiceGrid extends StatelessWidget {
                         child: _GridRadio(
                           label: columns[i].label,
                           checked: selected[row.id] == columns[i].id,
-                          onTap: enabled ? () => choose(row.id, columns[i].id) : null,
+                          onTap: enabled
+                              ? () => choose(row.id, columns[i].id)
+                              : null,
                         ),
                       ),
                   ],
@@ -172,7 +190,8 @@ class IddsChoiceGrid extends StatelessWidget {
             border: Border.all(color: c.strokePrimary),
             borderRadius: BorderRadius.circular(IddsRadius.lg),
           ),
-          child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: grid),
+          child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal, child: grid),
         ),
       ),
     );
@@ -180,7 +199,8 @@ class IddsChoiceGrid extends StatelessWidget {
 }
 
 class _GridRadio extends StatelessWidget {
-  const _GridRadio({required this.label, required this.checked, required this.onTap});
+  const _GridRadio(
+      {required this.label, required this.checked, required this.onTap});
 
   final String label;
   final bool checked;
@@ -197,7 +217,8 @@ class _GridRadio extends StatelessWidget {
       excludeSemantics: true,
       child: IddsInteractive(
         onTap: onTap,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: BorderRadius.circular(12),
           rings: <(double, Color)>[(2.0, c.primary.shade500)],
@@ -222,7 +243,11 @@ class _GridRadio extends StatelessWidget {
                 ),
               ),
               child: checked
-                  ? Container(width: 6, height: 6, decoration: BoxDecoration(color: c.backgroundPrimary, shape: BoxShape.circle))
+                  ? Container(
+                      width: 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                          color: c.backgroundPrimary, shape: BoxShape.circle))
                   : null,
             ),
           ),

@@ -23,15 +23,18 @@ export 'src/components/divider/idds_divider.dart';
 export 'src/components/drawer/idds_drawer.dart';
 export 'src/components/dropdown/idds_action_menu.dart';
 export 'src/components/dropdown/idds_dropdown.dart';
-export 'src/components/dropdown/idds_dropdown_trigger.dart' show IddsDropdownSize;
-export 'src/components/dropdown/idds_select.dart' show IddsMultiSelect, IddsSelect, IddsSelectIndicator, IddsSelectOption;
+export 'src/components/dropdown/idds_dropdown_trigger.dart'
+    show IddsDropdownSize;
+export 'src/components/dropdown/idds_select.dart'
+    show IddsMultiSelect, IddsSelect, IddsSelectIndicator, IddsSelectOption;
 export 'src/components/file_upload/idds_file_upload.dart';
 export 'src/components/loading/idds_loading.dart';
 export 'src/components/misc/idds_bottom_sheet.dart';
 export 'src/components/misc/idds_choice_grid.dart';
 export 'src/components/misc/idds_list.dart';
 export 'src/components/misc/idds_theme_toggle.dart';
-export 'src/components/modal/idds_modal.dart' show IddsModal, IddsModalSize, showIddsModal;
+export 'src/components/modal/idds_modal.dart'
+    show IddsModal, IddsModalSize, showIddsModal;
 export 'src/components/otp/idds_otp_input.dart';
 export 'src/components/pagination/idds_pagination.dart';
 export 'src/components/phone_input/idds_phone_input.dart';

@@ -39,7 +39,8 @@ void main() {
           items: const <IddsAccordionItem>[
             IddsAccordionItem(title: Text('Satu'), child: Text('Isi satu')),
             IddsAccordionItem(title: Text('Dua'), child: Text('Isi dua')),
-            IddsAccordionItem(title: Text('Tiga'), child: Text('Isi tiga'), enabled: false),
+            IddsAccordionItem(
+                title: Text('Tiga'), child: Text('Isi tiga'), enabled: false),
           ],
         ),
       )));
@@ -59,7 +60,10 @@ void main() {
     testWidgets('accordion kartu', (WidgetTester tester) async {
       await tester.pumpWidget(testApp(const SizedBox(
         width: 400,
-        child: IddsAccordionCard(title: Text('Rincian biaya'), initiallyOpen: true, child: Text('Gratis')),
+        child: IddsAccordionCard(
+            title: Text('Rincian biaya'),
+            initiallyOpen: true,
+            child: Text('Gratis')),
       )));
       expect(find.text('Gratis'), findsOneWidget);
       await tester.tap(find.text('Rincian biaya'));
@@ -69,7 +73,8 @@ void main() {
   });
 
   group('IddsCard', () {
-    testWidgets('judul, keterangan, aksi, dan ketukan', (WidgetTester tester) async {
+    testWidgets('judul, keterangan, aksi, dan ketukan',
+        (WidgetTester tester) async {
       int taps = 0;
       await tester.pumpWidget(testApp(SizedBox(
         width: 360,
@@ -87,7 +92,8 @@ void main() {
       expect(taps, 1);
     });
 
-    testWidgets('varian horizontal dan overlay tanpa error tata letak', (WidgetTester tester) async {
+    testWidgets('varian horizontal dan overlay tanpa error tata letak',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testApp(const SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -108,11 +114,13 @@ void main() {
       )));
       expect(tester.takeException(), isNull);
       expect(find.text('Overlay'), findsOneWidget);
-      expect(tester.getSize(find.byType(IddsCard).last).height, greaterThanOrEqualTo(362));
+      expect(tester.getSize(find.byType(IddsCard).last).height,
+          greaterThanOrEqualTo(362));
     });
   });
 
-  testWidgets('indikator memuat dan divider tampil', (WidgetTester tester) async {
+  testWidgets('indikator memuat dan divider tampil',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testApp(const SizedBox(
       width: 300,
       child: Column(
@@ -125,7 +133,9 @@ void main() {
           IddsSkeleton(height: 16),
           IddsSkeleton.circle(size: 40),
           IddsDivider(label: Text('atau')),
-          SizedBox(height: 20, child: Row(children: <Widget>[IddsDivider.vertical()])),
+          SizedBox(
+              height: 20,
+              child: Row(children: <Widget>[IddsDivider.vertical()])),
         ],
       ),
     )));

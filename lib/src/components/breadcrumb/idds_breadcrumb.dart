@@ -12,7 +12,8 @@ import '../../tokens/idds_typography_tokens.g.dart';
 @immutable
 class IddsBreadcrumbItem {
   /// Membuat langkah.
-  const IddsBreadcrumbItem({required this.label, this.onTap, this.icon, this.enabled = true});
+  const IddsBreadcrumbItem(
+      {required this.label, this.onTap, this.icon, this.enabled = true});
 
   /// Teks.
   final String label;
@@ -72,7 +73,10 @@ class IddsBreadcrumb extends StatelessWidget {
       child: IconTheme(
         data: IconThemeData(size: 14, color: c.contentSecondary),
         child: DefaultTextStyle(
-          style: theme.textStyle(fontSize: fontSize, lineHeight: lineHeight, color: c.contentSecondary),
+          style: theme.textStyle(
+              fontSize: fontSize,
+              lineHeight: lineHeight,
+              color: c.contentSecondary),
           child: separator ?? const IddsIcon(IddsIcons.chevronRight),
         ),
       ),
@@ -131,7 +135,8 @@ class _Crumb extends StatelessWidget {
     final VoidCallback? onTap = !current && item.enabled ? item.onTap : null;
 
     Widget content(bool hovered) {
-      final Color color = current || hovered ? c.contentPrimary : c.contentSecondary;
+      final Color color =
+          current || hovered ? c.contentPrimary : c.contentSecondary;
       return Opacity(
         opacity: item.enabled ? 1 : 0.5,
         child: IconTheme(
@@ -151,11 +156,15 @@ class _Crumb extends StatelessWidget {
                     .textStyle(
                       fontSize: fontSize,
                       lineHeight: lineHeight,
-                      fontWeight: current ? IddsFontWeight.medium : IddsFontWeight.normal,
+                      fontWeight: current
+                          ? IddsFontWeight.medium
+                          : IddsFontWeight.normal,
                       color: color,
                     )
                     .copyWith(
-                      decoration: hovered ? TextDecoration.underline : TextDecoration.none,
+                      decoration: hovered
+                          ? TextDecoration.underline
+                          : TextDecoration.none,
                       decorationColor: color,
                     ),
               ),
@@ -178,12 +187,15 @@ class _Crumb extends StatelessWidget {
       onTap: onTap,
       child: IddsInteractive(
         onTap: onTap,
-        builder: (BuildContext context, IddsInteractionState state) => Container(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            Container(
           decoration: state.focused
               ? BoxDecoration(
                   color: c.backgroundTertiary,
                   borderRadius: BorderRadius.circular(IddsRadius.sm),
-                  boxShadow: <BoxShadow>[BoxShadow(color: c.primary.shade600, spreadRadius: 2)],
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(color: c.primary.shade600, spreadRadius: 2)
+                  ],
                 )
               : null,
           child: content(state.hovered),

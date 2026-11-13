@@ -29,15 +29,20 @@ class IddsTheme extends StatelessWidget {
 
   /// Tema terdekat, atau tema bawaan (Neutral, terang) bila tidak ada
   /// [IddsTheme] di atas [context].
-  static IddsThemeData of(BuildContext context) => maybeOf(context) ?? _fallback;
+  static IddsThemeData of(BuildContext context) =>
+      maybeOf(context) ?? _fallback;
 
   /// Tema terdekat, atau `null` bila tidak ada.
   static IddsThemeData? maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<_InheritedIddsTheme>()?.theme.data;
+    return context
+        .dependOnInheritedWidgetOfExactType<_InheritedIddsTheme>()
+        ?.theme
+        .data;
   }
 
   @override
-  Widget build(BuildContext context) => _InheritedIddsTheme(theme: this, child: child);
+  Widget build(BuildContext context) =>
+      _InheritedIddsTheme(theme: this, child: child);
 }
 
 class _InheritedIddsTheme extends InheritedTheme {
@@ -46,10 +51,12 @@ class _InheritedIddsTheme extends InheritedTheme {
   final IddsTheme theme;
 
   @override
-  Widget wrap(BuildContext context, Widget child) => IddsTheme(data: theme.data, child: child);
+  Widget wrap(BuildContext context, Widget child) =>
+      IddsTheme(data: theme.data, child: child);
 
   @override
-  bool updateShouldNotify(_InheritedIddsTheme oldWidget) => theme.data != oldWidget.theme.data;
+  bool updateShouldNotify(_InheritedIddsTheme oldWidget) =>
+      theme.data != oldWidget.theme.data;
 }
 
 /// Versi [IddsTheme] yang menganimasikan perubahan warna, misalnya saat
@@ -72,10 +79,12 @@ class AnimatedIddsTheme extends ImplicitlyAnimatedWidget {
   final Widget child;
 
   @override
-  AnimatedWidgetBaseState<AnimatedIddsTheme> createState() => _AnimatedIddsThemeState();
+  AnimatedWidgetBaseState<AnimatedIddsTheme> createState() =>
+      _AnimatedIddsThemeState();
 }
 
-class _AnimatedIddsThemeState extends AnimatedWidgetBaseState<AnimatedIddsTheme> {
+class _AnimatedIddsThemeState
+    extends AnimatedWidgetBaseState<AnimatedIddsTheme> {
   _IddsThemeDataTween? _data;
 
   @override

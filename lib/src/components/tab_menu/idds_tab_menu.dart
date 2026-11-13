@@ -32,7 +32,8 @@ enum IddsTabSize {
 @immutable
 class IddsTabItem<T> {
   /// Membuat tab.
-  const IddsTabItem({required this.value, required this.label, this.enabled = true});
+  const IddsTabItem(
+      {required this.value, required this.label, this.enabled = true});
 
   /// Nilai tab.
   final T value;
@@ -124,7 +125,9 @@ class IddsTabMenu<T> extends StatelessWidget {
         _Tab<T>(
           item: item,
           selected: item.value == value,
-          onTap: onChanged != null && item.enabled ? () => onChanged!(item.value) : null,
+          onTap: onChanged != null && item.enabled
+              ? () => onChanged!(item.value)
+              : null,
           enabled: onChanged != null && item.enabled,
           horizontal: horizontal,
           variant: variant,
@@ -143,7 +146,17 @@ class IddsTabMenu<T> extends StatelessWidget {
             : tabs,
       );
       menu = !fullWidth
-          ? row
+          // Tab yang tidak muat (mis. di layar HP) bisa digeser ke samping,
+          // bukan meluap. Lebar tak terbatas (di dalam Row) tetap apa adanya.
+          ? LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) =>
+                  constraints.hasBoundedWidth
+                      ? SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: row,
+                        )
+                      : row,
+            )
           : LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 final double min = 120.0 * items.length;
@@ -160,7 +173,9 @@ class IddsTabMenu<T> extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: tabs,
       );
-      menu = width != null ? SizedBox(width: width, child: menu) : IntrinsicWidth(child: menu);
+      menu = width != null
+          ? SizedBox(width: width, child: menu)
+          : IntrinsicWidth(child: menu);
     }
 
     if (variant == IddsTabVariant.buttonWhite) {
@@ -238,12 +253,15 @@ class _Tab<T> extends StatelessWidget {
                           ? BorderSide(color: accent, width: 2)
                           : BorderSide(color: c.strokePrimary),
                     )
-                  : (selected ? Border(left: BorderSide(color: accent, width: 3)) : null);
+                  : (selected
+                      ? Border(left: BorderSide(color: accent, width: 3))
+                      : null);
             case IddsTabVariant.buttonBrand:
               if (selected) {
                 // Latar primary-25 tidak berubah di dark mode; teks memakai
                 // warna utama mode terang agar tetap terbaca.
-                background = hovered ? c.backgroundSecondary : c.primary.shade25;
+                background =
+                    hovered ? c.backgroundSecondary : c.primary.shade25;
                 foreground = theme.brand.primaryMainLight;
               } else if (hovered) {
                 background = c.backgroundSecondary;
@@ -256,13 +274,17 @@ class _Tab<T> extends StatelessWidget {
               // sesaat menjadi tajam dan gelap (kilatan abu-abu).
               shadow = <BoxShadow>[
                 BoxShadow(
-                  color: selected ? const Color(0x140A0D12) : const Color(0x000A0D12),
+                  color: selected
+                      ? const Color(0x140A0D12)
+                      : const Color(0x000A0D12),
                   offset: const Offset(0, 12),
                   blurRadius: 16,
                   spreadRadius: -4,
                 ),
                 BoxShadow(
-                  color: selected ? const Color(0x080A0D12) : const Color(0x000A0D12),
+                  color: selected
+                      ? const Color(0x080A0D12)
+                      : const Color(0x000A0D12),
                   offset: const Offset(0, 4),
                   blurRadius: 6,
                   spreadRadius: -2,
@@ -279,8 +301,12 @@ class _Tab<T> extends StatelessWidget {
 
           // Cincin fokus: selalu ada dua bayangan (transparan bila tidak
           // fokus) agar animasinya juga hanya memudar, tidak berubah ukuran.
-          final Color ringInner = state.focused ? c.backgroundPrimary : c.backgroundPrimary.withValues(alpha: 0);
-          final Color ringOuter = state.focused ? c.primary.shade500 : c.primary.shade500.withValues(alpha: 0);
+          final Color ringInner = state.focused
+              ? c.backgroundPrimary
+              : c.backgroundPrimary.withValues(alpha: 0);
+          final Color ringOuter = state.focused
+              ? c.primary.shade500
+              : c.primary.shade500.withValues(alpha: 0);
           shadow = <BoxShadow>[
             BoxShadow(color: ringOuter, spreadRadius: 4),
             BoxShadow(color: ringInner, spreadRadius: 2),
@@ -288,7 +314,10 @@ class _Tab<T> extends StatelessWidget {
           ];
 
           // Garis kiri 3px menggantikan 3px padding (CSS: padding-left 13px).
-          final double leftInset = !horizontal && variant == IddsTabVariant.outline && selected ? 13 : 16;
+          final double leftInset =
+              !horizontal && variant == IddsTabVariant.outline && selected
+                  ? 13
+                  : 16;
 
           return Opacity(
             opacity: enabled ? 1 : 0.6,
@@ -308,7 +337,9 @@ class _Tab<T> extends StatelessWidget {
                 style: theme.textStyle(
                   fontSize: fontSize,
                   lineHeight: IddsLineHeight.sm,
-                  fontWeight: selected ? IddsFontWeight.semibold : IddsFontWeight.normal,
+                  fontWeight: selected
+                      ? IddsFontWeight.semibold
+                      : IddsFontWeight.normal,
                   color: foreground,
                 ),
                 maxLines: 1,

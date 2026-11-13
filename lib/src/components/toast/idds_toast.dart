@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart' show TargetPlatform, defaultTargetPlatform;
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform;
 import 'package:flutter/widgets.dart';
 
 import '../../foundation/idds_hit_area.dart';
@@ -61,7 +62,8 @@ enum IddsToastPosition {
   /// Tengah kanan.
   centerRight;
 
-  bool get _isBottom => this == bottomRight || this == bottomLeft || this == bottomCenter;
+  bool get _isBottom =>
+      this == bottomRight || this == bottomLeft || this == bottomCenter;
 }
 
 /// Pengendali toast yang sedang tampil.
@@ -71,7 +73,8 @@ class IddsToastController {
   final _ToastEntry _entry;
 
   /// Toast masih tampil.
-  bool get isOpen => !_entry.closing && _entry.manager._entries.contains(_entry);
+  bool get isOpen =>
+      !_entry.closing && _entry.manager._entries.contains(_entry);
 
   /// Menutup toast.
   void close() => _entry.manager._close(_entry);
@@ -113,9 +116,11 @@ IddsToastController showIddsToast({
   bool replaceExisting = true,
   OverlayState? overlay,
 }) {
-  final _ToastManager manager = _ToastManager.of(overlay ?? _overlayOf(context));
+  final _ToastManager manager =
+      _ToastManager.of(overlay ?? _overlayOf(context));
   if (replaceExisting) manager._closeAll();
-  final bool screenReader = MediaQuery.maybeAccessibleNavigationOf(context) ?? false;
+  final bool screenReader =
+      MediaQuery.maybeAccessibleNavigationOf(context) ?? false;
   final Duration? shown = !screenReader || duration == null
       ? duration
       : action != null
@@ -146,8 +151,8 @@ void dismissAllIddsToasts(BuildContext context, {OverlayState? overlay}) {
 /// dalam entry overlay; context di atasnya (mis. `Navigator` root) memakai
 /// overlay milik navigator tersebut.
 OverlayState _overlayOf(BuildContext context) {
-  final OverlayState? overlay =
-      Overlay.maybeOf(context, rootOverlay: true) ?? Navigator.maybeOf(context, rootNavigator: true)?.overlay;
+  final OverlayState? overlay = Overlay.maybeOf(context, rootOverlay: true) ??
+      Navigator.maybeOf(context, rootNavigator: true)?.overlay;
   if (overlay == null) {
     throw FlutterError(
       'showIddsToast tidak menemukan Overlay dari context ini.\n'
@@ -160,7 +165,10 @@ OverlayState _overlayOf(BuildContext context) {
 /// Perangkat sentuh (Android/iOS/Fuchsia): toast masuk dengan geser dari
 /// tepi, seperti pola notifikasi mobile. Desktop/web tetap fade seperti CSS.
 bool get _isTouchPlatform => switch (defaultTargetPlatform) {
-      TargetPlatform.android || TargetPlatform.iOS || TargetPlatform.fuchsia => true,
+      TargetPlatform.android ||
+      TargetPlatform.iOS ||
+      TargetPlatform.fuchsia =>
+        true,
       _ => false,
     };
 
@@ -198,9 +206,11 @@ class _ToastEntry {
 class _ToastManager {
   _ToastManager(this.overlay);
 
-  static final Expando<_ToastManager> _managers = Expando<_ToastManager>('IddsToast');
+  static final Expando<_ToastManager> _managers =
+      Expando<_ToastManager>('IddsToast');
 
-  static _ToastManager of(OverlayState overlay) => _managers[overlay] ??= _ToastManager(overlay);
+  static _ToastManager of(OverlayState overlay) =>
+      _managers[overlay] ??= _ToastManager(overlay);
 
   final OverlayState overlay;
   final List<_ToastEntry> _entries = <_ToastEntry>[];
@@ -221,7 +231,9 @@ class _ToastManager {
   void _startTimer(_ToastEntry entry) {
     entry.timer?.cancel();
     final Duration? duration = entry.duration;
-    if (duration != null && !entry.closing) entry.timer = Timer(duration, () => _close(entry));
+    if (duration != null && !entry.closing) {
+      entry.timer = Timer(duration, () => _close(entry));
+    }
   }
 
   void _closeAll() {
@@ -262,8 +274,13 @@ class _ToastManager {
           if (_entries.any((_ToastEntry e) => e.position == p))
             Positioned(
               top: switch (p) {
-                IddsToastPosition.topLeft || IddsToastPosition.topRight || IddsToastPosition.topCenter => inset + safe.top,
-                IddsToastPosition.centerLeft || IddsToastPosition.centerRight => 0,
+                IddsToastPosition.topLeft ||
+                IddsToastPosition.topRight ||
+                IddsToastPosition.topCenter =>
+                  inset + safe.top,
+                IddsToastPosition.centerLeft ||
+                IddsToastPosition.centerRight =>
+                  0,
                 _ => null,
               },
               bottom: switch (p) {
@@ -271,18 +288,32 @@ class _ToastManager {
                 IddsToastPosition.bottomRight ||
                 IddsToastPosition.bottomCenter =>
                   // Di atas keyboard virtual bila sedang terbuka.
-                  inset + math.max(safe.bottom, MediaQuery.viewInsetsOf(context).bottom),
-                IddsToastPosition.centerLeft || IddsToastPosition.centerRight => 0,
+                  inset +
+                      math.max(
+                          safe.bottom, MediaQuery.viewInsetsOf(context).bottom),
+                IddsToastPosition.centerLeft ||
+                IddsToastPosition.centerRight =>
+                  0,
                 _ => null,
               },
               left: switch (p) {
-                IddsToastPosition.topRight || IddsToastPosition.bottomRight || IddsToastPosition.centerRight => null,
-                IddsToastPosition.topCenter || IddsToastPosition.bottomCenter => 0,
+                IddsToastPosition.topRight ||
+                IddsToastPosition.bottomRight ||
+                IddsToastPosition.centerRight =>
+                  null,
+                IddsToastPosition.topCenter ||
+                IddsToastPosition.bottomCenter =>
+                  0,
                 _ => inset,
               },
               right: switch (p) {
-                IddsToastPosition.topLeft || IddsToastPosition.bottomLeft || IddsToastPosition.centerLeft => null,
-                IddsToastPosition.topCenter || IddsToastPosition.bottomCenter => 0,
+                IddsToastPosition.topLeft ||
+                IddsToastPosition.bottomLeft ||
+                IddsToastPosition.centerLeft =>
+                  null,
+                IddsToastPosition.topCenter ||
+                IddsToastPosition.bottomCenter =>
+                  0,
                 _ => inset,
               },
               child: Align(
@@ -293,18 +324,30 @@ class _ToastManager {
                   IddsToastPosition.centerRight => Alignment.centerRight,
                   _ => Alignment.center,
                 },
-                widthFactor: p == IddsToastPosition.topCenter || p == IddsToastPosition.bottomCenter ? null : 1,
-                heightFactor: p == IddsToastPosition.centerLeft || p == IddsToastPosition.centerRight ? null : 1,
+                widthFactor: p == IddsToastPosition.topCenter ||
+                        p == IddsToastPosition.bottomCenter
+                    ? null
+                    : 1,
+                heightFactor: p == IddsToastPosition.centerLeft ||
+                        p == IddsToastPosition.centerRight
+                    ? null
+                    : 1,
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: maxWidth, maxHeight: math.max(0, screen.height - 2 * inset)),
+                  constraints: BoxConstraints(
+                      maxWidth: maxWidth,
+                      maxHeight: math.max(0, screen.height - 2 * inset)),
                   child: SingleChildScrollView(
                     reverse: p._isBottom,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: switch (p) {
-                        IddsToastPosition.topLeft || IddsToastPosition.bottomLeft || IddsToastPosition.centerLeft =>
+                        IddsToastPosition.topLeft ||
+                        IddsToastPosition.bottomLeft ||
+                        IddsToastPosition.centerLeft =>
                           CrossAxisAlignment.start,
-                        IddsToastPosition.topCenter || IddsToastPosition.bottomCenter => CrossAxisAlignment.center,
+                        IddsToastPosition.topCenter ||
+                        IddsToastPosition.bottomCenter =>
+                          CrossAxisAlignment.center,
                         _ => CrossAxisAlignment.end,
                       },
                       spacing: IddsSpacing.s8,
@@ -313,8 +356,10 @@ class _ToastManager {
                         // tepi layar (di bawah untuk posisi atas, di atas untuk
                         // posisi bawah).
                         for (final _ToastEntry e in p._isBottom
-                            ? _entries.reversed.where((_ToastEntry e) => e.position == p)
-                            : _entries.where((_ToastEntry e) => e.position == p))
+                            ? _entries.reversed
+                                .where((_ToastEntry e) => e.position == p)
+                            : _entries
+                                .where((_ToastEntry e) => e.position == p))
                           IddsTheme(
                             key: e.key,
                             data: e.theme,
@@ -341,8 +386,10 @@ class _ToastView extends StatefulWidget {
   State<_ToastView> createState() => _ToastViewState();
 }
 
-class _ToastViewState extends State<_ToastView> with SingleTickerProviderStateMixin {
-  late final AnimationController _fade = AnimationController(vsync: this, duration: IddsDuration.slow)..forward();
+class _ToastViewState extends State<_ToastView>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _fade =
+      AnimationController(vsync: this, duration: IddsDuration.slow)..forward();
 
   @override
   void didUpdateWidget(_ToastView oldWidget) {
@@ -357,8 +404,12 @@ class _ToastViewState extends State<_ToastView> with SingleTickerProviderStateMi
   }
 
   void _checkClosing() {
-    if (!widget.entry.closing || _fade.status == AnimationStatus.reverse) return;
-    _fade.reverse().whenComplete(() => widget.entry.manager._remove(widget.entry));
+    if (!widget.entry.closing || _fade.status == AnimationStatus.reverse) {
+      return;
+    }
+    _fade
+        .reverse()
+        .whenComplete(() => widget.entry.manager._remove(widget.entry));
   }
 
   @override
@@ -377,13 +428,30 @@ class _ToastViewState extends State<_ToastView> with SingleTickerProviderStateMi
     final bool large = screen >= IddsBreakpoint.lg;
     final bool solid = e.style == IddsToastStyle.solid;
 
-    final (Color background, Color border, Color foreground) = switch ((e.state, solid)) {
+    final (Color background, Color border, Color foreground) =
+        switch ((e.state, solid)) {
       (IddsToastState.normal, true) => (c.baseBlack, c.baseBlack, c.baseWhite),
-      (IddsToastState.destructive, true) => (c.negative.shade500, c.negative.shade500, c.baseWhite),
-      (IddsToastState.positive, true) => (c.positive.shade600, c.positive.shade600, c.baseWhite),
+      (IddsToastState.destructive, true) => (
+          c.negative.shade500,
+          c.negative.shade500,
+          c.baseWhite
+        ),
+      (IddsToastState.positive, true) => (
+          c.positive.shade600,
+          c.positive.shade600,
+          c.baseWhite
+        ),
       (IddsToastState.normal, false) => (c.baseWhite, c.baseBlack, c.baseBlack),
-      (IddsToastState.destructive, false) => (c.negative.shade50, c.negative.shade500, c.negative.shade500),
-      (IddsToastState.positive, false) => (c.positive.shade50, c.positive.shade600, c.positive.shade600),
+      (IddsToastState.destructive, false) => (
+          c.negative.shade50,
+          c.negative.shade500,
+          c.negative.shade500
+        ),
+      (IddsToastState.positive, false) => (
+          c.positive.shade50,
+          c.positive.shade600,
+          c.positive.shade600
+        ),
     };
     final IddsIconData icon = switch (e.state) {
       IddsToastState.normal => IddsIcons.infoCircle,
@@ -403,8 +471,16 @@ class _ToastViewState extends State<_ToastView> with SingleTickerProviderStateMi
         borderRadius: BorderRadius.circular(IddsRadius.lg),
         border: Border.all(color: border),
         boxShadow: const <BoxShadow>[
-          BoxShadow(color: Color(0x140A0D12), offset: Offset(0, 12), blurRadius: 16, spreadRadius: -4),
-          BoxShadow(color: Color(0x080A0D12), offset: Offset(0, 4), blurRadius: 6, spreadRadius: -2),
+          BoxShadow(
+              color: Color(0x140A0D12),
+              offset: Offset(0, 12),
+              blurRadius: 16,
+              spreadRadius: -4),
+          BoxShadow(
+              color: Color(0x080A0D12),
+              offset: Offset(0, 4),
+              blurRadius: 6,
+              spreadRadius: -2),
         ],
       ),
       // Lebar mengikuti isi (minimal 358px); teks mengisi sisa ruang sehingga
@@ -423,11 +499,14 @@ class _ToastViewState extends State<_ToastView> with SingleTickerProviderStateMi
                 DefaultTextStyle(
                   style: theme.textStyle(
                     fontSize: large ? IddsFontSize.sm : IddsFontSize.xs,
-                    lineHeight: (large ? IddsFontSize.sm : IddsFontSize.xs) * 1.4,
+                    lineHeight:
+                        (large ? IddsFontSize.sm : IddsFontSize.xs) * 1.4,
                     fontWeight: IddsFontWeight.medium,
                     color: foreground,
                   ),
-                  child: IconTheme(data: IconThemeData(size: 16, color: foreground), child: e.title),
+                  child: IconTheme(
+                      data: IconThemeData(size: 16, color: foreground),
+                      child: e.title),
                 ),
                 if (e.description != null) ...<Widget>[
                   const SizedBox(height: IddsSpacing.s4),
@@ -458,13 +537,17 @@ class _ToastViewState extends State<_ToastView> with SingleTickerProviderStateMi
               excludeSemantics: true,
               child: IddsInteractive(
                 onTap: () => e.manager._close(e),
-                builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+                builder: (BuildContext context, IddsInteractionState state) =>
+                    IddsInsetRing(
                   visible: state.focused,
                   borderRadius: BorderRadius.circular(IddsRadius.sm),
                   rings: <(double, Color)>[(1.5, foreground)],
                   child: Padding(
                     padding: const EdgeInsets.all(2),
-                    child: IddsIcon(IddsIcons.x, size: 16, strokeWidth: state.hovered ? 3 : 2, color: foreground),
+                    child: IddsIcon(IddsIcons.x,
+                        size: 16,
+                        strokeWidth: state.hovered ? 3 : 2,
+                        color: foreground),
                   ),
                 ),
               ),
@@ -474,15 +557,21 @@ class _ToastViewState extends State<_ToastView> with SingleTickerProviderStateMi
       ),
     );
 
-    final Animation<double> curve = CurvedAnimation(parent: _fade, curve: Curves.easeInOut);
+    final Animation<double> curve =
+        CurvedAnimation(parent: _fade, curve: Curves.easeInOut);
     final bool fromBottom = e.position._isBottom;
     Widget result = FadeTransition(
       opacity: curve,
-      child: Semantics(liveRegion: true, container: true, child: IntrinsicWidth(child: toast)),
+      child: Semantics(
+          liveRegion: true,
+          container: true,
+          child: IntrinsicWidth(child: toast)),
     );
     if (_isTouchPlatform) {
       result = SlideTransition(
-        position: Tween<Offset>(begin: Offset(0, fromBottom ? 0.5 : -0.5), end: Offset.zero).animate(curve),
+        position: Tween<Offset>(
+                begin: Offset(0, fromBottom ? 0.5 : -0.5), end: Offset.zero)
+            .animate(curve),
         child: result,
       );
     }

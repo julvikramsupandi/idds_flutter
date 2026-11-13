@@ -19,16 +19,22 @@ const List<_Row> _data = <_Row>[
 ];
 
 List<IddsTableColumn<_Row>> _columns = <IddsTableColumn<_Row>>[
-  IddsTableColumn<_Row>(header: 'Nama', sortKey: 'name', cell: (BuildContext c, _Row r) => Text(r.name)),
-  IddsTableColumn<_Row>(header: 'Unit', cell: (BuildContext c, _Row r) => Text(r.unit)),
+  IddsTableColumn<_Row>(
+      header: 'Nama',
+      sortKey: 'name',
+      cell: (BuildContext c, _Row r) => Text(r.name)),
+  IddsTableColumn<_Row>(
+      header: 'Unit', cell: (BuildContext c, _Row r) => Text(r.unit)),
 ];
 
 void main() {
-  testWidgets('menampilkan judul dan baris, ketukan baris', (WidgetTester tester) async {
+  testWidgets('menampilkan judul dan baris, ketukan baris',
+      (WidgetTester tester) async {
     _Row? tapped;
     await tester.pumpWidget(testApp(SizedBox(
       width: 600,
-      child: IddsTable<_Row>(columns: _columns, rows: _data, onRowTap: (_Row r) => tapped = r),
+      child: IddsTable<_Row>(
+          columns: _columns, rows: _data, onRowTap: (_Row r) => tapped = r),
     )));
     expect(find.text('Nama'), findsOneWidget);
     expect(find.text('Bapenda'), findsOneWidget);
@@ -41,7 +47,11 @@ void main() {
     IddsTableSort? sort;
     Widget build() => testApp(SizedBox(
           width: 600,
-          child: IddsTable<_Row>(columns: _columns, rows: _data, sort: sort, onSortChanged: (IddsTableSort s) => sort = s),
+          child: IddsTable<_Row>(
+              columns: _columns,
+              rows: _data,
+              sort: sort,
+              onSortChanged: (IddsTableSort s) => sort = s),
         ));
     await tester.pumpWidget(build());
     await tester.tap(find.text('Nama'));
@@ -101,13 +111,16 @@ void main() {
     expect(page, 2);
   });
 
-  testWidgets('tabel lebar bisa digeser tanpa overflow', (WidgetTester tester) async {
+  testWidgets('tabel lebar bisa digeser tanpa overflow',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testApp(SizedBox(
       width: 300,
       child: IddsTable<_Row>(
         columns: <IddsTableColumn<_Row>>[
           for (int i = 0; i < 6; i++)
-            IddsTableColumn<_Row>(header: 'Kolom panjang $i', cell: (BuildContext c, _Row r) => Text('${r.name} $i')),
+            IddsTableColumn<_Row>(
+                header: 'Kolom panjang $i',
+                cell: (BuildContext c, _Row r) => Text('${r.name} $i')),
         ],
         rows: _data,
       ),
@@ -116,8 +129,13 @@ void main() {
     expect(find.byType(SingleChildScrollView), findsOneWidget);
   });
 
-  testWidgets('edit sel: ketuk, validasi, Enter menyimpan', (WidgetTester tester) async {
-    final Map<int, String> names = <int, String>{1: 'Andi', 2: 'Budi', 3: 'Citra'};
+  testWidgets('edit sel: ketuk, validasi, Enter menyimpan',
+      (WidgetTester tester) async {
+    final Map<int, String> names = <int, String>{
+      1: 'Andi',
+      2: 'Budi',
+      3: 'Citra'
+    };
     _Row? tapped;
     Widget build() => testApp(SizedBox(
           width: 600,
@@ -131,11 +149,14 @@ void main() {
                 editor: IddsTableCellEditor<_Row>(
                   value: (_Row r) => names[r.id]!,
                   enabled: (_Row r) => r.id != 3,
-                  validator: (String v) => v.trim().isEmpty ? 'Nama wajib diisi' : null,
+                  validator: (String v) =>
+                      v.trim().isEmpty ? 'Nama wajib diisi' : null,
                   onSubmitted: (_Row r, String v) => names[r.id] = v,
                 ),
               ),
-              IddsTableColumn<_Row>(header: 'Unit', cell: (BuildContext c, _Row r) => Text(r.unit)),
+              IddsTableColumn<_Row>(
+                  header: 'Unit',
+                  cell: (BuildContext c, _Row r) => Text(r.unit)),
             ],
           ),
         ));
@@ -165,7 +186,8 @@ void main() {
     expect(tapped?.id, 3);
   });
 
-  testWidgets('edit sel: Esc dan tombol batal tidak menyimpan', (WidgetTester tester) async {
+  testWidgets('edit sel: Esc dan tombol batal tidak menyimpan',
+      (WidgetTester tester) async {
     String name = 'Andi';
     await tester.pumpWidget(testApp(SizedBox(
       width: 600,
@@ -175,7 +197,9 @@ void main() {
           IddsTableColumn<_Row>(
             header: 'Nama',
             cell: (BuildContext c, _Row r) => Text(name),
-            editor: IddsTableCellEditor<_Row>(value: (_Row r) => name, onSubmitted: (_Row r, String v) => name = v),
+            editor: IddsTableCellEditor<_Row>(
+                value: (_Row r) => name,
+                onSubmitted: (_Row r, String v) => name = v),
           ),
         ],
       ),
@@ -191,22 +215,32 @@ void main() {
     await tester.tap(find.text('Andi'));
     await tester.pump();
     await tester.enterText(find.byType(EditableText), 'Ani');
-    await tester.tap(find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == IddsIcons.x));
+    await tester.tap(find.byWidgetPredicate(
+        (Widget w) => w is IddsIcon && w.icon == IddsIcons.x));
     await tester.pump();
     expect(find.byType(IddsTableFieldInput), findsNothing);
     expect(name, 'Andi');
   });
 
-  testWidgets('kolom terakhir menempel saat tabel digeser', (WidgetTester tester) async {
+  testWidgets('kolom terakhir menempel saat tabel digeser',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testApp(SizedBox(
       width: 300,
       child: IddsTable<_Row>(
         rows: _data,
         stickyLastColumn: true,
         columns: <IddsTableColumn<_Row>>[
-          IddsTableColumn<_Row>(header: 'Nama', width: 200, cell: (BuildContext c, _Row r) => Text(r.name)),
-          IddsTableColumn<_Row>(header: 'Unit', width: 200, cell: (BuildContext c, _Row r) => Text(r.unit)),
-          IddsTableColumn<_Row>(header: 'Aksi', cell: (BuildContext c, _Row r) => const Text('Ubah')),
+          IddsTableColumn<_Row>(
+              header: 'Nama',
+              width: 200,
+              cell: (BuildContext c, _Row r) => Text(r.name)),
+          IddsTableColumn<_Row>(
+              header: 'Unit',
+              width: 200,
+              cell: (BuildContext c, _Row r) => Text(r.unit)),
+          IddsTableColumn<_Row>(
+              header: 'Aksi',
+              cell: (BuildContext c, _Row r) => const Text('Ubah')),
         ],
       ),
     )));
@@ -220,7 +254,8 @@ void main() {
     // Setelah digeser penuh ke kanan, posisinya tetap.
     await tester.drag(find.text('Bapenda'), const Offset(-500, 0));
     await tester.pumpAndSettle();
-    expect(tester.getRect(find.text('Aksi')).right, lessThanOrEqualTo(table.right));
+    expect(tester.getRect(find.text('Aksi')).right,
+        lessThanOrEqualTo(table.right));
     expect(find.text('Ubah'), findsNWidgets(3));
   });
 }

@@ -14,7 +14,20 @@ class _ChartSectionState extends State<ChartSection> {
   bool _stacked = false;
   bool _area = true;
 
-  static const List<String> _months = <String>['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+  static const List<String> _months = <String>[
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'Mei',
+    'Jun',
+    'Jul',
+    'Agu',
+    'Sep',
+    'Okt',
+    'Nov',
+    'Des'
+  ];
 
   Widget _card(String title, Widget child) => ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 560),
@@ -42,8 +55,10 @@ class _ChartSectionState extends State<ChartSection> {
   Widget build(BuildContext context) {
     return GallerySection(
       title: 'Grafik',
-      subtitle: 'Line, Bar, dan Pie/Donut, digambar sendiri dengan palet IddsChartColors. Sorot atau ketuk untuk tooltip.',
-      usage: 'Warna seri mengikuti IddsChartColors.categorical sesuai urutan, bisa diganti per seri lewat color. Legenda tampil otomatis untuk dua seri atau lebih; null pada values membuat garis terputus.',
+      subtitle:
+          'Line, Bar, dan Pie/Donut, digambar sendiri dengan palet IddsChartColors. Sorot atau ketuk untuk tooltip.',
+      usage:
+          'Warna seri mengikuti IddsChartColors.categorical sesuai urutan, bisa diganti per seri lewat color. Legenda tampil otomatis untuk dua seri atau lebih; null pada values membuat garis terputus.',
       code: _chartCode,
       children: <Widget>[
         Wrap(
@@ -59,7 +74,10 @@ class _ChartSectionState extends State<ChartSection> {
                   Row(
                     spacing: IddsSpacing.s8,
                     children: <Widget>[
-                      IddsToggle(value: _area, semanticLabel: 'Area', onChanged: (bool v) => setState(() => _area = v)),
+                      IddsToggle(
+                          value: _area,
+                          semanticLabel: 'Area',
+                          onChanged: (bool v) => setState(() => _area = v)),
                       const Text('Area'),
                     ],
                   ),
@@ -69,11 +87,37 @@ class _ChartSectionState extends State<ChartSection> {
                     series: const <IddsChartSeries>[
                       IddsChartSeries(
                         name: 'Permohonan',
-                        values: <double?>[1200, 1350, 1280, 1510, 1620, 1580, 1740, 1810, 1700, 1920, 2050, 2210],
+                        values: <double?>[
+                          1200,
+                          1350,
+                          1280,
+                          1510,
+                          1620,
+                          1580,
+                          1740,
+                          1810,
+                          1700,
+                          1920,
+                          2050,
+                          2210
+                        ],
                       ),
                       IddsChartSeries(
                         name: 'Selesai',
-                        values: <double?>[1100, 1240, 1200, 1390, 1500, 1490, 1610, 1700, 1650, 1830, 1960, null],
+                        values: <double?>[
+                          1100,
+                          1240,
+                          1200,
+                          1390,
+                          1500,
+                          1490,
+                          1610,
+                          1700,
+                          1650,
+                          1830,
+                          1960,
+                          null
+                        ],
                       ),
                     ],
                   ),
@@ -89,16 +133,29 @@ class _ChartSectionState extends State<ChartSection> {
                   Row(
                     spacing: IddsSpacing.s8,
                     children: <Widget>[
-                      IddsToggle(value: _stacked, semanticLabel: 'Bertumpuk', onChanged: (bool v) => setState(() => _stacked = v)),
+                      IddsToggle(
+                          value: _stacked,
+                          semanticLabel: 'Bertumpuk',
+                          onChanged: (bool v) => setState(() => _stacked = v)),
                       const Text('Bertumpuk'),
                     ],
                   ),
                   IddsBarChart(
-                    labels: const <String>['Kota Gorontalo', 'Kab. Gorontalo', 'Bone Bolango', 'Pohuwato', 'Boalemo'],
+                    labels: const <String>[
+                      'Kota Gorontalo',
+                      'Kab. Gorontalo',
+                      'Bone Bolango',
+                      'Pohuwato',
+                      'Boalemo'
+                    ],
                     stacked: _stacked,
                     series: const <IddsChartSeries>[
-                      IddsChartSeries(name: 'Laki-laki', values: <double?>[4200, 5100, 2150, 1900, 1650]),
-                      IddsChartSeries(name: 'Perempuan', values: <double?>[4500, 5300, 2300, 2050, 1700]),
+                      IddsChartSeries(
+                          name: 'Laki-laki',
+                          values: <double?>[4200, 5100, 2150, 1900, 1650]),
+                      IddsChartSeries(
+                          name: 'Perempuan',
+                          values: <double?>[4500, 5300, 2300, 2050, 1700]),
                     ],
                   ),
                 ],
@@ -109,8 +166,17 @@ class _ChartSectionState extends State<ChartSection> {
               const IddsBarChart(
                 horizontal: true,
                 showValues: true,
-                labels: <String>['Paspor', 'KTP Elektronik', 'Akta Kelahiran', 'SIM', 'NPWP'],
-                series: <IddsChartSeries>[IddsChartSeries(name: 'Skor', values: <double?>[92, 88, 85, 79, 74])],
+                labels: <String>[
+                  'Paspor',
+                  'KTP Elektronik',
+                  'Akta Kelahiran',
+                  'SIM',
+                  'NPWP'
+                ],
+                series: <IddsChartSeries>[
+                  IddsChartSeries(
+                      name: 'Skor', values: <double?>[92, 88, 85, 79, 74])
+                ],
               ),
             ),
             _card(

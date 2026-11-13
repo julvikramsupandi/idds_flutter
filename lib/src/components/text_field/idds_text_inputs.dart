@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart' show AutofillHints, TextInputAction, TextInputFormatter;
+import 'package:flutter/services.dart'
+    show AutofillHints, TextInputAction, TextInputFormatter;
 import 'package:flutter/widgets.dart';
 
 import '../../foundation/idds_icon.dart';
@@ -227,7 +228,8 @@ class _IddsPasswordFieldState extends State<IddsPasswordField> {
   Widget build(BuildContext context) {
     final IddsColors c = IddsTheme.of(context).colors;
     final String label = _visible ? widget.hideLabel : widget.showLabel;
-    final VoidCallback? toggle = widget.enabled ? () => setState(() => _visible = !_visible) : null;
+    final VoidCallback? toggle =
+        widget.enabled ? () => setState(() => _visible = !_visible) : null;
     return IddsTextField(
       controller: widget.controller,
       onChanged: widget.onChanged,
@@ -255,7 +257,8 @@ class _IddsPasswordFieldState extends State<IddsPasswordField> {
         excludeSemantics: true,
         child: IddsInteractive(
           onTap: toggle,
-          builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+          builder: (BuildContext context, IddsInteractionState state) =>
+              IddsInsetRing(
             visible: state.focused,
             borderRadius: BorderRadius.circular(IddsRadius.sm),
             rings: <(double, Color)>[(2.0, c.contentPrimary)],
@@ -374,8 +377,12 @@ class _IddsSearchFieldState extends State<IddsSearchField> {
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
       textInputAction: TextInputAction.search,
-      prefixIcon: IddsIcon(IddsIcons.search, size: 20, color: c.contentSecondary),
-      suffixIcon: widget.loading ? const IddsSpinner(size: 16, strokeWidth: 2, semanticLabel: 'Mencari') : null,
+      prefixIcon:
+          IddsIcon(IddsIcons.search, size: 20, color: c.contentSecondary),
+      suffixIcon: widget.loading
+          ? const IddsSpinner(
+              size: 16, strokeWidth: 2, semanticLabel: 'Mencari')
+          : null,
     );
   }
 }

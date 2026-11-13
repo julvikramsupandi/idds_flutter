@@ -12,7 +12,8 @@ import 'phone_frame.dart';
 /// Memperlihatkan Stepper, validasi per langkah, unggah berkas, dan tombol
 /// aksi yang menempel di bawah layar.
 class ApplicationFormScreen extends StatefulWidget {
-  const ApplicationFormScreen({super.key, this.serviceName = 'Pindah Domisili'});
+  const ApplicationFormScreen(
+      {super.key, this.serviceName = 'Pindah Domisili'});
 
   /// Nama layanan yang diajukan, tampil di judul.
   final String serviceName;
@@ -28,7 +29,8 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen> {
     IddsStep(label: 'Kirim'),
   ];
 
-  static const List<IddsSelectOption<String>> _districts = <IddsSelectOption<String>>[
+  static const List<IddsSelectOption<String>> _districts =
+      <IddsSelectOption<String>>[
     IddsSelectOption<String>(value: 'kota-barat', label: 'Kota Barat'),
     IddsSelectOption<String>(value: 'kota-selatan', label: 'Kota Selatan'),
     IddsSelectOption<String>(value: 'kota-timur', label: 'Kota Timur'),
@@ -62,7 +64,9 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen> {
     super.dispose();
   }
 
-  String? get _nameError => _submitted && _name.text.trim().isEmpty ? 'Nama lengkap wajib diisi' : null;
+  String? get _nameError => _submitted && _name.text.trim().isEmpty
+      ? 'Nama lengkap wajib diisi'
+      : null;
 
   String? get _nikError => !_submitted
       ? null
@@ -72,25 +76,40 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen> {
               ? 'NIK harus 16 digit'
               : null;
 
-  String? get _districtError => _submitted && _district == null ? 'Kecamatan wajib dipilih' : null;
+  String? get _districtError =>
+      _submitted && _district == null ? 'Kecamatan wajib dipilih' : null;
 
   bool get _stepValid => switch (_step) {
-        0 => _name.text.trim().isNotEmpty && _nik.text.length == 16 && _district != null,
-        1 => _ktp?.status == IddsFileStatus.success && _kk?.status == IddsFileStatus.success,
+        0 => _name.text.trim().isNotEmpty &&
+            _nik.text.length == 16 &&
+            _district != null,
+        1 => _ktp?.status == IddsFileStatus.success &&
+            _kk?.status == IddsFileStatus.success,
         _ => _agree,
       };
 
   /// Simulasi unggah: aplikasi sungguhan memilih berkas (mis. file_picker)
   /// lalu memperbarui `progress` dari proses unggah.
-  void _pick(String key, String fileName, int size, ValueChanged<IddsUploadFile?> assign) {
+  void _pick(String key, String fileName, int size,
+      ValueChanged<IddsUploadFile?> assign) {
     _uploads.remove(key)?.cancel();
-    setState(() => assign(IddsUploadFile(name: fileName, size: size, status: IddsFileStatus.uploading, progress: 0)));
+    setState(() => assign(IddsUploadFile(
+        name: fileName,
+        size: size,
+        status: IddsFileStatus.uploading,
+        progress: 0)));
     double progress = 0;
-    _uploads[key] = Timer.periodic(const Duration(milliseconds: 120), (Timer t) {
+    _uploads[key] =
+        Timer.periodic(const Duration(milliseconds: 120), (Timer t) {
       progress += 0.1;
       setState(() => assign(progress >= 1
-          ? IddsUploadFile(name: fileName, size: size, status: IddsFileStatus.success)
-          : IddsUploadFile(name: fileName, size: size, status: IddsFileStatus.uploading, progress: progress)));
+          ? IddsUploadFile(
+              name: fileName, size: size, status: IddsFileStatus.success)
+          : IddsUploadFile(
+              name: fileName,
+              size: size,
+              status: IddsFileStatus.uploading,
+              progress: progress)));
       if (progress >= 1) {
         t.cancel();
         _uploads.remove(key);
@@ -128,7 +147,8 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen> {
     showPhoneToast(
       context,
       title: const Text('Pengajuan terkirim'),
-      description: const Text('Nomor pengajuan PD-2026-11-0042. Pantau statusnya di Riwayat.'),
+      description: const Text(
+          'Nomor pengajuan PD-2026-11-0042. Pantau statusnya di Riwayat.'),
       state: IddsToastState.positive,
     );
     _reset();
@@ -195,7 +215,8 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen> {
               ),
             IddsButton(
               onPressed: _next,
-              child: Text(_step == _steps.length - 1 ? 'Kirim Pengajuan' : 'Lanjut'),
+              child: Text(
+                  _step == _steps.length - 1 ? 'Kirim Pengajuan' : 'Lanjut'),
             ),
           ],
         ),
@@ -213,7 +234,9 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen> {
           label: const Text('Nama Lengkap'),
           required: true,
           placeholder: 'Sesuai KTP-el',
-          status: _nameError == null ? IddsTextFieldStatus.neutral : IddsTextFieldStatus.error,
+          status: _nameError == null
+              ? IddsTextFieldStatus.neutral
+              : IddsTextFieldStatus.error,
           statusMessage: _nameError,
           onChanged: (_) => setState(() {}),
         ),
@@ -223,10 +246,14 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen> {
           required: true,
           placeholder: '16 digit angka',
           keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.digitsOnly
+          ],
           maxLength: 16,
           showCharCount: true,
-          status: _nikError == null ? IddsTextFieldStatus.neutral : IddsTextFieldStatus.error,
+          status: _nikError == null
+              ? IddsTextFieldStatus.neutral
+              : IddsTextFieldStatus.error,
           statusMessage: _nikError,
           onChanged: (_) => setState(() {}),
         ),
@@ -267,7 +294,8 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen> {
           file: _ktp,
           title: 'Unggah KTP-el',
           description: 'JPG atau PDF, maksimal 2 MB',
-          onPick: () => _pick('ktp', 'ktp-el.jpg', 812000, (IddsUploadFile? f) => _ktp = f),
+          onPick: () => _pick(
+              'ktp', 'ktp-el.jpg', 812000, (IddsUploadFile? f) => _ktp = f),
           onRemove: () => setState(() => _ktp = null),
         ),
         const SizedBox(height: IddsSpacing.s8),
@@ -277,7 +305,8 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen> {
           file: _kk,
           title: 'Unggah Kartu Keluarga',
           description: 'JPG atau PDF, maksimal 2 MB',
-          onPick: () => _pick('kk', 'kartu-keluarga.pdf', 1240000, (IddsUploadFile? f) => _kk = f),
+          onPick: () => _pick('kk', 'kartu-keluarga.pdf', 1240000,
+              (IddsUploadFile? f) => _kk = f),
           onRemove: () => setState(() => _kk = null),
         ),
         const SizedBox(height: IddsSpacing.s8),
@@ -294,7 +323,8 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen> {
 
   Widget _review() {
     final String district = _districts
-        .firstWhere((IddsSelectOption<String> o) => o.value == _district, orElse: () => _districts.first)
+        .firstWhere((IddsSelectOption<String> o) => o.value == _district,
+            orElse: () => _districts.first)
         .label;
     final DateTime? d = _birthDate;
     return Column(
@@ -303,21 +333,31 @@ class _ApplicationFormScreenState extends State<ApplicationFormScreen> {
       children: <Widget>[
         const IddsAlert(
           title: Text('Periksa kembali data Anda'),
-          message: Text('Data yang sudah dikirim tidak bisa diubah sampai pengajuan diproses.'),
+          message: Text(
+              'Data yang sudah dikirim tidak bisa diubah sampai pengajuan diproses.'),
         ),
         IddsCardPlain(
           padding: EdgeInsets.zero,
           child: IddsList(
             padding: EdgeInsets.zero,
             children: <Widget>[
-              IddsListItem(leading: const Icon(TablerIcons.user), title: Text(_name.text), subtitle: const Text('Nama lengkap')),
-              IddsListItem(leading: const Icon(TablerIcons.id), title: Text(_nik.text), subtitle: const Text('NIK')),
+              IddsListItem(
+                  leading: const Icon(TablerIcons.user),
+                  title: Text(_name.text),
+                  subtitle: const Text('Nama lengkap')),
+              IddsListItem(
+                  leading: const Icon(TablerIcons.id),
+                  title: Text(_nik.text),
+                  subtitle: const Text('NIK')),
               IddsListItem(
                 leading: const Icon(TablerIcons.calendar_event),
                 title: Text(d == null ? '-' : '${d.day}/${d.month}/${d.year}'),
                 subtitle: const Text('Tanggal lahir'),
               ),
-              IddsListItem(leading: const Icon(TablerIcons.map_pin), title: Text(district), subtitle: const Text('Kecamatan tujuan')),
+              IddsListItem(
+                  leading: const Icon(TablerIcons.map_pin),
+                  title: Text(district),
+                  subtitle: const Text('Kecamatan tujuan')),
               const IddsListItem(
                 leading: Icon(TablerIcons.file_certificate),
                 title: Text('2 dokumen'),

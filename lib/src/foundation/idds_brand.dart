@@ -48,7 +48,8 @@ class IddsBrand {
     final Oklch o = IddsColorUtils.toOklch(seed);
     int anchor = 0;
     for (int i = 1; i < _targetLightness.length; i++) {
-      if ((_targetLightness[i] - o.l).abs() < (_targetLightness[anchor] - o.l).abs()) {
+      if ((_targetLightness[i] - o.l).abs() <
+          (_targetLightness[anchor] - o.l).abs()) {
         anchor = i;
       }
     }
@@ -58,7 +59,8 @@ class IddsBrand {
           seed
         else
           IddsColorUtils.fromOklch(
-            Oklch(_targetLightness[i], o.c * _relativeChroma[i] / _relativeChroma[anchor], o.h),
+            Oklch(_targetLightness[i],
+                o.c * _relativeChroma[i] / _relativeChroma[anchor], o.h),
           ),
     ]);
     return IddsBrand.fromScale(
@@ -159,7 +161,10 @@ class IddsBrand {
 
   /// Latar dark mode IDDS (`--ina-background-primary` gelap).
   static const Color _darkBackground = Color(0xFF141414);
-  static const List<Color> _onColors = <Color>[Color(0xFFFFFFFF), Color(0xFF141414)];
+  static const List<Color> _onColors = <Color>[
+    Color(0xFFFFFFFF),
+    Color(0xFF141414)
+  ];
 
   /// Rata-rata lightness OKLCH per langkah dari brand resmi IDDS
   /// (INAgov, INApas, PANRB, BKN, LAN, BGN; INAku dikecualikan karena

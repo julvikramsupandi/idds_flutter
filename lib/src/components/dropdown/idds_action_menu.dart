@@ -1,4 +1,10 @@
-import 'package:flutter/services.dart' show KeyDownEvent, KeyEvent, KeyRepeatEvent, LogicalKeyboardKey, SystemMouseCursors;
+import 'package:flutter/services.dart'
+    show
+        KeyDownEvent,
+        KeyEvent,
+        KeyRepeatEvent,
+        LogicalKeyboardKey,
+        SystemMouseCursors;
 import 'package:flutter/widgets.dart';
 
 import '../../foundation/idds_interactive.dart';
@@ -147,7 +153,8 @@ class IddsActionMenu extends StatefulWidget {
   final double maxHeight;
 
   /// Pemicu kustom. [toggle] membuka/menutup menu (`null` bila nonaktif).
-  final Widget Function(BuildContext context, bool open, VoidCallback? toggle)? triggerBuilder;
+  final Widget Function(BuildContext context, bool open, VoidCallback? toggle)?
+      triggerBuilder;
 
   @override
   State<IddsActionMenu> createState() => _IddsActionMenuState();
@@ -219,7 +226,9 @@ class _IddsActionMenuState extends State<IddsActionMenu> {
   }
 
   KeyEventResult _onKey(FocusNode node, KeyEvent event) {
-    if (event is! KeyDownEvent && event is! KeyRepeatEvent) return KeyEventResult.ignored;
+    if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
+      return KeyEventResult.ignored;
+    }
     final LogicalKeyboardKey key = event.logicalKey;
     if (key == LogicalKeyboardKey.arrowDown) {
       _move(1);
@@ -234,7 +243,9 @@ class _IddsActionMenuState extends State<IddsActionMenu> {
     } else if (key == LogicalKeyboardKey.enter ||
         key == LogicalKeyboardKey.numpadEnter ||
         key == LogicalKeyboardKey.space) {
-      if (_highlight >= 0 && _selectable(_highlight)) _activate(widget.items[_highlight] as IddsActionMenuItem);
+      if (_highlight >= 0 && _selectable(_highlight)) {
+        _activate(widget.items[_highlight] as IddsActionMenuItem);
+      }
     } else if (key == LogicalKeyboardKey.tab) {
       _close();
       return KeyEventResult.ignored;
@@ -249,27 +260,29 @@ class _IddsActionMenuState extends State<IddsActionMenu> {
     final IddsDropdownMetrics m = IddsDropdownMetrics.of(context, widget.size);
     final VoidCallback? toggle = widget.enabled ? _toggle : null;
 
-    final Widget trigger = widget.triggerBuilder?.call(context, _open, toggle) ??
-        Semantics(
-          button: true,
-          enabled: widget.enabled,
-          label: widget.label,
-          onTap: toggle,
-          excludeSemantics: true,
-          child: IddsInteractive(
-            focusNode: _triggerFocus,
-            onTap: toggle,
-            builder: (BuildContext context, IddsInteractionState state) => IntrinsicWidth(
-              child: IddsDropdownTriggerBox(
-                state: state,
-                open: _open,
-                metrics: m,
-                prefix: widget.prefix,
-                child: Text(widget.label),
+    final Widget trigger =
+        widget.triggerBuilder?.call(context, _open, toggle) ??
+            Semantics(
+              button: true,
+              enabled: widget.enabled,
+              label: widget.label,
+              onTap: toggle,
+              excludeSemantics: true,
+              child: IddsInteractive(
+                focusNode: _triggerFocus,
+                onTap: toggle,
+                builder: (BuildContext context, IddsInteractionState state) =>
+                    IntrinsicWidth(
+                  child: IddsDropdownTriggerBox(
+                    state: state,
+                    open: _open,
+                    metrics: m,
+                    prefix: widget.prefix,
+                    child: Text(widget.label),
+                  ),
+                ),
               ),
-            ),
-          ),
-        );
+            );
 
     final double? minWidth = switch (widget.width) {
       IddsActionMenuWidth.auto => 160,
@@ -284,7 +297,8 @@ class _IddsActionMenuState extends State<IddsActionMenu> {
       open: _open,
       onDismiss: _close,
       placement: widget.placement,
-      matchAnchorWidth: widget.width == IddsActionMenuWidth.auto || widget.width == IddsActionMenuWidth.full,
+      matchAnchorWidth: widget.width == IddsActionMenuWidth.auto ||
+          widget.width == IddsActionMenuWidth.full,
       minWidth: minWidth,
       maxHeight: widget.maxHeight,
       panelBuilder: _buildMenu,
@@ -328,11 +342,14 @@ class _IddsActionMenuState extends State<IddsActionMenu> {
                       ),
                     IddsActionMenuDivider _ => Container(
                         height: 1,
-                        margin: const EdgeInsets.symmetric(vertical: IddsSpacing.s4, horizontal: IddsSpacing.s16),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: IddsSpacing.s4,
+                            horizontal: IddsSpacing.s16),
                         color: c.strokePrimary,
                       ),
                     final IddsActionMenuHeader header => Padding(
-                        padding: const EdgeInsets.fromLTRB(IddsSpacing.s16, IddsSpacing.s8, IddsSpacing.s16, IddsSpacing.s4),
+                        padding: const EdgeInsets.fromLTRB(IddsSpacing.s16,
+                            IddsSpacing.s8, IddsSpacing.s16, IddsSpacing.s4),
                         child: Text(
                           header.label.toUpperCase(),
                           style: theme.textStyle(
@@ -404,17 +421,24 @@ class _MenuItem extends StatelessWidget {
     // terang, jadi dipakai latar netral dan warna 400 agar tetap terbaca.
     Color foreground = switch (item.type) {
       IddsActionMenuItemType.normal => c.contentPrimary,
-      IddsActionMenuItemType.danger => dark ? c.negative.shade400 : c.negative.shade600,
-      IddsActionMenuItemType.warning => dark ? c.warning.shade400 : c.warning.shade600,
-      IddsActionMenuItemType.success => dark ? c.positive.shade400 : c.positive.shade600,
+      IddsActionMenuItemType.danger =>
+        dark ? c.negative.shade400 : c.negative.shade600,
+      IddsActionMenuItemType.warning =>
+        dark ? c.warning.shade400 : c.warning.shade600,
+      IddsActionMenuItemType.success =>
+        dark ? c.positive.shade400 : c.positive.shade600,
     };
     Color? background;
     if (enabled && focusRing) {
       // CSS :focus: latar primary-100, teks primary-600.
       background = dark ? c.backgroundTertiary : c.primary.shade100;
-      if (item.type == IddsActionMenuItemType.normal) foreground = dark ? c.contentPrimary : c.primary.shade600;
+      if (item.type == IddsActionMenuItemType.normal) {
+        foreground = dark ? c.contentPrimary : c.primary.shade600;
+      }
     } else if (enabled && highlighted) {
-      background = item.type == IddsActionMenuItemType.danger && !dark ? c.negative.shade100 : c.backgroundSecondary;
+      background = item.type == IddsActionMenuItemType.danger && !dark
+          ? c.negative.shade100
+          : c.backgroundSecondary;
     }
 
     return Semantics(
@@ -424,7 +448,8 @@ class _MenuItem extends StatelessWidget {
       onTap: enabled ? onTap : null,
       excludeSemantics: true,
       child: MouseRegion(
-        cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.forbidden,
+        cursor:
+            enabled ? SystemMouseCursors.click : SystemMouseCursors.forbidden,
         onEnter: enabled ? (_) => onHover() : null,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -433,7 +458,9 @@ class _MenuItem extends StatelessWidget {
             opacity: enabled ? 1 : 0.5,
             child: Container(
               color: background,
-              padding: EdgeInsets.symmetric(horizontal: IddsSpacing.s16, vertical: compact ? IddsSpacing.s12 : IddsSpacing.s8),
+              padding: EdgeInsets.symmetric(
+                  horizontal: IddsSpacing.s16,
+                  vertical: compact ? IddsSpacing.s12 : IddsSpacing.s8),
               child: IconTheme(
                 data: IconThemeData(size: 16, color: foreground),
                 child: Row(
@@ -444,8 +471,10 @@ class _MenuItem extends StatelessWidget {
                       child: Text(
                         item.label,
                         style: theme.textStyle(
-                          fontSize: compact ? IddsFontSize.base : IddsFontSize.sm,
-                          lineHeight: compact ? IddsLineHeight.base : IddsLineHeight.sm,
+                          fontSize:
+                              compact ? IddsFontSize.base : IddsFontSize.sm,
+                          lineHeight:
+                              compact ? IddsLineHeight.base : IddsLineHeight.sm,
                           color: foreground,
                         ),
                       ),

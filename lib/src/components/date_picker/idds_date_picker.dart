@@ -234,11 +234,16 @@ class IddsDateRangePicker extends StatelessWidget {
     String? text;
     if (value != null) {
       final String start = iddsFormatDate(value.start, dateFormat);
-      text = value.end == null ? '$start - ' : '$start - ${iddsFormatDate(value.end!, dateFormat)}';
+      text = value.end == null
+          ? '$start - '
+          : '$start - ${iddsFormatDate(value.end!, dateFormat)}';
     }
     return _DateField(
       mode: IddsCalendarMode.range,
-      selected: <DateTime>[if (value != null) value.start, if (value?.end != null) value!.end!],
+      selected: <DateTime>[
+        if (value != null) value.start,
+        if (value?.end != null) value!.end!
+      ],
       text: text,
       monthCount: monthCount,
       onCalendarChanged: onChanged == null
@@ -248,7 +253,8 @@ class IddsDateRangePicker extends StatelessWidget {
                 onChanged(null);
                 return;
               }
-              final IddsDateRange range = IddsDateRange(start: days.first, end: days.length > 1 ? days[1] : null);
+              final IddsDateRange range = IddsDateRange(
+                  start: days.first, end: days.length > 1 ? days[1] : null);
               onChanged(range);
               if (range.isComplete) close();
             },
@@ -362,16 +368,20 @@ class IddsMultiDatePicker extends StatelessWidget {
     final ValueChanged<List<DateTime>>? onChanged = this.onChanged;
     String? text;
     if (values.length > 3) {
-      text = selectionText?.call(values.length) ?? '${values.length} tanggal dipilih';
+      text = selectionText?.call(values.length) ??
+          '${values.length} tanggal dipilih';
     } else if (values.isNotEmpty) {
-      text = values.map((DateTime d) => iddsFormatDate(d, dateFormat)).join(', ');
+      text =
+          values.map((DateTime d) => iddsFormatDate(d, dateFormat)).join(', ');
     }
     return _DateField(
       mode: IddsCalendarMode.multiple,
       selected: values,
       text: text,
       monthCount: monthCount,
-      onCalendarChanged: onChanged == null ? null : (List<DateTime> days, VoidCallback close) => onChanged(days),
+      onCalendarChanged: onChanged == null
+          ? null
+          : (List<DateTime> days, VoidCallback close) => onChanged(days),
       onClear: onChanged == null ? null : () => onChanged(<DateTime>[]),
       common: _Common.fromMulti(this),
     );
@@ -496,7 +506,8 @@ class _DateField extends StatefulWidget {
   final IddsCalendarMode mode;
   final List<DateTime> selected;
   final String? text;
-  final void Function(List<DateTime> days, VoidCallback close)? onCalendarChanged;
+  final void Function(List<DateTime> days, VoidCallback close)?
+      onCalendarChanged;
   final VoidCallback? onClear;
   final _Common common;
   final int? monthCount;
@@ -508,7 +519,8 @@ class _DateField extends StatefulWidget {
 class _DateFieldState extends State<_DateField> {
   bool _open = false;
   final FocusNode _triggerFocus = FocusNode(debugLabel: 'IddsDatePicker');
-  final FocusNode _calendarFocus = FocusNode(debugLabel: 'IddsDatePicker calendar');
+  final FocusNode _calendarFocus =
+      FocusNode(debugLabel: 'IddsDatePicker calendar');
 
   bool get _enabled => widget.onCalendarChanged != null;
 
@@ -543,12 +555,19 @@ class _DateFieldState extends State<_DateField> {
     final _Common o = widget.common;
     final IddsDropdownMetrics m = IddsDropdownMetrics.of(context, o.size);
     final DateTime today = iddsDateOnly(o.currentDate ?? DateTime.now());
-    DateTime? firstDate = o.firstDate == null ? null : iddsDateOnly(o.firstDate!);
+    DateTime? firstDate =
+        o.firstDate == null ? null : iddsDateOnly(o.firstDate!);
     DateTime? lastDate = o.lastDate == null ? null : iddsDateOnly(o.lastDate!);
-    if (o.disablePast) firstDate = firstDate == null || firstDate.isBefore(today) ? today : firstDate;
-    if (o.disableFuture) lastDate = lastDate == null || lastDate.isAfter(today) ? today : lastDate;
+    if (o.disablePast) {
+      firstDate =
+          firstDate == null || firstDate.isBefore(today) ? today : firstDate;
+    }
+    if (o.disableFuture) {
+      lastDate = lastDate == null || lastDate.isAfter(today) ? today : lastDate;
+    }
     final bool hasError = o.errorText != null;
-    final bool showClear = widget.text != null && _canOpen && widget.onClear != null;
+    final bool showClear =
+        widget.text != null && _canOpen && widget.onClear != null;
 
     final Widget trigger = Semantics(
       button: true,
@@ -579,17 +598,26 @@ class _DateFieldState extends State<_DateField> {
               visible: state.enabled && active,
               borderRadius: radius,
               inset: 1,
-              rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, hasError ? c.negative.shade500 : c.contentPrimary)],
+              rings: <(double, Color)>[
+                (2.0, c.backgroundPrimary),
+                (1.0, hasError ? c.negative.shade500 : c.contentPrimary)
+              ],
               child: AnimatedContainer(
                 duration: IddsDuration.base,
                 curve: IddsCurves.standard,
                 height: m.height,
-                padding: EdgeInsets.symmetric(horizontal: (m.small ? IddsSpacing.s8 : IddsSpacing.s12) - 1),
-                decoration: BoxDecoration(color: background, borderRadius: radius, border: Border.all(color: border)),
+                padding: EdgeInsets.symmetric(
+                    horizontal:
+                        (m.small ? IddsSpacing.s8 : IddsSpacing.s12) - 1),
+                decoration: BoxDecoration(
+                    color: background,
+                    borderRadius: radius,
+                    border: Border.all(color: border)),
                 child: Row(
                   spacing: m.small ? 6 : IddsSpacing.s8,
                   children: <Widget>[
-                    IddsIcon(IddsIcons.calendar, size: m.small ? 18 : 20, color: c.contentTertiary),
+                    IddsIcon(IddsIcons.calendar,
+                        size: m.small ? 18 : 20, color: c.contentTertiary),
                     Expanded(
                       child: Text(
                         widget.text ?? o.placeholder,
@@ -599,11 +627,17 @@ class _DateFieldState extends State<_DateField> {
                         style: theme.textStyle(
                           fontSize: m.fontSize,
                           lineHeight: m.lineHeight,
-                          color: widget.text == null ? c.contentTertiary : c.contentPrimary,
+                          color: widget.text == null
+                              ? c.contentTertiary
+                              : c.contentPrimary,
                         ),
                       ),
                     ),
-                    if (showClear) _ClearButton(label: o.clearLabel, size: m.small ? 14 : 16, onTap: widget.onClear!),
+                    if (showClear)
+                      _ClearButton(
+                          label: o.clearLabel,
+                          size: m.small ? 14 : 16,
+                          onTap: widget.onClear!),
                   ],
                 ),
               ),
@@ -637,7 +671,8 @@ class _DateFieldState extends State<_DateField> {
                 monthCount: widget.monthCount,
                 onChanged: widget.onCalendarChanged == null
                     ? null
-                    : (List<DateTime> days) => widget.onCalendarChanged!(days, _close),
+                    : (List<DateTime> days) =>
+                        widget.onCalendarChanged!(days, _close),
               ),
             ),
           ),
@@ -651,7 +686,8 @@ class _DateFieldState extends State<_DateField> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        if (o.label != null) IddsFieldLabel(label: o.label!, required: o.required, small: m.small),
+        if (o.label != null)
+          IddsFieldLabel(label: o.label!, required: o.required, small: m.small),
         popover,
         if (message != null)
           Padding(
@@ -671,9 +707,11 @@ class _DateFieldState extends State<_DateField> {
     if (o.width != null) return SizedBox(width: o.width, child: field);
     // CSS: lebar minimal 200px; di dalam Row tanpa batas lebar dipakai 280px.
     return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) => constraints.hasBoundedWidth
+      builder: (BuildContext context, BoxConstraints constraints) => constraints
+              .hasBoundedWidth
           ? ConstrainedBox(
-              constraints: BoxConstraints(minWidth: math.min(200, constraints.maxWidth)),
+              constraints:
+                  BoxConstraints(minWidth: math.min(200, constraints.maxWidth)),
               child: field,
             )
           : SizedBox(width: 280, child: field),
@@ -682,7 +720,8 @@ class _DateFieldState extends State<_DateField> {
 }
 
 class _ClearButton extends StatelessWidget {
-  const _ClearButton({required this.label, required this.size, required this.onTap});
+  const _ClearButton(
+      {required this.label, required this.size, required this.onTap});
 
   final String label;
   final double size;
@@ -698,7 +737,8 @@ class _ClearButton extends StatelessWidget {
       excludeSemantics: true,
       child: IddsInteractive(
         onTap: onTap,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: BorderRadius.circular(IddsRadius.sm),
           rings: <(double, Color)>[(2.0, c.contentPrimary)],

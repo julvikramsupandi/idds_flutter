@@ -75,53 +75,137 @@ class _GalleryShellState extends State<GalleryShell> {
         GalleryShell.homePage,
         'Beranda',
         TablerIcons.layout_dashboard,
-        (BuildContext context) => HomePage(brand: widget.brand, onBrandChanged: widget.onBrandChanged),
+        (BuildContext context) => HomePage(
+          brand: widget.brand,
+          onBrandChanged: widget.onBrandChanged,
+        ),
       ),
       _Page(
         'brand',
         'Brand & Warna',
         TablerIcons.palette,
-        (BuildContext context) => _scroll(BrandPage(brand: widget.brand, onBrandChanged: widget.onBrandChanged)),
+        (BuildContext context) => _scroll(
+          BrandPage(brand: widget.brand, onBrandChanged: widget.onBrandChanged),
+        ),
       ),
     ]),
-    _Group('Aksi & Tampilan', <_Page>[
-      _Page('button', 'Button', TablerIcons.click, (_) => _scroll(const ButtonSection())),
-      _Page('badge', 'Badge', TablerIcons.tag, (_) => _scroll(const BadgeSection())),
-      _Page('avatar', 'Avatar', TablerIcons.user_circle, (_) => _scroll(const AvatarSection())),
-      _Page('alert', 'Alert', TablerIcons.alert_triangle, (_) => _scroll(const AlertSection())),
-      _Page('content', 'Accordion, Card & Loading', TablerIcons.layout_cards, (_) => _scroll(const ContentSection())),
+    _Group('Aksi', <_Page>[
+      _section('button', 'Button', TablerIcons.click, const ButtonSection()),
+      _section('button-group', 'Button Group', TablerIcons.box_multiple,
+          const ButtonGroupSection()),
+      _section('action-menu', 'Action Menu', TablerIcons.dots_vertical,
+          const ActionMenuSection()),
     ]),
-    _Group('Form', <_Page>[
-      _Page('form', 'Text Input, Checkbox & Radio', TablerIcons.forms, (_) => _scroll(const FormSection())),
-      _Page('inputs', 'Input lainnya', TablerIcons.password, (_) => _scroll(const MoreInputsSection())),
-      _Page('dropdown', 'Dropdown', TablerIcons.selector, (_) => _scroll(const DropdownSection())),
-      _Page('date', 'Date Picker', TablerIcons.calendar, (_) => _scroll(const DateSection())),
-      _Page('upload', 'File Upload', TablerIcons.file_upload, (_) => _scroll(const FileUploadSection())),
+    _Group('Input', <_Page>[
+      _section('text-field', 'Text Field', TablerIcons.forms,
+          const TextFieldSection()),
+      _section('text-area', 'Text Area', TablerIcons.align_left,
+          const TextAreaSection()),
+      _section(
+          'password', 'Password', TablerIcons.lock, const PasswordSection()),
+      _section('search', 'Search', TablerIcons.search, const SearchSection()),
+      _section(
+          'phone', 'Phone Input', TablerIcons.phone, const PhoneInputSection()),
+      _section('otp', 'OTP', TablerIcons.shield_lock, const OtpSection()),
+      _section('checkbox', 'Checkbox', TablerIcons.checkbox,
+          const CheckboxSection()),
+      _section('radio', 'Radio', TablerIcons.circle_dot, const RadioSection()),
+      _section(
+          'toggle', 'Toggle', TablerIcons.toggle_right, const ToggleSection()),
+      _section('select', 'Select', TablerIcons.selector, const SelectSection()),
+      _section('dropdown', 'Dropdown', TablerIcons.caret_down,
+          const DropdownSection()),
+      _section('upload', 'File Upload', TablerIcons.file_upload,
+          const FileUploadSection()),
+    ]),
+    _Group('Tanggal & Waktu', <_Page>[
+      _section('date', 'Date Picker', TablerIcons.calendar,
+          const DatePickerSection()),
+      _section('calendar', 'Calendar', TablerIcons.calendar_month,
+          const CalendarSection()),
+      _section(
+          'time', 'Time Picker', TablerIcons.clock, const TimePickerSection()),
+      _section('month-year', 'Month/Year Picker', TablerIcons.calendar_event,
+          const MonthYearPickerSection()),
+    ]),
+    _Group('Tampilan Data', <_Page>[
+      _section(
+          'avatar', 'Avatar', TablerIcons.user_circle, const AvatarSection()),
+      _section('badge', 'Badge', TablerIcons.tag, const BadgeSection()),
+      _section('card', 'Card', TablerIcons.layout_cards, const CardSection()),
+      _section('list', 'List', TablerIcons.list, const ListSection()),
+      _section('accordion', 'Accordion', TablerIcons.layout_navbar_collapse,
+          const AccordionSection()),
+      _section('divider', 'Divider', TablerIcons.separator_horizontal,
+          const DividerSection()),
+      _section('table', 'Table', TablerIcons.table, const TableSection()),
+      _section('chart', 'Grafik', TablerIcons.chart_line, const ChartSection()),
     ]),
     _Group('Umpan Balik', <_Page>[
-      _Page('overlay', 'Modal & Drawer', TablerIcons.app_window, (_) => _scroll(const OverlaySection())),
-      _Page('feedback', 'Toast & Tooltip', TablerIcons.bell, (_) => _scroll(const FeedbackSection())),
-    ]),
-    _Group('Data', <_Page>[
-      _Page('table', 'Table', TablerIcons.table, (_) => _scroll(const TableSection())),
-      _Page('chart', 'Grafik', TablerIcons.chart_line, (_) => _scroll(const ChartSection())),
+      _section(
+          'alert', 'Alert', TablerIcons.alert_triangle, const AlertSection()),
+      _section('toast', 'Toast', TablerIcons.bell, const ToastSection()),
+      _section('tooltip', 'Tooltip', TablerIcons.message_circle,
+          const TooltipSection()),
+      _section('modal', 'Modal', TablerIcons.app_window, const ModalSection()),
+      _section('drawer', 'Drawer', TablerIcons.layout_sidebar,
+          const DrawerSection()),
+      _section('bottom-sheet', 'Bottom Sheet', TablerIcons.layout_bottombar,
+          const BottomSheetSection()),
+      _section(
+          'loading', 'Loading', TablerIcons.loader, const LoadingSection()),
     ]),
     _Group('Navigasi', <_Page>[
-      _Page('navigation', 'Chip, Tab, Stepper & Pagination', TablerIcons.route, (_) => _scroll(const NavigationSection())),
-      _Page('misc', 'Lainnya', TablerIcons.components, (_) => _scroll(const MiscSection())),
+      _section(
+          'tab', 'Tab Menu', TablerIcons.layout_navbar, const TabMenuSection()),
+      _section(
+          'stepper', 'Stepper', TablerIcons.timeline, const StepperSection()),
+      _section('breadcrumb', 'Breadcrumb', TablerIcons.chevrons_right,
+          const BreadcrumbSection()),
+      _section('pagination', 'Pagination', TablerIcons.dots,
+          const PaginationSection()),
+      _section('chip', 'Chip', TablerIcons.tags, const ChipSection()),
+    ]),
+    _Group('Lainnya', <_Page>[
+      _section('choice-grid', 'Multiple Choice Grid', TablerIcons.grid_dots,
+          const ChoiceGridSection()),
+      _section('theme-toggle', 'Theme Toggle', TablerIcons.sun_moon,
+          const ThemeToggleSection()),
     ]),
   ];
 
+  /// Alamat halaman gabungan versi lama → halaman komponen pertamanya, agar
+  /// tautan lama (mis. `/#/content`) tetap berfungsi.
+  static const Map<String, String> _aliases = <String, String>{
+    'content': 'accordion',
+    'form': 'text-field',
+    'inputs': 'text-area',
+    'overlay': 'modal',
+    'feedback': 'toast',
+    'navigation': 'chip',
+    'misc': 'list',
+  };
+
+  static _Page _section(
+          String id, String title, IconData icon, Widget section) =>
+      _Page(id, title, icon, (_) => _scroll(section));
+
   static Widget _scroll(Widget child) => SingleChildScrollView(
         padding: const EdgeInsets.all(IddsSpacing.s24),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[child]),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[child]),
       );
 
   Iterable<_Page> get _pages => _groups.expand((_Group g) => g.pages);
 
-  _Page get _page => _pages.firstWhere((_Page p) => p.id == widget.page, orElse: () => _pages.first);
+  _Page get _activePage {
+    final String id = _aliases[widget.page] ?? widget.page;
+    return _pages.firstWhere((_Page p) => p.id == id,
+        orElse: () => _pages.first);
+  }
 
-  String get _current => _page.id;
+  String get _current => _activePage.id;
 
   void _select(String id) => widget.onPageChanged(id);
 
@@ -130,6 +214,8 @@ class _GalleryShellState extends State<GalleryShell> {
       context: context,
       position: IddsDrawerPosition.left,
       width: 300,
+      // Menu navigasi tetap dari samping di HP, bukan panel bawah.
+      bottomOnSmallScreens: false,
       builder: (BuildContext context) => IddsDrawer(
         title: const Text('idds_flutter'),
         padding: EdgeInsets.zero,
@@ -156,7 +242,8 @@ class _GalleryShellState extends State<GalleryShell> {
     final Widget topBar = Container(
       height: 64,
       padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s16),
-      decoration: BoxDecoration(color: c.backgroundPrimary, border: Border(bottom: line)),
+      decoration: BoxDecoration(
+          color: c.backgroundPrimary, border: Border(bottom: line)),
       child: Row(
         spacing: IddsSpacing.s12,
         children: <Widget>[
@@ -170,7 +257,7 @@ class _GalleryShellState extends State<GalleryShell> {
             ),
           Expanded(
             child: Text(
-              _page.title,
+              _activePage.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: theme.textStyle(
@@ -187,29 +274,36 @@ class _GalleryShellState extends State<GalleryShell> {
               child: IddsSelect<String>(
                 size: IddsDropdownSize.sm,
                 options: <IddsSelectOption<String>>[
-                  for (final IddsBrand b in galleryBrands) IddsSelectOption<String>(value: b.id, label: b.name),
+                  for (final IddsBrand b in galleryBrands)
+                    IddsSelectOption<String>(value: b.id, label: b.name),
                 ],
                 value: widget.brand.id,
                 onChanged: (String? id) {
-                  if (id != null) widget.onBrandChanged(galleryBrands.firstWhere((IddsBrand b) => b.id == id));
+                  if (id != null) {
+                    widget.onBrandChanged(
+                        galleryBrands.firstWhere((IddsBrand b) => b.id == id));
+                  }
                 },
               ),
             ),
           IddsThemeToggle(
             dark: widget.brightness == Brightness.dark,
             size: IddsThemeToggleSize.md,
-            onChanged: (bool dark) => widget.onBrightnessChanged(dark ? Brightness.dark : Brightness.light),
+            onChanged: (bool dark) => widget
+                .onBrightnessChanged(dark ? Brightness.dark : Brightness.light),
           ),
         ],
       ),
     );
 
     // Key per halaman: state tiap halaman dibuat baru saat berpindah menu.
-    final Widget content = KeyedSubtree(key: ValueKey<String>(_current), child: Builder(builder: _page.builder));
+    final Widget content = KeyedSubtree(
+        key: ValueKey<String>(_current),
+        child: Builder(builder: _activePage.builder));
 
     // Judul tab browser mengikuti halaman yang dibuka.
     return Title(
-      title: '${_page.title} · idds_flutter',
+      title: '${_activePage.title} · idds_flutter',
       color: c.primaryMain,
       child: Scaffold(
         backgroundColor: c.backgroundPrimary,
@@ -220,13 +314,15 @@ class _GalleryShellState extends State<GalleryShell> {
               if (wide)
                 Container(
                   width: 280,
-                  decoration: BoxDecoration(color: c.backgroundPrimary, border: Border(right: line)),
+                  decoration: BoxDecoration(
+                      color: c.backgroundPrimary, border: Border(right: line)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Container(
                         height: 64,
-                        padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s16),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: IddsSpacing.s16),
                         alignment: AlignmentDirectional.centerStart,
                         decoration: BoxDecoration(border: Border(bottom: line)),
                         child: Text(
@@ -240,8 +336,12 @@ class _GalleryShellState extends State<GalleryShell> {
                         ),
                       ),
                       Expanded(
-                        child: SingleChildScrollView(
-                          child: _Menu(groups: _groups, current: _current, onSelected: _select),
+                        child: _Menu(
+                          groups: _groups,
+                          current: _current,
+                          onSelected: _select,
+                          // Pencarian menempel di atas, daftar digulir.
+                          expand: true,
                         ),
                       ),
                     ],
@@ -261,16 +361,61 @@ class _GalleryShellState extends State<GalleryShell> {
   }
 }
 
-class _Menu extends StatelessWidget {
-  const _Menu({required this.groups, required this.current, required this.onSelected});
+/// Daftar menu galeri dengan kotak pencarian komponen.
+class _Menu extends StatefulWidget {
+  const _Menu({
+    required this.groups,
+    required this.current,
+    required this.onSelected,
+    this.expand = false,
+  });
 
   final List<_Group> groups;
   final String current;
   final ValueChanged<String> onSelected;
 
+  /// `true`: mengisi tinggi induk, pencarian tetap di atas dan daftar
+  /// digulir sendiri (sidebar). `false`: setinggi isinya (di dalam drawer
+  /// yang sudah bisa digulir).
+  final bool expand;
+
+  @override
+  State<_Menu> createState() => _MenuState();
+}
+
+class _MenuState extends State<_Menu> {
+  String _query = '';
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final String q = _query.trim().toLowerCase();
+    final List<_Group> groups = <_Group>[
+      for (final _Group g in widget.groups)
+        if (q.isEmpty)
+          g
+        else if (g.pages.any((_Page p) => p.title.toLowerCase().contains(q)))
+          _Group(g.title, <_Page>[
+            for (final _Page p in g.pages)
+              if (p.title.toLowerCase().contains(q)) p,
+          ]),
+    ];
+
+    final Widget search = Padding(
+      padding: const EdgeInsets.fromLTRB(
+        IddsSpacing.s16,
+        IddsSpacing.s12,
+        IddsSpacing.s16,
+        IddsSpacing.s4,
+      ),
+      child: IddsSearchField(
+        size: IddsTextFieldSize.sm,
+        placeholder: 'Cari komponen',
+        debounce: Duration.zero,
+        onChanged: (String v) => setState(() => _query = v),
+      ),
+    );
+
+    final Widget list = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         for (final _Group group in groups)
@@ -283,12 +428,35 @@ class _Menu extends StatelessWidget {
                   dense: true,
                   leading: Icon(page.icon),
                   title: Text(page.title),
-                  selected: page.id == current,
-                  onTap: () => onSelected(page.id),
+                  selected: page.id == widget.current,
+                  onTap: () => widget.onSelected(page.id),
                 ),
             ],
           ),
+        if (groups.isEmpty)
+          Padding(
+            padding: const EdgeInsets.all(IddsSpacing.s16),
+            child: Text(
+              'Tidak ada komponen "${_query.trim()}".',
+              style: IddsTheme.of(context).textStyle(
+                fontSize: IddsFontSize.sm,
+                lineHeight: IddsLineHeight.sm,
+                color: IddsTheme.of(context).colors.contentSecondary,
+              ),
+            ),
+          ),
         const SizedBox(height: IddsSpacing.s16),
+      ],
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        search,
+        if (widget.expand)
+          Expanded(child: SingleChildScrollView(child: list))
+        else
+          list,
       ],
     );
   }

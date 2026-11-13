@@ -9,7 +9,8 @@ import 'test_app.dart';
 final DateTime _today = DateTime(2026, 8, 17);
 
 /// Kolom diletakkan di atas layar agar panel punya ruang di bawahnya.
-Widget _top(Widget child) => testApp(Align(alignment: Alignment.topCenter, child: SizedBox(width: 320, child: child)));
+Widget _top(Widget child) => testApp(Align(
+    alignment: Alignment.topCenter, child: SizedBox(width: 320, child: child)));
 
 class _RangeHarness extends StatefulWidget {
   const _RangeHarness({required this.log});
@@ -76,7 +77,8 @@ void main() {
     });
 
     test('IddsDateRange menukar urutan dan menghitung hari', () {
-      final IddsDateRange r = IddsDateRange(start: DateTime(2026, 8, 20), end: DateTime(2026, 8, 10));
+      final IddsDateRange r = IddsDateRange(
+          start: DateTime(2026, 8, 20), end: DateTime(2026, 8, 10));
       expect(r.start, DateTime(2026, 8, 10));
       expect(r.dayCount, 11);
       expect(r.contains(DateTime(2026, 8, 15, 13)), isTrue);
@@ -85,9 +87,13 @@ void main() {
   });
 
   group('IddsDatePicker', () {
-    testWidgets('memilih tanggal lalu menutup panel', (WidgetTester tester) async {
+    testWidgets('memilih tanggal lalu menutup panel',
+        (WidgetTester tester) async {
       DateTime? picked;
-      await tester.pumpWidget(_top(IddsDatePicker(value: null, currentDate: _today, onChanged: (DateTime? d) => picked = d)));
+      await tester.pumpWidget(_top(IddsDatePicker(
+          value: null,
+          currentDate: _today,
+          onChanged: (DateTime? d) => picked = d)));
       expect(find.text('Pilih tanggal'), findsOneWidget);
 
       await tester.tap(find.text('Pilih tanggal'));
@@ -101,7 +107,8 @@ void main() {
       expect(find.text('Agustus'), findsNothing);
     });
 
-    testWidgets('menampilkan nilai dan tombol hapus', (WidgetTester tester) async {
+    testWidgets('menampilkan nilai dan tombol hapus',
+        (WidgetTester tester) async {
       DateTime? picked = DateTime(2026, 1, 1);
       await tester.pumpWidget(_top(IddsDatePicker(
         value: DateTime(2026, 8, 5),
@@ -109,12 +116,14 @@ void main() {
         onChanged: (DateTime? d) => picked = d,
       )));
       expect(find.text('5 Agustus 2026'), findsOneWidget);
-      await tester.tap(find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == IddsIcons.x));
+      await tester.tap(find.byWidgetPredicate(
+          (Widget w) => w is IddsIcon && w.icon == IddsIcons.x));
       await tester.pumpAndSettle();
       expect(picked, isNull);
     });
 
-    testWidgets('tanggal setelah hari ini nonaktif dengan disableFuture', (WidgetTester tester) async {
+    testWidgets('tanggal setelah hari ini nonaktif dengan disableFuture',
+        (WidgetTester tester) async {
       DateTime? picked;
       await tester.pumpWidget(_top(IddsDatePicker(
         value: null,
@@ -132,9 +141,13 @@ void main() {
       expect(picked, DateTime(2026, 8, 16));
     });
 
-    testWidgets('keyboard: panah kanan lalu Enter', (WidgetTester tester) async {
+    testWidgets('keyboard: panah kanan lalu Enter',
+        (WidgetTester tester) async {
       DateTime? picked;
-      await tester.pumpWidget(_top(IddsDatePicker(value: null, currentDate: _today, onChanged: (DateTime? d) => picked = d)));
+      await tester.pumpWidget(_top(IddsDatePicker(
+          value: null,
+          currentDate: _today,
+          onChanged: (DateTime? d) => picked = d)));
       await tester.tap(find.text('Pilih tanggal'));
       await tester.pumpAndSettle();
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
@@ -145,7 +158,8 @@ void main() {
     });
 
     testWidgets('pilihan bulan dan tahun', (WidgetTester tester) async {
-      await tester.pumpWidget(_top(IddsDatePicker(value: null, currentDate: _today, onChanged: (_) {})));
+      await tester.pumpWidget(_top(
+          IddsDatePicker(value: null, currentDate: _today, onChanged: (_) {})));
       await tester.tap(find.text('Pilih tanggal'));
       await tester.pumpAndSettle();
 
@@ -163,11 +177,14 @@ void main() {
       expect(find.text('2030'), findsOneWidget);
     });
 
-    testWidgets('nonaktif dan hanya-baca tidak membuka panel', (WidgetTester tester) async {
+    testWidgets('nonaktif dan hanya-baca tidak membuka panel',
+        (WidgetTester tester) async {
       await tester.pumpWidget(_top(Column(
         children: <Widget>[
-          const IddsDatePicker(value: null, onChanged: null, placeholder: 'Nonaktif'),
-          IddsDatePicker(value: DateTime(2026, 8, 1), readOnly: true, onChanged: (_) {}),
+          const IddsDatePicker(
+              value: null, onChanged: null, placeholder: 'Nonaktif'),
+          IddsDatePicker(
+              value: DateTime(2026, 8, 1), readOnly: true, onChanged: (_) {}),
         ],
       )));
       await tester.tap(find.text('Nonaktif'));
@@ -176,11 +193,15 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Agustus'), findsNothing);
       // Tombol hapus tidak tampil saat hanya-baca.
-      expect(find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == IddsIcons.x), findsNothing);
+      expect(
+          find.byWidgetPredicate(
+              (Widget w) => w is IddsIcon && w.icon == IddsIcons.x),
+          findsNothing);
     });
   });
 
-  testWidgets('IddsDateRangePicker: awal lalu akhir, panel tertutup', (WidgetTester tester) async {
+  testWidgets('IddsDateRangePicker: awal lalu akhir, panel tertutup',
+      (WidgetTester tester) async {
     final List<IddsDateRange?> log = <IddsDateRange?>[];
     await tester.pumpWidget(_top(_RangeHarness(log: log)));
     await tester.tap(find.text('Pilih rentang tanggal'));
@@ -194,12 +215,16 @@ void main() {
     // Memilih tanggal lebih awal sebagai akhir: urutan ditukar.
     await tester.tap(find.text('10'));
     await tester.pumpAndSettle();
-    expect(log.last, IddsDateRange(start: DateTime(2026, 8, 10), end: DateTime(2026, 8, 14)));
+    expect(
+        log.last,
+        IddsDateRange(
+            start: DateTime(2026, 8, 10), end: DateTime(2026, 8, 14)));
     expect(find.text('10/08/2026 - 14/08/2026'), findsOneWidget);
     expect(find.text('Agustus'), findsNothing);
   });
 
-  testWidgets('IddsMultiDatePicker: tetap terbuka dan meringkas teks', (WidgetTester tester) async {
+  testWidgets('IddsMultiDatePicker: tetap terbuka dan meringkas teks',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_top(const _MultiHarness()));
     await tester.tap(find.text('Pilih tanggal'));
     await tester.pumpAndSettle();
@@ -220,7 +245,8 @@ void main() {
     expect(find.text('03/08/2026, 04/08/2026, 05/08/2026'), findsOneWidget);
   });
 
-  testWidgets('IddsCalendar mulai Senin bila diatur', (WidgetTester tester) async {
+  testWidgets('IddsCalendar mulai Senin bila diatur',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testApp(IddsCalendar(
       mode: IddsCalendarMode.single,
       selected: const <DateTime>[],

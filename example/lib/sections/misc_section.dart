@@ -4,34 +4,111 @@ import 'package:idds_flutter/idds_flutter.dart';
 
 import 'common.dart';
 
-class MiscSection extends StatefulWidget {
-  const MiscSection({super.key});
+class MonthYearPickerSection extends StatefulWidget {
+  const MonthYearPickerSection({super.key});
 
   @override
-  State<MiscSection> createState() => _MiscSectionState();
+  State<MonthYearPickerSection> createState() => _MonthYearPickerSectionState();
 }
 
-class _MiscSectionState extends State<MiscSection> {
+class _MonthYearPickerSectionState extends State<MonthYearPickerSection> {
   int? _month = DateTime.now().month;
   int? _year = DateTime.now().year;
+
+  @override
+  Widget build(BuildContext context) {
+    return GallerySection(
+      title: 'Month/Year Picker',
+      subtitle: 'Memilih bulan atau tahun saja, tanpa tanggal.',
+      usage:
+          'Cocok untuk periode laporan atau masa berlaku. Nilai berupa angka: bulan 1–12 dan tahun empat digit. clearable menampilkan tombol hapus.',
+      code: _monthYearCode,
+      children: <Widget>[
+        Wrap(
+          spacing: IddsSpacing.s16,
+          runSpacing: IddsSpacing.s16,
+          children: <Widget>[
+            SizedBox(
+              width: 200,
+              child: IddsMonthPicker(
+                value: _month,
+                clearable: true,
+                onChanged: (int? m) => setState(() => _month = m),
+              ),
+            ),
+            SizedBox(
+              width: 160,
+              child: IddsYearPicker(
+                value: _year,
+                onChanged: (int? y) => setState(() => _year = y),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class ThemeToggleSection extends StatefulWidget {
+  const ThemeToggleSection({super.key});
+
+  @override
+  State<ThemeToggleSection> createState() => _ThemeToggleSectionState();
+}
+
+class _ThemeToggleSectionState extends State<ThemeToggleSection> {
   bool _dark = false;
-  String _service = 'ktp';
-  Map<String, String> _survey = <String, String>{};
 
-  static const List<IddsChoiceGridItem> _scale = <IddsChoiceGridItem>[
-    IddsChoiceGridItem(id: '1', label: 'Sangat kurang'),
-    IddsChoiceGridItem(id: '2', label: 'Kurang'),
-    IddsChoiceGridItem(id: '3', label: 'Cukup'),
-    IddsChoiceGridItem(id: '4', label: 'Baik'),
-    IddsChoiceGridItem(id: '5', label: 'Sangat baik'),
-  ];
+  @override
+  Widget build(BuildContext context) {
+    return GallerySection(
+      title: 'Theme Toggle',
+      subtitle: 'Tombol pengganti mode terang/gelap, dengan atau tanpa label.',
+      usage:
+          'IddsThemeToggle hanya melaporkan nilai: bangun ulang IddsThemeData dengan brightness yang sesuai, seperti tombol di bilah atas galeri ini.',
+      code: _themeToggleCode,
+      children: <Widget>[
+        Wrap(
+          spacing: IddsSpacing.s16,
+          runSpacing: IddsSpacing.s16,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: <Widget>[
+            IddsThemeToggle(
+              dark: _dark,
+              showLabel: true,
+              onChanged: (bool v) => setState(() => _dark = v),
+            ),
+            IddsThemeToggle(
+              dark: _dark,
+              size: IddsThemeToggleSize.sm,
+              onChanged: (bool v) => setState(() => _dark = v),
+            ),
+          ],
+        ),
+        const SizedBox(height: IddsSpacing.s8),
+        const GalleryCaption(
+          'Contoh ini hanya menyimpan nilai; pakai tombol di bilah atas untuk mengganti tema galeri.',
+        ),
+      ],
+    );
+  }
+}
 
-  void _openSheet({required bool locked}) {
+class BottomSheetSection extends StatelessWidget {
+  const BottomSheetSection({super.key});
+
+  void _openSheet(BuildContext context, {required bool locked}) {
     showIddsBottomSheet<void>(
       context: context,
       locked: locked,
       builder: (BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(IddsSpacing.s16, 0, IddsSpacing.s16, IddsSpacing.s16),
+        padding: EdgeInsets.fromLTRB(
+          IddsSpacing.s16,
+          0,
+          IddsSpacing.s16,
+          IddsSpacing.s16 + MediaQuery.paddingOf(context).bottom,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -45,10 +122,15 @@ class _MiscSectionState extends State<MiscSection> {
                 fontWeight: IddsFontWeight.semibold,
               ),
             ),
-            Text(locked
-                ? 'Panel ini hanya bisa ditutup dengan tombol di bawah.'
-                : 'Tarik ke bawah, tekan latar, atau Esc untuk menutup.'),
-            IddsButton(onPressed: () => Navigator.pop(context), child: const Text('Tutup')),
+            Text(
+              locked
+                  ? 'Panel ini hanya bisa ditutup dengan tombol di bawah.'
+                  : 'Tarik ke bawah, tekan latar, atau Esc untuk menutup.',
+            ),
+            IddsButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Tutup'),
+            ),
           ],
         ),
       ),
@@ -58,40 +140,52 @@ class _MiscSectionState extends State<MiscSection> {
   @override
   Widget build(BuildContext context) {
     return GallerySection(
-      title: 'Lainnya',
-      subtitle: 'Month/Year Picker, Theme Toggle, Bottom Sheet, List, dan Multiple Choice Grid.',
-      usage: 'Month/Year Picker untuk memilih bulan atau tahun saja. IddsThemeToggle hanya melaporkan nilai: bangun ulang IddsThemeData dengan brightness yang sesuai. Bottom sheet bisa ditarik ke bawah untuk menutup (locked: true untuk mencegahnya).',
-      code: _miscCode,
+      title: 'Bottom Sheet',
+      subtitle: 'Panel dari bawah layar yang bisa ditarik untuk menutup.',
+      usage:
+          'showIddsBottomSheet menampilkan panel dan mengembalikan Future berisi nilai dari Navigator.pop. locked: true mencegah panel ditutup dengan menarik, menekan latar, atau Esc. Tinggi panel mengikuti isi, maksimal 90% layar (maxHeightFactor).',
+      code: _bottomSheetCode,
       children: <Widget>[
         Wrap(
-          spacing: IddsSpacing.s16,
-          runSpacing: IddsSpacing.s16,
-          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: IddsSpacing.s8,
+          runSpacing: IddsSpacing.s8,
           children: <Widget>[
-            SizedBox(
-              width: 200,
-              child: IddsMonthPicker(value: _month, clearable: true, onChanged: (int? m) => setState(() => _month = m)),
+            IddsButton(
+              onPressed: () => _openSheet(context, locked: false),
+              child: const Text('Buka bottom sheet'),
             ),
-            SizedBox(
-              width: 160,
-              child: IddsYearPicker(value: _year, onChanged: (int? y) => setState(() => _year = y)),
-            ),
-            IddsThemeToggle(dark: _dark, showLabel: true, onChanged: (bool v) => setState(() => _dark = v)),
-            IddsThemeToggle(dark: _dark, size: IddsThemeToggleSize.sm, onChanged: (bool v) => setState(() => _dark = v)),
             IddsButton(
               hierarchy: IddsButtonHierarchy.secondary,
-              onPressed: () => _openSheet(locked: false),
-              child: const Text('Bottom sheet'),
-            ),
-            IddsButton(
-              hierarchy: IddsButtonHierarchy.tertiary,
-              onPressed: () => _openSheet(locked: true),
+              onPressed: () => _openSheet(context, locked: true),
               child: const Text('Bottom sheet terkunci'),
             ),
           ],
         ),
-        const GalleryCaption('Theme Toggle di contoh ini hanya menyimpan nilai; pakai switch di atas halaman untuk mengganti tema.'),
-        const SizedBox(height: IddsSpacing.s24),
+      ],
+    );
+  }
+}
+
+class ListSection extends StatefulWidget {
+  const ListSection({super.key});
+
+  @override
+  State<ListSection> createState() => _ListSectionState();
+}
+
+class _ListSectionState extends State<ListSection> {
+  String _service = 'ktp';
+
+  @override
+  Widget build(BuildContext context) {
+    return GallerySection(
+      title: 'List',
+      subtitle: 'Daftar dengan subjudul, ikon, keterangan, item terpilih, '
+          'dan garis pemisah.',
+      usage:
+          'IddsList membungkus IddsListItem dan bisa diberi subheader serta dividers. Isi onTap agar item bisa ditekan; selected menandai item yang sedang aktif.',
+      code: _listCode,
+      children: <Widget>[
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),
           child: IddsCardPlain(
@@ -100,10 +194,26 @@ class _MiscSectionState extends State<MiscSection> {
               subheader: const IddsListSubheader('Layanan kependudukan'),
               dividers: true,
               children: <Widget>[
-                for (final (String id, String title, String sub, IconData icon) in <(String, String, String, IconData)>[
-                  ('ktp', 'KTP Elektronik', 'Perekaman dan pencetakan', TablerIcons.id),
-                  ('kk', 'Kartu Keluarga', 'Perubahan data anggota keluarga', TablerIcons.users_group),
-                  ('akta', 'Akta Kelahiran', 'Pencatatan kelahiran', TablerIcons.baby_carriage),
+                for (final (String id, String title, String sub, IconData icon)
+                    in <(String, String, String, IconData)>[
+                  (
+                    'ktp',
+                    'KTP Elektronik',
+                    'Perekaman dan pencetakan',
+                    TablerIcons.id,
+                  ),
+                  (
+                    'kk',
+                    'Kartu Keluarga',
+                    'Perubahan data anggota keluarga',
+                    TablerIcons.users_group,
+                  ),
+                  (
+                    'akta',
+                    'Akta Kelahiran',
+                    'Pencatatan kelahiran',
+                    TablerIcons.baby_carriage,
+                  ),
                 ])
                   IddsListItem(
                     leading: Icon(icon),
@@ -113,14 +223,47 @@ class _MiscSectionState extends State<MiscSection> {
                     trailing: const IddsIcon(IddsIcons.chevronRight),
                     onTap: () => setState(() => _service = id),
                   ),
-                const IddsListItem(title: Text('Surat pindah (segera)'), enabled: false, dense: true),
+                const IddsListItem(
+                  title: Text('Surat pindah (segera)'),
+                  enabled: false,
+                  dense: true,
+                ),
               ],
             ),
           ),
         ),
-        const SizedBox(height: IddsSpacing.s24),
-        const GalleryCaption('Survei kepuasan (Multiple Choice Grid)'),
-        const SizedBox(height: IddsSpacing.s8),
+      ],
+    );
+  }
+}
+
+class ChoiceGridSection extends StatefulWidget {
+  const ChoiceGridSection({super.key});
+
+  @override
+  State<ChoiceGridSection> createState() => _ChoiceGridSectionState();
+}
+
+class _ChoiceGridSectionState extends State<ChoiceGridSection> {
+  Map<String, String> _survey = <String, String>{};
+
+  static const List<IddsChoiceGridItem> _scale = <IddsChoiceGridItem>[
+    IddsChoiceGridItem(id: '1', label: 'Sangat kurang'),
+    IddsChoiceGridItem(id: '2', label: 'Kurang'),
+    IddsChoiceGridItem(id: '3', label: 'Cukup'),
+    IddsChoiceGridItem(id: '4', label: 'Baik'),
+    IddsChoiceGridItem(id: '5', label: 'Sangat baik'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return GallerySection(
+      title: 'Multiple Choice Grid',
+      subtitle: 'Satu pilihan per baris, misalnya untuk survei kepuasan.',
+      usage:
+          'columns berisi skala jawaban dan rows berisi pertanyaan. Jawaban disimpan sebagai Map<id baris, id kolom>.',
+      code: _choiceGridCode,
+      children: <Widget>[
         IddsChoiceGrid(
           columns: _scale,
           rows: const <IddsChoiceGridItem>[
@@ -136,20 +279,47 @@ class _MiscSectionState extends State<MiscSection> {
   }
 }
 
-const String _miscCode = r'''
-IddsMonthPicker(value: _month, clearable: true, onChanged: (int? m) => setState(() => _month = m))
-IddsYearPicker(value: _year, onChanged: (int? y) => setState(() => _year = y))
+const String _monthYearCode = r'''
+IddsMonthPicker(
+  value: _month, // 1–12
+  clearable: true,
+  onChanged: (int? m) => setState(() => _month = m),
+)
 
-IddsThemeToggle(dark: _dark, onChanged: (bool v) => setState(() => _dark = v))
+IddsYearPicker(
+  value: _year,
+  onChanged: (int? y) => setState(() => _year = y),
+)
+''';
 
-showIddsBottomSheet<void>(
+const String _themeToggleCode = r'''
+IddsThemeToggle(
+  dark: _brightness == Brightness.dark,
+  showLabel: true,
+  onChanged: (bool dark) => setState(
+    () => _brightness = dark ? Brightness.dark : Brightness.light,
+  ),
+)
+
+// Lalu bangun ulang tema:
+IddsThemeData(brand: IddsBrand.inagov, brightness: _brightness)
+''';
+
+const String _bottomSheetCode = r'''
+final String? choice = await showIddsBottomSheet<String>(
   context: context,
-  builder: (BuildContext context) => const Padding(
-    padding: EdgeInsets.all(16),
-    child: Text('Isi panel'),
+  // locked: true, // tidak bisa ditutup dengan menarik/menekan latar
+  builder: (BuildContext context) => Padding(
+    padding: const EdgeInsets.all(16),
+    child: IddsButton(
+      onPressed: () => Navigator.pop(context, 'whatsapp'),
+      child: const Text('Bagikan ke WhatsApp'),
+    ),
   ),
 );
+''';
 
+const String _listCode = r'''
 IddsList(
   subheader: const IddsListSubheader('Layanan kependudukan'),
   dividers: true,
@@ -159,11 +329,14 @@ IddsList(
       title: const Text('KTP Elektronik'),
       subtitle: const Text('Perekaman dan pencetakan'),
       trailing: const IddsIcon(IddsIcons.chevronRight),
+      selected: _service == 'ktp',
       onTap: () => open('ktp'),
     ),
   ],
 )
+''';
 
+const String _choiceGridCode = r'''
 IddsChoiceGrid(
   columns: const [
     IddsChoiceGridItem(id: '1', label: 'Kurang'),

@@ -111,7 +111,9 @@ class IddsAlert extends StatelessWidget {
                 fontWeight: IddsFontWeight.semibold,
                 color: style.accent,
               ),
-              child: IconTheme(data: IconThemeData(size: 16, color: style.accent), child: title!),
+              child: IconTheme(
+                  data: IconThemeData(size: 16, color: style.accent),
+                  child: title!),
             ),
           if (message != null)
             Padding(
@@ -127,7 +129,8 @@ class IddsAlert extends StatelessWidget {
             ),
           if (action != null)
             Padding(
-              padding: EdgeInsets.only(top: title == null && message == null ? 0 : IddsSpacing.s12),
+              padding: EdgeInsets.only(
+                  top: title == null && message == null ? 0 : IddsSpacing.s12),
               child: action!,
             ),
         ],
@@ -140,7 +143,8 @@ class IddsAlert extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: compact
-            ? const EdgeInsets.symmetric(vertical: IddsSpacing.s8, horizontal: IddsSpacing.s12)
+            ? const EdgeInsets.symmetric(
+                vertical: IddsSpacing.s8, horizontal: IddsSpacing.s12)
             : const EdgeInsets.all(IddsSpacing.s16),
         decoration: BoxDecoration(
           color: style.background,
@@ -158,7 +162,10 @@ class IddsAlert extends StatelessWidget {
             text,
             if (onDismiss != null) ...<Widget>[
               const SizedBox(width: IddsSpacing.s8),
-              _DismissButton(onPressed: onDismiss!, label: dismissLabel, color: style.text),
+              _DismissButton(
+                  onPressed: onDismiss!,
+                  label: dismissLabel,
+                  color: style.text),
             ],
           ],
         ),
@@ -168,7 +175,8 @@ class IddsAlert extends StatelessWidget {
 }
 
 class _DismissButton extends StatelessWidget {
-  const _DismissButton({required this.onPressed, required this.label, required this.color});
+  const _DismissButton(
+      {required this.onPressed, required this.label, required this.color});
 
   final VoidCallback onPressed;
   final String label;
@@ -194,10 +202,13 @@ class _DismissButton extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(IddsRadius.sm),
                 boxShadow: state.focused
-                    ? <BoxShadow>[BoxShadow(color: c.guide.shade500, spreadRadius: 2)]
+                    ? <BoxShadow>[
+                        BoxShadow(color: c.guide.shade500, spreadRadius: 2)
+                      ]
                     : null,
               ),
-              child: IddsIcon(IddsIcons.x, size: 14, color: color, strokeWidth: state.hovered ? 2.5 : 2),
+              child: IddsIcon(IddsIcons.x,
+                  size: 14, color: color, strokeWidth: state.hovered ? 2.5 : 2),
             );
           },
         ),
@@ -215,7 +226,8 @@ class _AlertStyle {
     required this.icon,
   });
 
-  factory _AlertStyle.of(IddsAlertVariant variant, IddsColors c, {required bool isDark}) {
+  factory _AlertStyle.of(IddsAlertVariant variant, IddsColors c,
+      {required bool isDark}) {
     final _AlertStyle light = _AlertStyle._light(variant, c);
     if (!isDark || variant == IddsAlertVariant.neutral) return light;
     // Dark mode: skala warna status IDDS sama di kedua mode, sehingga latar
@@ -230,7 +242,8 @@ class _AlertStyle {
       _ => c.negative,
     };
     return _AlertStyle(
-      background: Color.alphaBlend(palette.shade500.withValues(alpha: 0.16), c.backgroundPrimary),
+      background: Color.alphaBlend(
+          palette.shade500.withValues(alpha: 0.16), c.backgroundPrimary),
       border: light.border,
       accent: palette.shade300,
       text: c.contentPrimary,

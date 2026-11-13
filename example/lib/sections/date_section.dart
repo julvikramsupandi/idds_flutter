@@ -3,30 +3,31 @@ import 'package:idds_flutter/idds_flutter.dart';
 
 import 'common.dart';
 
-class DateSection extends StatefulWidget {
-  const DateSection({super.key});
+class DatePickerSection extends StatefulWidget {
+  const DatePickerSection({super.key});
 
   @override
-  State<DateSection> createState() => _DateSectionState();
+  State<DatePickerSection> createState() => _DatePickerSectionState();
 }
 
-class _DateSectionState extends State<DateSection> {
+class _DatePickerSectionState extends State<DatePickerSection> {
   DateTime? _birthDate;
   DateTime? _visitDate;
   IddsDateRange? _leaveRange;
   List<DateTime> _meetingDates = <DateTime>[];
-  DateTime? _inline = DateTime.now();
 
-  static bool _isWeekday(DateTime d) => d.weekday != DateTime.saturday && d.weekday != DateTime.sunday;
+  static bool _isWeekday(DateTime d) =>
+      d.weekday != DateTime.saturday && d.weekday != DateTime.sunday;
 
   @override
   Widget build(BuildContext context) {
-    final IddsThemeData theme = IddsTheme.of(context);
     return GallerySection(
       title: 'Date Picker',
-      subtitle: 'Satu tanggal, rentang (dua bulan di layar ≥ 768px), dan banyak tanggal. '
+      subtitle:
+          'Satu tanggal, rentang (dua bulan di layar ≥ 768px), dan banyak tanggal. '
           'Tekan nama bulan atau tahun untuk melompat. Keyboard: panah, Page Up/Down, Enter, Esc.',
-      usage: 'Nilai disimpan di state aplikasi dan diperbarui lewat onChanged. Batasi tanggal dengan disablePast/disableFuture, firstDate/lastDate, atau selectableDayPredicate. Pola dateFormat memakai nama hari dan bulan berbahasa Indonesia.',
+      usage:
+          'Nilai disimpan di state aplikasi dan diperbarui lewat onChanged. Batasi tanggal dengan disablePast/disableFuture, firstDate/lastDate, atau selectableDayPredicate. Pola dateFormat memakai nama hari dan bulan berbahasa Indonesia.',
       code: _dateCode,
       children: <Widget>[
         Wrap(
@@ -61,8 +62,11 @@ class _DateSectionState extends State<DateSection> {
               child: IddsDateRangePicker(
                 label: const Text('Periode cuti'),
                 value: _leaveRange,
-                helperText: _leaveRange?.isComplete ?? false ? '${_leaveRange!.dayCount} hari' : null,
-                onChanged: (IddsDateRange? r) => setState(() => _leaveRange = r),
+                helperText: _leaveRange?.isComplete ?? false
+                    ? '${_leaveRange!.dayCount} hari'
+                    : null,
+                onChanged: (IddsDateRange? r) =>
+                    setState(() => _leaveRange = r),
               ),
             ),
             SizedBox(
@@ -71,7 +75,8 @@ class _DateSectionState extends State<DateSection> {
                 label: const Text('Tanggal rapat'),
                 size: IddsDropdownSize.sm,
                 values: _meetingDates,
-                onChanged: (List<DateTime> v) => setState(() => _meetingDates = v),
+                onChanged: (List<DateTime> v) =>
+                    setState(() => _meetingDates = v),
               ),
             ),
             SizedBox(
@@ -85,13 +90,36 @@ class _DateSectionState extends State<DateSection> {
             ),
             const SizedBox(
               width: 280,
-              child: IddsDatePicker(label: Text('Nonaktif'), value: null, onChanged: null),
+              child: IddsDatePicker(
+                  label: Text('Nonaktif'), value: null, onChanged: null),
             ),
           ],
         ),
-        const SizedBox(height: IddsSpacing.s24),
-        const GalleryCaption('Kalender langsung di halaman (IddsCalendar)'),
-        const SizedBox(height: IddsSpacing.s8),
+      ],
+    );
+  }
+}
+
+class CalendarSection extends StatefulWidget {
+  const CalendarSection({super.key});
+
+  @override
+  State<CalendarSection> createState() => _CalendarSectionState();
+}
+
+class _CalendarSectionState extends State<CalendarSection> {
+  DateTime? _inline = DateTime.now();
+
+  @override
+  Widget build(BuildContext context) {
+    final IddsThemeData theme = IddsTheme.of(context);
+    return GallerySection(
+      title: 'Calendar',
+      subtitle: 'Kalender langsung di halaman, tanpa kotak isian.',
+      usage:
+          'IddsCalendar adalah kalender yang dipakai Date Picker, bisa ditaruh langsung di halaman. mode: single, range, atau multiple; nilai terpilih berupa List<DateTime>. iddsFormatDate memformat tanggal dengan nama hari dan bulan berbahasa Indonesia.',
+      code: _calendarCode,
+      children: <Widget>[
         Container(
           padding: const EdgeInsets.all(IddsSpacing.s16),
           decoration: BoxDecoration(
@@ -101,12 +129,14 @@ class _DateSectionState extends State<DateSection> {
           child: IddsCalendar(
             mode: IddsCalendarMode.single,
             selected: <DateTime>[if (_inline != null) _inline!],
-            onChanged: (List<DateTime> d) => setState(() => _inline = d.isEmpty ? null : d.first),
+            onChanged: (List<DateTime> d) =>
+                setState(() => _inline = d.isEmpty ? null : d.first),
           ),
         ),
         if (_inline != null) ...<Widget>[
           const SizedBox(height: IddsSpacing.s8),
-          GalleryCaption('Terpilih: ${iddsFormatDate(_inline!, 'EEEE, d MMMM yyyy')}'),
+          GalleryCaption(
+              'Terpilih: ${iddsFormatDate(_inline!, 'EEEE, d MMMM yyyy')}'),
         ],
       ],
     );
@@ -136,8 +166,9 @@ IddsMultiDatePicker(
   values: _meetingDates, // List<DateTime>
   onChanged: (List<DateTime> v) => setState(() => _meetingDates = v),
 )
+''';
 
-// Kalender langsung di halaman
+const String _calendarCode = r'''
 IddsCalendar(
   mode: IddsCalendarMode.single, // single, range, multiple
   selected: [if (_date != null) _date!],

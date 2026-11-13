@@ -12,10 +12,14 @@ void main() {
       IddsChipOption<String>(value: 'c', label: 'Tiga', enabled: false),
     ];
 
-    testWidgets('satu pilihan: memilih dan membatalkan', (WidgetTester tester) async {
+    testWidgets('satu pilihan: memilih dan membatalkan',
+        (WidgetTester tester) async {
       Set<String>? result;
       await tester.pumpWidget(
-        testApp(IddsChipGroup<String>(options: options, selected: const <String>{'a'}, onChanged: (Set<String> v) => result = v)),
+        testApp(IddsChipGroup<String>(
+            options: options,
+            selected: const <String>{'a'},
+            onChanged: (Set<String> v) => result = v)),
       );
       await tester.tap(find.text('Dua'));
       expect(result, <String>{'b'});
@@ -23,7 +27,8 @@ void main() {
       expect(result, isEmpty);
     });
 
-    testWidgets('banyak pilihan menambah ke himpunan', (WidgetTester tester) async {
+    testWidgets('banyak pilihan menambah ke himpunan',
+        (WidgetTester tester) async {
       Set<String>? result;
       await tester.pumpWidget(
         testApp(
@@ -42,14 +47,19 @@ void main() {
     testWidgets('pilihan nonaktif diabaikan', (WidgetTester tester) async {
       Set<String>? result;
       await tester.pumpWidget(
-        testApp(IddsChipGroup<String>(options: options, selected: const <String>{}, onChanged: (Set<String> v) => result = v)),
+        testApp(IddsChipGroup<String>(
+            options: options,
+            selected: const <String>{},
+            onChanged: (Set<String> v) => result = v)),
       );
       await tester.tap(find.text('Tiga'), warnIfMissed: false);
       expect(result, isNull);
     });
 
-    testWidgets('chip selebar isinya, tinggi sesuai ukuran', (WidgetTester tester) async {
-      await tester.pumpWidget(testApp(IddsChip(label: const Text('A'), selected: false, onPressed: () {})));
+    testWidgets('chip selebar isinya, tinggi sesuai ukuran',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(testApp(
+          IddsChip(label: const Text('A'), selected: false, onPressed: () {})));
       final Size size = tester.getSize(find.byType(IddsChip));
       expect(size.height, 32);
       expect(size.width, lessThan(100));
@@ -77,7 +87,8 @@ void main() {
   });
 
   group('IddsBreadcrumb', () {
-    testWidgets('langkah sebelumnya bisa ditekan, langkah terakhir tidak', (WidgetTester tester) async {
+    testWidgets('langkah sebelumnya bisa ditekan, langkah terakhir tidak',
+        (WidgetTester tester) async {
       int home = 0;
       int last = 0;
       await tester.pumpWidget(
@@ -86,7 +97,8 @@ void main() {
             maxLength: 5,
             items: <IddsBreadcrumbItem>[
               IddsBreadcrumbItem(label: 'Beranda', onTap: () => home++),
-              IddsBreadcrumbItem(label: 'Beasiswa Gorontalo', onTap: () => last++),
+              IddsBreadcrumbItem(
+                  label: 'Beasiswa Gorontalo', onTap: () => last++),
             ],
           ),
         ),
@@ -108,7 +120,8 @@ void main() {
 
     for (final Axis direction in Axis.values) {
       for (final IddsTabVariant variant in IddsTabVariant.values) {
-        testWidgets('${direction.name} ${variant.name}: memilih tab', (WidgetTester tester) async {
+        testWidgets('${direction.name} ${variant.name}: memilih tab',
+            (WidgetTester tester) async {
           String? result;
           await tester.pumpWidget(
             testApp(
@@ -134,11 +147,57 @@ void main() {
         testApp(
           SizedBox(
             width: 600,
-            child: IddsTabMenu<String>(items: items, value: 'a', fullWidth: true, onChanged: (_) {}),
+            child: IddsTabMenu<String>(
+                items: items, value: 'a', fullWidth: true, onChanged: (_) {}),
           ),
         ),
       );
       expect(tester.getSize(find.byType(IddsTabMenu<String>)).width, 600);
+    });
+
+    testWidgets('tab yang tidak muat bisa digeser, tidak meluap',
+        (WidgetTester tester) async {
+      String? result;
+      await tester.pumpWidget(
+        testApp(
+          SizedBox(
+            width: 200,
+            child: IddsTabMenu<String>(
+              items: const <IddsTabItem<String>>[
+                IddsTabItem<String>(value: 'a', label: Text('Profil')),
+                IddsTabItem<String>(value: 'b', label: Text('Dokumen')),
+                IddsTabItem<String>(value: 'c', label: Text('Riwayat')),
+                IddsTabItem<String>(value: 'd', label: Text('Pengaturan')),
+              ],
+              value: 'a',
+              onChanged: (String v) => result = v,
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      expect(tester.getSize(find.byType(IddsTabMenu<String>)).width, 200);
+
+      await tester.drag(find.text('Dokumen'), const Offset(-400, 0));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Pengaturan'));
+      expect(result, 'd');
+    });
+
+    testWidgets('di dalam Row (lebar tak terbatas) tetap selebar isinya',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        testApp(
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              IddsTabMenu<String>(items: items, value: 'a', onChanged: (_) {}),
+            ],
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      expect(find.text('Dokumen'), findsOneWidget);
     });
   });
 
@@ -149,8 +208,10 @@ void main() {
       IddsStep(label: 'Konfirmasi'),
     ];
 
-    testWidgets('langkah selesai menampilkan centang, sisanya nomor', (WidgetTester tester) async {
-      await tester.pumpWidget(testApp(const SizedBox(width: 600, child: IddsStepper(steps: steps, currentStep: 1))));
+    testWidgets('langkah selesai menampilkan centang, sisanya nomor',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(testApp(const SizedBox(
+          width: 600, child: IddsStepper(steps: steps, currentStep: 1))));
       expect(find.byType(IddsIcon), findsOneWidget);
       expect(find.text('2'), findsOneWidget);
       expect(find.text('3'), findsOneWidget);
@@ -184,7 +245,10 @@ void main() {
     testWidgets('tombol navigasi', (WidgetTester tester) async {
       int? page;
       await tester.pumpWidget(
-        testApp(IddsPagination(currentPage: 5, totalPages: 10, onPageChanged: (int p) => page = p)),
+        testApp(IddsPagination(
+            currentPage: 5,
+            totalPages: 10,
+            onPageChanged: (int p) => page = p)),
       );
       await tester.tap(find.bySemanticsLabel('Halaman berikutnya'));
       expect(page, 6);
@@ -194,10 +258,14 @@ void main() {
       expect(page, 4);
     });
 
-    testWidgets('mengisi nomor halaman lalu Enter', (WidgetTester tester) async {
+    testWidgets('mengisi nomor halaman lalu Enter',
+        (WidgetTester tester) async {
       int? page;
       await tester.pumpWidget(
-        testApp(IddsPagination(currentPage: 1, totalPages: 10, onPageChanged: (int p) => page = p)),
+        testApp(IddsPagination(
+            currentPage: 1,
+            totalPages: 10,
+            onPageChanged: (int p) => page = p)),
       );
       await tester.enterText(find.byType(EditableText), '99');
       await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -205,8 +273,10 @@ void main() {
       expect(page, 10);
     });
 
-    testWidgets('totalPages 0 tidak menampilkan apa-apa', (WidgetTester tester) async {
-      await tester.pumpWidget(testApp(IddsPagination(currentPage: 1, totalPages: 0, onPageChanged: (_) {})));
+    testWidgets('totalPages 0 tidak menampilkan apa-apa',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(testApp(IddsPagination(
+          currentPage: 1, totalPages: 0, onPageChanged: (_) {})));
       expect(find.text('Halaman'), findsNothing);
     });
   });
@@ -242,7 +312,8 @@ void main() {
       expect(find.byType(EditableText), findsNothing);
     });
 
-    testWidgets('nilai kustom tampil di label dan dipakai sebagai isian awal', (WidgetTester tester) async {
+    testWidgets('nilai kustom tampil di label dan dipakai sebagai isian awal',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testApp(
         SizedBox(
           width: 600,
@@ -257,17 +328,26 @@ void main() {
       expect(find.text('Kustomisasi: 45 hari'), findsOneWidget);
       await tester.tap(find.text('Kustomisasi: 45 hari'));
       await tester.pumpAndSettle();
-      expect(tester.widget<EditableText>(find.byType(EditableText)).controller.text, '45');
+      expect(
+          tester
+              .widget<EditableText>(find.byType(EditableText))
+              .controller
+              .text,
+          '45');
     });
 
-    testWidgets('banyak pilihan: mengganti nilai kustom lama, isian kosong menghapusnya', (WidgetTester tester) async {
+    testWidgets(
+        'banyak pilihan: mengganti nilai kustom lama, isian kosong menghapusnya',
+        (WidgetTester tester) async {
       Set<String>? result;
       await tester.pumpWidget(testApp(
         SizedBox(
           width: 600,
           child: IddsChipGroup<String>(
             multiple: true,
-            options: const <IddsChipOption<String>>[IddsChipOption<String>(value: 'a', label: 'A')],
+            options: const <IddsChipOption<String>>[
+              IddsChipOption<String>(value: 'a', label: 'A')
+            ],
             selected: const <String>{'a', 'lama'},
             onChanged: (Set<String> v) => result = v,
             customization: IddsChipCustomization.text(),

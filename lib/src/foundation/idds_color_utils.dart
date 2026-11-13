@@ -5,7 +5,9 @@ import 'dart:ui' show Color;
 abstract final class IddsColorUtils {
   /// Luminans relatif WCAG 2.x (0 = hitam, 1 = putih).
   static double relativeLuminance(Color color) {
-    return 0.2126 * _toLinear(color.r) + 0.7152 * _toLinear(color.g) + 0.0722 * _toLinear(color.b);
+    return 0.2126 * _toLinear(color.r) +
+        0.7152 * _toLinear(color.g) +
+        0.0722 * _toLinear(color.b);
   }
 
   /// Rasio kontras WCAG 2.x antara dua warna (1–21).
@@ -39,10 +41,14 @@ abstract final class IddsColorUtils {
     final double r = _toLinear(color.r);
     final double g = _toLinear(color.g);
     final double b = _toLinear(color.b);
-    final double l = _cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
-    final double m = _cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
-    final double s = _cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
-    final double lightness = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
+    final double l =
+        _cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+    final double m =
+        _cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+    final double s =
+        _cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+    final double lightness =
+        0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
     final double aa = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
     final double bb = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
     return Oklch(lightness, math.sqrt(aa * aa + bb * bb), math.atan2(bb, aa));
@@ -65,23 +71,35 @@ abstract final class IddsColorUtils {
       }
       rgb = _oklchToLinear(value.l, lo, value.h);
     }
-    int channel(double linear) => (_fromLinear(linear.clamp(0.0, 1.0)).clamp(0.0, 1.0) * 255).round();
-    return Color.fromARGB((alpha * 255).round(), channel(rgb[0]), channel(rgb[1]), channel(rgb[2]));
+    int channel(double linear) =>
+        (_fromLinear(linear.clamp(0.0, 1.0)).clamp(0.0, 1.0) * 255).round();
+    return Color.fromARGB((alpha * 255).round(), channel(rgb[0]),
+        channel(rgb[1]), channel(rgb[2]));
   }
 
-  static double _toLinear(double c) => c <= 0.04045 ? c / 12.92 : math.pow((c + 0.055) / 1.055, 2.4).toDouble();
+  static double _toLinear(double c) =>
+      c <= 0.04045 ? c / 12.92 : math.pow((c + 0.055) / 1.055, 2.4).toDouble();
 
-  static double _fromLinear(double c) =>
-      c <= 0.0031308 ? 12.92 * c : 1.055 * math.pow(c, 1 / 2.4).toDouble() - 0.055;
+  static double _fromLinear(double c) => c <= 0.0031308
+      ? 12.92 * c
+      : 1.055 * math.pow(c, 1 / 2.4).toDouble() - 0.055;
 
-  static double _cbrt(double x) => x < 0 ? -math.pow(-x, 1 / 3).toDouble() : math.pow(x, 1 / 3).toDouble();
+  static double _cbrt(double x) =>
+      x < 0 ? -math.pow(-x, 1 / 3).toDouble() : math.pow(x, 1 / 3).toDouble();
 
-  static List<double> _oklchToLinear(double lightness, double chroma, double hue) {
+  static List<double> _oklchToLinear(
+      double lightness, double chroma, double hue) {
     final double aa = chroma * math.cos(hue);
     final double bb = chroma * math.sin(hue);
-    final double l = math.pow(lightness + 0.3963377774 * aa + 0.2158037573 * bb, 3).toDouble();
-    final double m = math.pow(lightness - 0.1055613458 * aa - 0.0638541728 * bb, 3).toDouble();
-    final double s = math.pow(lightness - 0.0894841775 * aa - 1.2914855480 * bb, 3).toDouble();
+    final double l = math
+        .pow(lightness + 0.3963377774 * aa + 0.2158037573 * bb, 3)
+        .toDouble();
+    final double m = math
+        .pow(lightness - 0.1055613458 * aa - 0.0638541728 * bb, 3)
+        .toDouble();
+    final double s = math
+        .pow(lightness - 0.0894841775 * aa - 1.2914855480 * bb, 3)
+        .toDouble();
     return <double>[
       4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
       -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
@@ -89,7 +107,8 @@ abstract final class IddsColorUtils {
     ];
   }
 
-  static bool _inGamut(List<double> rgb) => rgb.every((double c) => c >= -1e-4 && c <= 1 + 1e-4);
+  static bool _inGamut(List<double> rgb) =>
+      rgb.every((double c) => c >= -1e-4 && c <= 1 + 1e-4);
 }
 
 /// Warna dalam ruang OKLCH: lightness [l] (0–1), chroma [c], hue [h] (radian).
@@ -107,5 +126,6 @@ class Oklch {
   final double h;
 
   @override
-  String toString() => 'Oklch(l: ${l.toStringAsFixed(3)}, c: ${c.toStringAsFixed(3)}, h: ${h.toStringAsFixed(3)})';
+  String toString() =>
+      'Oklch(l: ${l.toStringAsFixed(3)}, c: ${c.toStringAsFixed(3)}, h: ${h.toStringAsFixed(3)})';
 }

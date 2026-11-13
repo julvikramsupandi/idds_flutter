@@ -15,7 +15,8 @@ Widget _app(Widget child, {IddsThemeData? theme}) {
 
 BoxDecoration _decoration(WidgetTester tester) {
   final AnimatedContainer container = tester.widget<AnimatedContainer>(
-    find.descendant(of: find.byType(IddsButton), matching: find.byType(AnimatedContainer)),
+    find.descendant(
+        of: find.byType(IddsButton), matching: find.byType(AnimatedContainer)),
   );
   return container.decoration! as BoxDecoration;
 }
@@ -23,12 +24,14 @@ BoxDecoration _decoration(WidgetTester tester) {
 void main() {
   testWidgets('memanggil onPressed saat ditekan', (WidgetTester tester) async {
     int taps = 0;
-    await tester.pumpWidget(_app(IddsButton(onPressed: () => taps++, child: const Text('Simpan'))));
+    await tester.pumpWidget(
+        _app(IddsButton(onPressed: () => taps++, child: const Text('Simpan'))));
     await tester.tap(find.text('Simpan'));
     expect(taps, 1);
   });
 
-  testWidgets('isi tetap di tengah saat tombol selebar induk', (WidgetTester tester) async {
+  testWidgets('isi tetap di tengah saat tombol selebar induk',
+      (WidgetTester tester) async {
     await tester.pumpWidget(_app(SizedBox(
       width: 320,
       child: IddsButton(onPressed: () {}, child: const Text('Masuk')),
@@ -39,22 +42,29 @@ void main() {
     expect(label.center.dx, moreOrLessEquals(button.center.dx, epsilon: 0.5));
   });
 
-  testWidgets('tanpa lebar dari induk, tombol tetap selebar isinya', (WidgetTester tester) async {
-    await tester.pumpWidget(_app(IddsButton(onPressed: () {}, child: const Text('Masuk'))));
+  testWidgets('tanpa lebar dari induk, tombol tetap selebar isinya',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+        _app(IddsButton(onPressed: () {}, child: const Text('Masuk'))));
     expect(tester.getSize(find.byType(IddsButton)).width, lessThan(200));
   });
 
   testWidgets('nonaktif bila onPressed null', (WidgetTester tester) async {
-    await tester.pumpWidget(_app(const IddsButton(onPressed: null, child: Text('Simpan'))));
+    await tester.pumpWidget(
+        _app(const IddsButton(onPressed: null, child: Text('Simpan'))));
     await tester.tap(find.text('Simpan'), warnIfMissed: false);
     final IddsColors colors = IddsThemeData().colors;
     expect(_decoration(tester).color, colors.backgroundTertiary);
   });
 
-  testWidgets('bisa diaktifkan dengan Enter dan Space', (WidgetTester tester) async {
+  testWidgets('bisa diaktifkan dengan Enter dan Space',
+      (WidgetTester tester) async {
     int taps = 0;
     await tester.pumpWidget(
-      _app(IddsButton(onPressed: () => taps++, autofocus: true, child: const Text('Kirim'))),
+      _app(IddsButton(
+          onPressed: () => taps++,
+          autofocus: true,
+          child: const Text('Kirim'))),
     );
     await tester.pump();
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
@@ -64,13 +74,18 @@ void main() {
 
   testWidgets('primary memakai warna utama brand', (WidgetTester tester) async {
     final IddsThemeData theme = IddsThemeData(brand: IddsBrand.panrb);
-    await tester.pumpWidget(_app(IddsButton(onPressed: () {}, child: const Text('OK')), theme: theme));
+    await tester.pumpWidget(_app(
+        IddsButton(onPressed: () {}, child: const Text('OK')),
+        theme: theme));
     expect(_decoration(tester).color, IddsBrand.panrb.primaryMainLight);
   });
 
   testWidgets('secondary memiliki garis tepi', (WidgetTester tester) async {
     await tester.pumpWidget(
-      _app(IddsButton(onPressed: () {}, hierarchy: IddsButtonHierarchy.secondary, child: const Text('Batal'))),
+      _app(IddsButton(
+          onPressed: () {},
+          hierarchy: IddsButtonHierarchy.secondary,
+          child: const Text('Batal'))),
     );
     expect(_decoration(tester).border, isNotNull);
   });
@@ -93,7 +108,8 @@ void main() {
     };
 
     for (final MapEntry<IddsButtonSize, double> e in desktop.entries) {
-      testWidgets('${e.key.name} = ${e.value} di layar lebar', (WidgetTester tester) async {
+      testWidgets('${e.key.name} = ${e.value} di layar lebar',
+          (WidgetTester tester) async {
         tester.view.physicalSize = const Size(1024, 768);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.reset);
@@ -102,24 +118,32 @@ void main() {
           IddsButtonHierarchy.secondary,
         ]) {
           await tester.pumpWidget(
-            _app(IddsButton(onPressed: () {}, size: e.key, hierarchy: h, child: const Text('A'))),
+            _app(IddsButton(
+                onPressed: () {},
+                size: e.key,
+                hierarchy: h,
+                child: const Text('A'))),
           );
-          expect(tester.getSize(find.byType(IddsButton)).height, e.value, reason: h.name);
+          expect(tester.getSize(find.byType(IddsButton)).height, e.value,
+              reason: h.name);
         }
       });
     }
 
     for (final MapEntry<IddsButtonSize, double> e in compact.entries) {
-      testWidgets('${e.key.name} = ${e.value} di layar < 640px', (WidgetTester tester) async {
+      testWidgets('${e.key.name} = ${e.value} di layar < 640px',
+          (WidgetTester tester) async {
         tester.view.physicalSize = const Size(400, 800);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.reset);
-        await tester.pumpWidget(_app(IddsButton(onPressed: () {}, size: e.key, child: const Text('A'))));
+        await tester.pumpWidget(_app(
+            IddsButton(onPressed: () {}, size: e.key, child: const Text('A'))));
         expect(tester.getSize(find.byType(IddsButton)).height, e.value);
       });
     }
 
-    testWidgets('compactOnSmallScreens: false mempertahankan ukuran', (WidgetTester tester) async {
+    testWidgets('compactOnSmallScreens: false mempertahankan ukuran',
+        (WidgetTester tester) async {
       tester.view.physicalSize = const Size(400, 800);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);

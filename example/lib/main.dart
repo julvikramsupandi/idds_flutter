@@ -43,12 +43,14 @@ class _GalleryAppState extends State<GalleryApp> {
 
   @override
   Widget build(BuildContext context) {
-    final IddsThemeData idds = IddsThemeData(brand: _brand, brightness: _brightness, textStyleBuilder: interFont);
+    final IddsThemeData idds = IddsThemeData(
+        brand: _brand, brightness: _brightness, textStyleBuilder: interFont);
     return MaterialApp.router(
       title: 'IDDS Flutter',
       debugShowCheckedModeBanner: false,
       theme: idds.toMaterialTheme(),
-      builder: (BuildContext context, Widget? child) => AnimatedIddsTheme(data: idds, child: child!),
+      builder: (BuildContext context, Widget? child) =>
+          AnimatedIddsTheme(data: idds, child: child!),
       routeInformationParser: const GalleryRouteParser(),
       routerDelegate: _router,
     );
@@ -64,13 +66,18 @@ class GalleryRouteParser extends RouteInformationParser<String> {
 
   @override
   Future<String> parseRouteInformation(RouteInformation routeInformation) {
-    final List<String> segments = routeInformation.uri.pathSegments.where((String s) => s.isNotEmpty).toList();
-    return SynchronousFuture<String>(segments.isEmpty ? GalleryShell.homePage : segments.first);
+    final List<String> segments = routeInformation.uri.pathSegments
+        .where((String s) => s.isNotEmpty)
+        .toList();
+    return SynchronousFuture<String>(
+        segments.isEmpty ? GalleryShell.homePage : segments.first);
   }
 
   @override
   RouteInformation restoreRouteInformation(String configuration) {
-    return RouteInformation(uri: Uri.parse(configuration == GalleryShell.homePage ? '/' : '/$configuration'));
+    return RouteInformation(
+        uri: Uri.parse(
+            configuration == GalleryShell.homePage ? '/' : '/$configuration'));
   }
 }
 
@@ -110,7 +117,10 @@ class GalleryRouterDelegate extends RouterDelegate<String>
     return Navigator(
       key: navigatorKey,
       pages: <Page<void>>[
-        MaterialPage<void>(key: const ValueKey<String>('galeri'), child: Builder(builder: (BuildContext context) => builder(context, _page))),
+        MaterialPage<void>(
+            key: const ValueKey<String>('galeri'),
+            child: Builder(
+                builder: (BuildContext context) => builder(context, _page))),
       ],
       onDidRemovePage: (Page<Object?> page) {},
     );

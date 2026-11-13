@@ -4,7 +4,8 @@ import 'package:idds_flutter/idds_flutter.dart';
 
 import 'test_app.dart';
 
-Finder _icon(IddsIconData data) => find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == data);
+Finder _icon(IddsIconData data) =>
+    find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == data);
 
 void main() {
   group('iddsFormatFileSize / iddsValidateFile', () {
@@ -17,26 +18,42 @@ void main() {
     });
 
     test('validasi nama, ekstensi, dan ukuran', () {
-      expect(iddsValidateFile(name: 'ktp.pdf', size: 1000, allowedExtensions: <String>['pdf']), isNull);
       expect(
-        iddsValidateFile(name: 'ktp.exe', size: 1000, allowedExtensions: <String>['pdf', '.png']),
+          iddsValidateFile(
+              name: 'ktp.pdf', size: 1000, allowedExtensions: <String>['pdf']),
+          isNull);
+      expect(
+        iddsValidateFile(
+            name: 'ktp.exe',
+            size: 1000,
+            allowedExtensions: <String>['pdf', '.png']),
         'Ekstensi file harus: pdf, png',
       );
-      expect(iddsValidateFile(name: 'a.pdf', size: 3 * 1048576, maxSize: 2 * 1048576), 'Ukuran file maksimal 2.00 MB');
-      expect(iddsValidateFile(name: 'a<b>.pdf', size: 1), 'Nama file mengandung karakter yang tidak diizinkan');
+      expect(
+          iddsValidateFile(
+              name: 'a.pdf', size: 3 * 1048576, maxSize: 2 * 1048576),
+          'Ukuran file maksimal 2.00 MB');
+      expect(iddsValidateFile(name: 'a<b>.pdf', size: 1),
+          'Nama file mengandung karakter yang tidak diizinkan');
     });
   });
 
   group('IddsFileUpload', () {
-    testWidgets('menekan area memanggil onPick; nonaktif bila null', (WidgetTester tester) async {
+    testWidgets('menekan area memanggil onPick; nonaktif bila null',
+        (WidgetTester tester) async {
       int picks = 0;
-      await tester.pumpWidget(testApp(SizedBox(width: 500, child: IddsFileUpload(files: const <IddsUploadFile>[], onPick: () => picks++))));
+      await tester.pumpWidget(testApp(SizedBox(
+          width: 500,
+          child: IddsFileUpload(
+              files: const <IddsUploadFile>[], onPick: () => picks++))));
       expect(find.text('Unggah File'), findsOneWidget);
       await tester.tap(find.text('Pilih File'));
       await tester.tap(find.text('Unggah File'));
       expect(picks, 2);
 
-      await tester.pumpWidget(testApp(const SizedBox(width: 500, child: IddsFileUpload(files: <IddsUploadFile>[], onPick: null))));
+      await tester.pumpWidget(testApp(const SizedBox(
+          width: 500,
+          child: IddsFileUpload(files: <IddsUploadFile>[], onPick: null))));
       await tester.tap(find.text('Pilih File'));
       expect(picks, 2);
     });
@@ -51,9 +68,18 @@ void main() {
           onRetry: (int i) => log.add('ulang $i'),
           onCancel: (int i) => log.add('batal $i'),
           files: const <IddsUploadFile>[
-            IddsUploadFile(name: 'ktp.pdf', size: 1536, status: IddsFileStatus.success),
-            IddsUploadFile(name: 'kk.pdf', size: 2048, status: IddsFileStatus.uploading, progress: 0.4),
-            IddsUploadFile(name: 'foto.png', size: 10, status: IddsFileStatus.error, error: 'Gagal mengunggah'),
+            IddsUploadFile(
+                name: 'ktp.pdf', size: 1536, status: IddsFileStatus.success),
+            IddsUploadFile(
+                name: 'kk.pdf',
+                size: 2048,
+                status: IddsFileStatus.uploading,
+                progress: 0.4),
+            IddsUploadFile(
+                name: 'foto.png',
+                size: 10,
+                status: IddsFileStatus.error,
+                error: 'Gagal mengunggah'),
           ],
         ),
       )));
@@ -64,21 +90,29 @@ void main() {
 
       await tester.tap(_icon(IddsIcons.trash).first);
       await tester.tap(_icon(IddsIcons.x));
-      await tester.tap(find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == IddsIcons.refresh).last);
+      await tester.tap(find
+          .byWidgetPredicate(
+              (Widget w) => w is IddsIcon && w.icon == IddsIcons.refresh)
+          .last);
       await tester.tap(_icon(IddsIcons.trash).last);
       expect(log, <String>['hapus 0', 'batal 1', 'ulang 2', 'hapus 2']);
       // Spinner berputar terus; hentikan sebelum test selesai.
       await tester.pumpWidget(const SizedBox());
     });
 
-    testWidgets('lebih dari 5 berkas disembunyikan', (WidgetTester tester) async {
+    testWidgets('lebih dari 5 berkas disembunyikan',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testApp(SingleChildScrollView(
         child: SizedBox(
           width: 500,
           child: IddsFileUpload(
             onPick: () {},
             files: <IddsUploadFile>[
-              for (int i = 1; i <= 7; i++) IddsUploadFile(name: 'berkas$i.pdf', size: 100, status: IddsFileStatus.success),
+              for (int i = 1; i <= 7; i++)
+                IddsUploadFile(
+                    name: 'berkas$i.pdf',
+                    size: 100,
+                    status: IddsFileStatus.success),
             ],
             errors: const <String>['Maksimal 7 file yang dapat diupload'],
           ),
@@ -97,7 +131,8 @@ void main() {
   });
 
   group('IddsSingleFileUpload', () {
-    testWidgets('kosong, mengunggah, dan berhasil', (WidgetTester tester) async {
+    testWidgets('kosong, mengunggah, dan berhasil',
+        (WidgetTester tester) async {
       int picks = 0;
       int removes = 0;
       Widget build(IddsUploadFile? file) => testApp(IddsSingleFileUpload(
@@ -110,11 +145,16 @@ void main() {
       await tester.tap(find.text('Unggah File'));
       expect(picks, 1);
 
-      await tester.pumpWidget(build(const IddsUploadFile(name: 'ktp.pdf', size: 1, status: IddsFileStatus.uploading, progress: 0.75)));
+      await tester.pumpWidget(build(const IddsUploadFile(
+          name: 'ktp.pdf',
+          size: 1,
+          status: IddsFileStatus.uploading,
+          progress: 0.75)));
       await tester.pumpAndSettle();
       expect(find.text('75%'), findsOneWidget);
 
-      await tester.pumpWidget(build(const IddsUploadFile(name: 'ktp.pdf', size: 1, status: IddsFileStatus.success)));
+      await tester.pumpWidget(build(const IddsUploadFile(
+          name: 'ktp.pdf', size: 1, status: IddsFileStatus.success)));
       await tester.pumpAndSettle();
       expect(find.text('ktp.pdf'), findsOneWidget);
       // Sudah ada berkas: menekan kotak tidak membuka pemilih.
@@ -124,9 +164,14 @@ void main() {
       expect(removes, 1);
     });
 
-    testWidgets('pesan error menggantikan keterangan', (WidgetTester tester) async {
+    testWidgets('pesan error menggantikan keterangan',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testApp(IddsSingleFileUpload(
-        file: const IddsUploadFile(name: 'a.exe', size: 1, status: IddsFileStatus.error, error: 'Ekstensi file harus: pdf'),
+        file: const IddsUploadFile(
+            name: 'a.exe',
+            size: 1,
+            status: IddsFileStatus.error,
+            error: 'Ekstensi file harus: pdf'),
         onPick: () {},
       )));
       expect(find.text('Ekstensi file harus: pdf'), findsOneWidget);

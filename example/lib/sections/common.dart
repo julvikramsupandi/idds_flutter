@@ -110,7 +110,8 @@ class GalleryCaption extends StatelessWidget {
 final Highlight _highlight = Highlight()..registerLanguage('dart', langDart);
 
 /// Tema tanpa warna latar per huruf; latar diatur oleh panel editor.
-Map<String, TextStyle> _withoutBackground(Map<String, TextStyle> theme) => <String, TextStyle>{
+Map<String, TextStyle> _withoutBackground(Map<String, TextStyle> theme) =>
+    <String, TextStyle>{
       for (final MapEntry<String, TextStyle> e in theme.entries)
         e.key: TextStyle(
           color: e.value.color,
@@ -159,7 +160,11 @@ class _EditorColors {
 /// Blok kode Dart bergaya editor VS Code: nomor baris, pewarnaan sintaks,
 /// tombol salin, dan bisa disembunyikan.
 class GalleryCodeBlock extends StatefulWidget {
-  const GalleryCodeBlock({super.key, required this.code, this.initiallyExpanded = true, this.fileName = 'contoh.dart'});
+  const GalleryCodeBlock(
+      {super.key,
+      required this.code,
+      this.initiallyExpanded = true,
+      this.fileName = 'contoh.dart'});
 
   final String code;
   final bool initiallyExpanded;
@@ -201,7 +206,8 @@ class _GalleryCodeBlockState extends State<GalleryCodeBlock> {
 
   TextSpan _highlighted(bool dark, TextStyle base) {
     if (_cachedSpan == null || _cachedCode != _code || _cachedDark != dark) {
-      final TextSpanRenderer renderer = TextSpanRenderer(base, dark ? _darkTheme : _lightTheme);
+      final TextSpanRenderer renderer =
+          TextSpanRenderer(base, dark ? _darkTheme : _lightTheme);
       _highlight.highlight(code: _code, language: 'dart').render(renderer);
       _cachedCode = _code;
       _cachedDark = dark;
@@ -217,7 +223,13 @@ class _GalleryCodeBlockState extends State<GalleryCodeBlock> {
     final _EditorColors e = dark ? _EditorColors.dark : _EditorColors.light;
     final IddsColors c = theme.colors;
     final BorderSide line = BorderSide(color: c.strokePrimary);
-    const List<String> mono = <String>['Menlo', 'Consolas', 'Roboto Mono', 'Courier New', 'monospace'];
+    const List<String> mono = <String>[
+      'Menlo',
+      'Consolas',
+      'Roboto Mono',
+      'Courier New',
+      'monospace'
+    ];
     // Ukuran dan tinggi baris sama untuk nomor baris dan kode agar sejajar.
     final TextStyle base = TextStyle(
       fontFamily: 'Menlo',
@@ -252,18 +264,26 @@ class _GalleryCodeBlockState extends State<GalleryCodeBlock> {
               alignment: AlignmentDirectional.centerStart,
               child: Container(
                 height: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: IddsSpacing.s12),
                 decoration: BoxDecoration(
                   color: _expanded ? e.background : null,
-                  border: Border(top: BorderSide(color: _expanded ? c.primaryMain : Colors.transparent, width: 2)),
+                  border: Border(
+                      top: BorderSide(
+                          color: _expanded ? c.primaryMain : Colors.transparent,
+                          width: 2)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   spacing: IddsSpacing.s6,
                   children: <Widget>[
-                    const Icon(TablerIcons.brand_flutter, size: 16, color: Color(0xFF42A5F5)),
+                    const Icon(TablerIcons.brand_flutter,
+                        size: 16, color: Color(0xFF42A5F5)),
                     Flexible(
-                      child: Text(widget.fileName, style: headerStyle, maxLines: 1, overflow: TextOverflow.ellipsis),
+                      child: Text(widget.fileName,
+                          style: headerStyle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis),
                     ),
                   ],
                 ),
@@ -275,9 +295,15 @@ class _GalleryCodeBlockState extends State<GalleryCodeBlock> {
             size: IddsButtonSize.sm,
             semanticLabel: _expanded ? 'Sembunyikan kode' : 'Tampilkan kode',
             onPressed: () => setState(() => _expanded = !_expanded),
-            suffixIcon: narrow ? null : Icon(_expanded ? TablerIcons.chevron_up : TablerIcons.chevron_down),
+            suffixIcon: narrow
+                ? null
+                : Icon(_expanded
+                    ? TablerIcons.chevron_up
+                    : TablerIcons.chevron_down),
             child: narrow
-                ? Icon(_expanded ? TablerIcons.chevron_up : TablerIcons.chevron_down)
+                ? Icon(_expanded
+                    ? TablerIcons.chevron_up
+                    : TablerIcons.chevron_down)
                 : Text(_expanded ? 'Sembunyikan' : 'Tampilkan kode'),
           ),
           IddsButton(
@@ -323,7 +349,8 @@ class _GalleryCodeBlockState extends State<GalleryCodeBlock> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.only(right: IddsSpacing.s16),
               // Tanpa pemenggalan baris agar sejajar dengan nomornya.
-              child: SelectableText.rich(_highlighted(dark, base), strutStyle: strut),
+              child: SelectableText.rich(_highlighted(dark, base),
+                  strutStyle: strut),
             ),
           ),
         ],
@@ -332,7 +359,9 @@ class _GalleryCodeBlockState extends State<GalleryCodeBlock> {
 
     return Container(
       clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(color: e.background, borderRadius: BorderRadius.circular(IddsRadius.lg)),
+      decoration: BoxDecoration(
+          color: e.background,
+          borderRadius: BorderRadius.circular(IddsRadius.lg)),
       // Garis tepi di atas isi; bila ikut di decoration, latar header
       // menutupi garis di sudut atas yang membulat.
       foregroundDecoration: BoxDecoration(
@@ -350,5 +379,6 @@ class _GalleryCodeBlockState extends State<GalleryCodeBlock> {
 void showGallerySnack(BuildContext context, String message) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
-    ..showSnackBar(SnackBar(content: Text(message), duration: const Duration(seconds: 1)));
+    ..showSnackBar(
+        SnackBar(content: Text(message), duration: const Duration(seconds: 1)));
 }

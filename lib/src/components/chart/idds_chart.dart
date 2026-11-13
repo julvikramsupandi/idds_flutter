@@ -28,7 +28,10 @@ class IddsChartSeries {
 
   @override
   bool operator ==(Object other) =>
-      other is IddsChartSeries && other.name == name && other.color == color && listEquals(other.values, values);
+      other is IddsChartSeries &&
+      other.name == name &&
+      other.color == color &&
+      listEquals(other.values, values);
 
   @override
   int get hashCode => Object.hash(name, color, Object.hashAll(values));
@@ -55,7 +58,10 @@ String iddsCompactNumber(num value) {
   final double v = value.toDouble();
   final double a = v.abs();
   String fmt(double n, String unit) {
-    final String s = (n >= 100 || n == n.roundToDouble() ? n.toStringAsFixed(0) : n.toStringAsFixed(1)).replaceAll('.', ',');
+    final String s = (n >= 100 || n == n.roundToDouble()
+            ? n.toStringAsFixed(0)
+            : n.toStringAsFixed(1))
+        .replaceAll('.', ',');
     return '${v < 0 ? '-' : ''}$s $unit';
   }
 
@@ -68,7 +74,8 @@ String iddsCompactNumber(num value) {
 }
 
 Color _seriesColor(int i, Color? custom) =>
-    custom ?? IddsChartColors.categorical[i % IddsChartColors.categorical.length];
+    custom ??
+    IddsChartColors.categorical[i % IddsChartColors.categorical.length];
 
 /// Skala sumbu Y dengan angka bulat.
 class _Scale {
@@ -77,9 +84,18 @@ class _Scale {
     double hi = math.max(0, dataMax);
     if (hi == lo) hi = lo + 1;
     final double rawStep = (hi - lo) / ticks;
-    final double mag = math.pow(10, (math.log(rawStep) / math.ln10).floor()).toDouble();
+    final double mag =
+        math.pow(10, (math.log(rawStep) / math.ln10).floor()).toDouble();
     final double norm = rawStep / mag;
-    final double nice = norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 2.5 ? 2.5 : norm <= 5 ? 5 : 10;
+    final double nice = norm <= 1
+        ? 1
+        : norm <= 2
+            ? 2
+            : norm <= 2.5
+                ? 2.5
+                : norm <= 5
+                    ? 5
+                    : 10;
     step = nice * mag;
     lo = (lo / step).floor() * step;
     hi = (hi / step).ceil() * step;
@@ -91,13 +107,19 @@ class _Scale {
   late final double max;
   late final double step;
 
-  List<double> get ticks => <double>[for (double v = min; v <= max + step / 2; v += step) v];
+  List<double> get ticks =>
+      <double>[for (double v = min; v <= max + step / 2; v += step) v];
 
   double fraction(double v) => (v - min) / (max - min);
 }
 
-TextPainter _text(String s, TextStyle style, {double maxWidth = double.infinity}) =>
-    TextPainter(text: TextSpan(text: s, style: style), textDirection: TextDirection.ltr, maxLines: 1, ellipsis: '…')
+TextPainter _text(String s, TextStyle style,
+        {double maxWidth = double.infinity}) =>
+    TextPainter(
+        text: TextSpan(text: s, style: style),
+        textDirection: TextDirection.ltr,
+        maxLines: 1,
+        ellipsis: '…')
       ..layout(maxWidth: maxWidth);
 
 // ---------------------------------------------------------------------------
@@ -130,12 +152,16 @@ class _Legend extends StatelessWidget {
                 height: shape == _KeyShape.line ? 2 : 10,
                 decoration: BoxDecoration(
                   color: color,
-                  borderRadius: BorderRadius.circular(shape == _KeyShape.line ? 1 : 2),
+                  borderRadius:
+                      BorderRadius.circular(shape == _KeyShape.line ? 1 : 2),
                 ),
               ),
               Text(
                 name,
-                style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary),
+                style: theme.textStyle(
+                    fontSize: IddsFontSize.xs,
+                    lineHeight: IddsLineHeight.xs,
+                    color: c.contentSecondary),
               ),
             ],
           ),
@@ -157,7 +183,8 @@ class _TooltipCard extends StatelessWidget {
     final IddsColors c = theme.colors;
     return Container(
       constraints: const BoxConstraints(maxWidth: 240),
-      padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s12, vertical: IddsSpacing.s8),
+      padding: const EdgeInsets.symmetric(
+          horizontal: IddsSpacing.s12, vertical: IddsSpacing.s8),
       decoration: BoxDecoration(
         color: c.backgroundPrimary,
         borderRadius: BorderRadius.circular(IddsRadius.lg),
@@ -171,7 +198,10 @@ class _TooltipCard extends StatelessWidget {
         children: <Widget>[
           Text(
             title,
-            style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary),
+            style: theme.textStyle(
+                fontSize: IddsFontSize.xs,
+                lineHeight: IddsLineHeight.xs,
+                color: c.contentSecondary),
           ),
           for (final (String name, String value, Color color) in rows)
             Row(
@@ -192,7 +222,10 @@ class _TooltipCard extends StatelessWidget {
                   child: Text(
                     name,
                     overflow: TextOverflow.ellipsis,
-                    style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary),
+                    style: theme.textStyle(
+                        fontSize: IddsFontSize.xs,
+                        lineHeight: IddsLineHeight.xs,
+                        color: c.contentSecondary),
                   ),
                 ),
               ],
@@ -211,7 +244,8 @@ class _TooltipLayout extends SingleChildLayoutDelegate {
   final Offset anchor;
 
   @override
-  BoxConstraints getConstraintsForChild(BoxConstraints constraints) => constraints.loosen();
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
+      constraints.loosen();
 
   @override
   Offset getPositionForChild(Size size, Size childSize) {
@@ -226,7 +260,8 @@ class _TooltipLayout extends SingleChildLayoutDelegate {
   }
 
   @override
-  bool shouldRelayout(_TooltipLayout oldDelegate) => oldDelegate.anchor != anchor;
+  bool shouldRelayout(_TooltipLayout oldDelegate) =>
+      oldDelegate.anchor != anchor;
 }
 
 /// Bingkai interaktif: animasi masuk, deteksi sorot/ketuk, dan tooltip.
@@ -243,7 +278,8 @@ class _InteractiveChart extends StatefulWidget {
   final double height;
 
   /// Membuat painter untuk ukuran, kemajuan animasi, dan indeks yang disorot.
-  final CustomPainter Function(Size size, double progress, int? hovered) painterBuilder;
+  final CustomPainter Function(Size size, double progress, int? hovered)
+      painterBuilder;
 
   /// Indeks yang ditunjuk posisi [p], dan titik jangkar tooltip.
   final (int, Offset)? Function(Size size, Offset p) hitTest;
@@ -260,8 +296,10 @@ class _InteractiveChart extends StatefulWidget {
   State<_InteractiveChart> createState() => _InteractiveChartState();
 }
 
-class _InteractiveChartState extends State<_InteractiveChart> with SingleTickerProviderStateMixin {
-  late final AnimationController _anim = AnimationController(vsync: this, duration: const Duration(milliseconds: 600))
+class _InteractiveChartState extends State<_InteractiveChart>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _anim = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 600))
     ..forward();
   int? _hovered;
   Offset? _anchor;
@@ -303,38 +341,45 @@ class _InteractiveChartState extends State<_InteractiveChart> with SingleTickerP
             return TapRegion(
               onTapOutside: (_) => _clear(),
               child: MouseRegion(
-              onHover: (PointerHoverEvent e) => _update(size, e.localPosition),
-              onExit: (_) => _clear(),
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTapDown: (TapDownDetails d) => _update(size, d.localPosition),
-                // Hanya seret mendatar, agar gulir halaman tetap berfungsi.
-                onHorizontalDragUpdate: (DragUpdateDetails d) => _update(size, d.localPosition),
-                onHorizontalDragEnd: (_) => _clear(),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: <Widget>[
-                    Positioned.fill(
-                      child: AnimatedBuilder(
-                        animation: _anim,
-                        builder: (BuildContext context, Widget? _) => CustomPaint(
-                          painter: widget.painterBuilder(size, Curves.easeOutCubic.transform(_anim.value), _hovered),
-                        ),
-                      ),
-                    ),
-                    if (_hovered != null && _anchor != null)
+                onHover: (PointerHoverEvent e) =>
+                    _update(size, e.localPosition),
+                onExit: (_) => _clear(),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTapDown: (TapDownDetails d) =>
+                      _update(size, d.localPosition),
+                  // Hanya seret mendatar, agar gulir halaman tetap berfungsi.
+                  onHorizontalDragUpdate: (DragUpdateDetails d) =>
+                      _update(size, d.localPosition),
+                  onHorizontalDragEnd: (_) => _clear(),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: <Widget>[
                       Positioned.fill(
-                        child: IgnorePointer(
-                          child: CustomSingleChildLayout(
-                            delegate: _TooltipLayout(_anchor!),
-                            child: widget.tooltipBuilder(_hovered!),
+                        child: AnimatedBuilder(
+                          animation: _anim,
+                          builder: (BuildContext context, Widget? _) =>
+                              CustomPaint(
+                            painter: widget.painterBuilder(
+                                size,
+                                Curves.easeOutCubic.transform(_anim.value),
+                                _hovered),
                           ),
                         ),
                       ),
-                  ],
+                      if (_hovered != null && _anchor != null)
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            child: CustomSingleChildLayout(
+                              delegate: _TooltipLayout(_anchor!),
+                              child: widget.tooltipBuilder(_hovered!),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
-            ),
             );
           },
         ),
@@ -362,7 +407,8 @@ class _Plot {
       yLabelWidth = math.max(yLabelWidth, _text(format(t), axisStyle).width);
     }
     final double xLabelHeight = _text('0', axisStyle).height;
-    rect = Rect.fromLTRB(yLabelWidth + 8, 8, size.width - 8, size.height - xLabelHeight - 8);
+    rect = Rect.fromLTRB(
+        yLabelWidth + 8, 8, size.width - 8, size.height - xLabelHeight - 8);
   }
 
   final _Scale scale;
@@ -386,7 +432,9 @@ class _Plot {
 
   int nearest(double px) {
     if (n == 0) return 0;
-    if (band) return ((px - rect.left) / rect.width * n).floor().clamp(0, n - 1);
+    if (band) {
+      return ((px - rect.left) / rect.width * n).floor().clamp(0, n - 1);
+    }
     if (n == 1) return 0;
     return ((px - rect.left) / rect.width * (n - 1)).round().clamp(0, n - 1);
   }
@@ -407,10 +455,12 @@ class _Plot {
     for (final String l in labels) {
       maxW = math.max(maxW, _text(l, axisStyle).width);
     }
-    final double slot = band ? rect.width / n : (n > 1 ? rect.width / (n - 1) : rect.width);
+    final double slot =
+        band ? rect.width / n : (n > 1 ? rect.width / (n - 1) : rect.width);
     final int every = math.max(1, ((maxW + 8) / math.max(1, slot)).ceil());
     for (int i = 0; i < n; i += every) {
-      final TextPainter tp = _text(labels[i], axisStyle, maxWidth: math.max(slot * every - 4, 24));
+      final TextPainter tp =
+          _text(labels[i], axisStyle, maxWidth: math.max(slot * every - 4, 24));
       double left = x(i) - tp.width / 2;
       left = left.clamp(0, rect.right + 8 - tp.width);
       tp.paint(canvas, Offset(left, rect.bottom + 6));
@@ -418,7 +468,8 @@ class _Plot {
   }
 }
 
-(double, double) _range(List<IddsChartSeries> series, {bool stacked = false, int count = 0}) {
+(double, double) _range(List<IddsChartSeries> series,
+    {bool stacked = false, int count = 0}) {
   double lo = 0;
   double hi = 0;
   if (stacked) {
@@ -510,14 +561,26 @@ class IddsLineChart extends StatelessWidget {
     final IddsColors c = theme.colors;
     final (double lo, double hi) = _range(series);
     final _Scale scale = _Scale(lo, hi);
-    final TextStyle axis = theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary);
-    final List<Color> colors = <Color>[for (int i = 0; i < series.length; i++) _seriesColor(i, series[i].color)];
-    _Plot plotFor(Size size) => _Plot(size: size, scale: scale, labels: labels, axisStyle: axis, format: valueFormat, band: false);
+    final TextStyle axis = theme.textStyle(
+        fontSize: IddsFontSize.xs,
+        lineHeight: IddsLineHeight.xs,
+        color: c.contentSecondary);
+    final List<Color> colors = <Color>[
+      for (int i = 0; i < series.length; i++) _seriesColor(i, series[i].color)
+    ];
+    _Plot plotFor(Size size) => _Plot(
+        size: size,
+        scale: scale,
+        labels: labels,
+        axisStyle: axis,
+        format: valueFormat,
+        band: false);
 
     final Widget chart = _InteractiveChart(
       height: height,
       data: Object.hashAll(<Object>[...series, ...labels]),
-      semanticLabel: semanticLabel ?? _describe('Grafik garis', labels, series, valueFormat),
+      semanticLabel: semanticLabel ??
+          _describe('Grafik garis', labels, series, valueFormat),
       painterBuilder: (Size size, double t, int? hovered) => _LinePainter(
         plot: plotFor(size),
         series: series,
@@ -554,14 +617,17 @@ class IddsLineChart extends StatelessWidget {
 
     return _withLegend(
       showLegend ?? series.length > 1,
-      <(String, Color)>[for (int i = 0; i < series.length; i++) (series[i].name, colors[i])],
+      <(String, Color)>[
+        for (int i = 0; i < series.length; i++) (series[i].name, colors[i])
+      ],
       area ? _KeyShape.box : _KeyShape.line,
       chart,
     );
   }
 }
 
-Widget _withLegend(bool show, List<(String, Color)> items, _KeyShape shape, Widget chart) {
+Widget _withLegend(
+    bool show, List<(String, Color)> items, _KeyShape shape, Widget chart) {
   if (!show) return chart;
   return Column(
     mainAxisSize: MainAxisSize.min,
@@ -571,7 +637,8 @@ Widget _withLegend(bool show, List<(String, Color)> items, _KeyShape shape, Widg
   );
 }
 
-String _describe(String kind, List<String> labels, List<IddsChartSeries> series, String Function(double) format) {
+String _describe(String kind, List<String> labels, List<IddsChartSeries> series,
+    String Function(double) format) {
   final StringBuffer b = StringBuffer('$kind. ');
   for (final IddsChartSeries s in series) {
     b.write('${s.name}: ');
@@ -628,7 +695,8 @@ class _LinePainter extends CustomPainter {
     }
 
     // Animasi: garis "tumbuh" dari bawah.
-    double ay(double v) => plot.rect.bottom - (plot.rect.bottom - plot.y(v)) * progress;
+    double ay(double v) =>
+        plot.rect.bottom - (plot.rect.bottom - plot.y(v)) * progress;
 
     for (int s = 0; s < series.length; s++) {
       final List<double?> values = series[s].values;
@@ -649,7 +717,8 @@ class _LinePainter extends CustomPainter {
             ..lineTo(pts.last.dx, plot.y(math.max(plot.scale.min, 0)))
             ..lineTo(pts.first.dx, plot.y(math.max(plot.scale.min, 0)))
             ..close();
-          canvas.drawPath(fill, Paint()..color = colors[s].withValues(alpha: 0.1));
+          canvas.drawPath(
+              fill, Paint()..color = colors[s].withValues(alpha: 0.1));
         }
         canvas.drawPath(
           line,
@@ -666,8 +735,11 @@ class _LinePainter extends CustomPainter {
           }
         }
       }
-      if (hovered != null && hovered! < values.length && values[hovered!] != null) {
-        _dot(canvas, Offset(plot.x(hovered!), ay(values[hovered!]!)), colors[s], radius: 5);
+      if (hovered != null &&
+          hovered! < values.length &&
+          values[hovered!] != null) {
+        _dot(canvas, Offset(plot.x(hovered!), ay(values[hovered!]!)), colors[s],
+            radius: 5);
       }
     }
   }
@@ -752,18 +824,25 @@ class IddsBarChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
-    final (double lo, double hi) = _range(series, stacked: stacked, count: labels.length);
+    final (double lo, double hi) =
+        _range(series, stacked: stacked, count: labels.length);
     final _Scale scale = _Scale(lo, hi);
-    final TextStyle axis = theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary);
+    final TextStyle axis = theme.textStyle(
+        fontSize: IddsFontSize.xs,
+        lineHeight: IddsLineHeight.xs,
+        color: c.contentSecondary);
     final TextStyle valueStyle = theme.textStyle(
       fontSize: IddsFontSize.xs,
       lineHeight: IddsLineHeight.xs,
       fontWeight: IddsFontWeight.medium,
       color: c.contentPrimary,
     );
-    final List<Color> colors = <Color>[for (int i = 0; i < series.length; i++) _seriesColor(i, series[i].color)];
+    final List<Color> colors = <Color>[
+      for (int i = 0; i < series.length; i++) _seriesColor(i, series[i].color)
+    ];
     final bool values = showValues && series.length == 1 && !stacked;
-    final double h = height ?? (horizontal ? math.max(120, labels.length * 40.0 + 32) : 240);
+    final double h =
+        height ?? (horizontal ? math.max(120, labels.length * 40.0 + 32) : 240);
 
     _BarGeometry geometryFor(Size size) => _BarGeometry(
           size: size,
@@ -778,7 +857,8 @@ class IddsBarChart extends StatelessWidget {
     final Widget chart = _InteractiveChart(
       height: h,
       data: Object.hashAll(<Object>[...series, ...labels, stacked, horizontal]),
-      semanticLabel: semanticLabel ?? _describe('Grafik batang', labels, series, valueFormat),
+      semanticLabel: semanticLabel ??
+          _describe('Grafik batang', labels, series, valueFormat),
       painterBuilder: (Size size, double t, int? hovered) => _BarPainter(
         g: geometryFor(size),
         series: series,
@@ -797,7 +877,10 @@ class IddsBarChart extends StatelessWidget {
         final _BarGeometry g = geometryFor(size);
         final int? i = g.indexAt(p);
         if (i == null) return null;
-        return (i, horizontal ? Offset(p.dx, g.center(i)) : Offset(g.center(i), p.dy));
+        return (
+          i,
+          horizontal ? Offset(p.dx, g.center(i)) : Offset(g.center(i), p.dy)
+        );
       },
       tooltipBuilder: (int i) => _TooltipCard(
         title: labels[i],
@@ -811,7 +894,9 @@ class IddsBarChart extends StatelessWidget {
 
     return _withLegend(
       showLegend ?? series.length > 1,
-      <(String, Color)>[for (int i = 0; i < series.length; i++) (series[i].name, colors[i])],
+      <(String, Color)>[
+        for (int i = 0; i < series.length; i++) (series[i].name, colors[i])
+      ],
       _KeyShape.box,
       chart,
     );
@@ -851,7 +936,8 @@ class _BarGeometry {
         yLabelWidth = math.max(yLabelWidth, _text(format(t), axisStyle).width);
       }
       final double xLabelHeight = _text('0', axisStyle).height;
-      rect = Rect.fromLTRB(yLabelWidth + 8, valueSpace ? 22 : 8, size.width - 8, size.height - xLabelHeight - 8);
+      rect = Rect.fromLTRB(yLabelWidth + 8, valueSpace ? 22 : 8, size.width - 8,
+          size.height - xLabelHeight - 8);
     }
   }
 
@@ -864,13 +950,16 @@ class _BarGeometry {
 
   int get n => labels.length;
 
-  double get bandSize => (horizontal ? rect.height : rect.width) / math.max(1, n);
+  double get bandSize =>
+      (horizontal ? rect.height : rect.width) / math.max(1, n);
 
-  double center(int i) => (horizontal ? rect.top : rect.left) + bandSize * (i + 0.5);
+  double center(int i) =>
+      (horizontal ? rect.top : rect.left) + bandSize * (i + 0.5);
 
   /// Posisi nilai pada sumbu nilai.
-  double pos(double v) =>
-      horizontal ? rect.left + rect.width * scale.fraction(v) : rect.bottom - rect.height * scale.fraction(v);
+  double pos(double v) => horizontal
+      ? rect.left + rect.width * scale.fraction(v)
+      : rect.bottom - rect.height * scale.fraction(v);
 
   int? indexAt(Offset p) {
     final double along = horizontal ? p.dy - rect.top : p.dx - rect.left;
@@ -887,29 +976,40 @@ class _BarGeometry {
       final TextPainter tp = _text(format(t), axisStyle);
       if (horizontal) {
         final double xx = pos(t).roundToDouble() + 0.5;
-        canvas.drawLine(Offset(xx, rect.top), Offset(xx, rect.bottom), gridPaint);
+        canvas.drawLine(
+            Offset(xx, rect.top), Offset(xx, rect.bottom), gridPaint);
         tp.paint(canvas, Offset(pos(t) - tp.width / 2, rect.bottom + 6));
       } else {
         final double yy = pos(t).roundToDouble() + 0.5;
-        canvas.drawLine(Offset(rect.left, yy), Offset(rect.right, yy), gridPaint);
-        tp.paint(canvas, Offset(rect.left - 8 - tp.width, pos(t) - tp.height / 2));
+        canvas.drawLine(
+            Offset(rect.left, yy), Offset(rect.right, yy), gridPaint);
+        tp.paint(
+            canvas, Offset(rect.left - 8 - tp.width, pos(t) - tp.height / 2));
       }
     }
     if (n == 0) return;
     if (horizontal) {
       for (int i = 0; i < n; i++) {
-        final TextPainter tp = _text(labels[i], axisStyle, maxWidth: rect.left - 12);
-        tp.paint(canvas, Offset(rect.left - 12 - tp.width, center(i) - tp.height / 2));
+        final TextPainter tp =
+            _text(labels[i], axisStyle, maxWidth: rect.left - 12);
+        tp.paint(canvas,
+            Offset(rect.left - 12 - tp.width, center(i) - tp.height / 2));
       }
     } else {
       double maxW = 0;
       for (final String l in labels) {
         maxW = math.max(maxW, _text(l, axisStyle).width);
       }
-      final int every = math.max(1, ((maxW + 8) / math.max(1, bandSize)).ceil());
+      final int every =
+          math.max(1, ((maxW + 8) / math.max(1, bandSize)).ceil());
       for (int i = 0; i < n; i += every) {
-        final TextPainter tp = _text(labels[i], axisStyle, maxWidth: math.max(bandSize * every - 4, 24));
-        tp.paint(canvas, Offset((center(i) - tp.width / 2).clamp(0, rect.right + 8 - tp.width), rect.bottom + 6));
+        final TextPainter tp = _text(labels[i], axisStyle,
+            maxWidth: math.max(bandSize * every - 4, 24));
+        tp.paint(
+            canvas,
+            Offset(
+                (center(i) - tp.width / 2).clamp(0, rect.right + 8 - tp.width),
+                rect.bottom + 6));
       }
     }
   }
@@ -963,7 +1063,9 @@ class _BarPainter extends CustomPainter {
     final double zero = g.pos(math.max(g.scale.min, 0));
     final int groups = stacked ? 1 : series.length;
     final double usable = g.bandSize * 0.7;
-    final double thickness = math.min(_maxThickness, (usable - _gap * (groups - 1)) / groups).clamp(2, _maxThickness);
+    final double thickness = math
+        .min(_maxThickness, (usable - _gap * (groups - 1)) / groups)
+        .clamp(2, _maxThickness);
     final double groupSize = thickness * groups + _gap * (groups - 1);
 
     for (int i = 0; i < g.n; i++) {
@@ -971,7 +1073,8 @@ class _BarPainter extends CustomPainter {
       double posBase = 0;
       double negBase = 0;
       for (int s = 0; s < series.length; s++) {
-        final double? raw = i < series[s].values.length ? series[s].values[i] : null;
+        final double? raw =
+            i < series[s].values.length ? series[s].values[i] : null;
         if (raw == null) continue;
         final double v = raw * progress;
         final double offset = stacked ? 0 : s * (thickness + _gap);
@@ -1001,8 +1104,10 @@ class _BarPainter extends CustomPainter {
         }
         final bool positive = to >= from;
         final Rect r = g.horizontal
-            ? Rect.fromLTRB(math.min(a, b), bandStart + offset, math.max(a, b), bandStart + offset + thickness)
-            : Rect.fromLTRB(bandStart + offset, math.min(a, b), bandStart + offset + thickness, math.max(a, b));
+            ? Rect.fromLTRB(math.min(a, b), bandStart + offset, math.max(a, b),
+                bandStart + offset + thickness)
+            : Rect.fromLTRB(bandStart + offset, math.min(a, b),
+                bandStart + offset + thickness, math.max(a, b));
         if (r.isEmpty) continue;
         // Ujung data membulat 4px, sisi dasar lurus. Segmen tumpukan di
         // tengah tidak dibulatkan.
@@ -1011,11 +1116,15 @@ class _BarPainter extends CustomPainter {
             ? RRect.fromRectAndRadius(r, Radius.zero)
             : g.horizontal
                 ? (positive
-                    ? RRect.fromRectAndCorners(r, topRight: _radius, bottomRight: _radius)
-                    : RRect.fromRectAndCorners(r, topLeft: _radius, bottomLeft: _radius))
+                    ? RRect.fromRectAndCorners(r,
+                        topRight: _radius, bottomRight: _radius)
+                    : RRect.fromRectAndCorners(r,
+                        topLeft: _radius, bottomLeft: _radius))
                 : (positive
-                    ? RRect.fromRectAndCorners(r, topLeft: _radius, topRight: _radius)
-                    : RRect.fromRectAndCorners(r, bottomLeft: _radius, bottomRight: _radius));
+                    ? RRect.fromRectAndCorners(r,
+                        topLeft: _radius, topRight: _radius)
+                    : RRect.fromRectAndCorners(r,
+                        bottomLeft: _radius, bottomRight: _radius));
         canvas.drawRRect(rr, Paint()..color = colors[s]);
 
         if (showValues && progress >= 1) {
@@ -1023,7 +1132,8 @@ class _BarPainter extends CustomPainter {
           if (g.horizontal) {
             tp.paint(canvas, Offset(r.right + 6, r.center.dy - tp.height / 2));
           } else {
-            tp.paint(canvas, Offset(r.center.dx - tp.width / 2, r.top - tp.height - 4));
+            tp.paint(canvas,
+                Offset(r.center.dx - tp.width / 2, r.top - tp.height - 4));
           }
         }
       }
@@ -1032,15 +1142,18 @@ class _BarPainter extends CustomPainter {
       ..color = grid
       ..strokeWidth = 1;
     if (g.horizontal) {
-      canvas.drawLine(Offset(zero, g.rect.top), Offset(zero, g.rect.bottom), base);
+      canvas.drawLine(
+          Offset(zero, g.rect.top), Offset(zero, g.rect.bottom), base);
     } else {
-      canvas.drawLine(Offset(g.rect.left, zero), Offset(g.rect.right, zero), base);
+      canvas.drawLine(
+          Offset(g.rect.left, zero), Offset(g.rect.right, zero), base);
     }
   }
 
   bool _isLastSegment(int i, int s, bool positive) {
     for (int k = s + 1; k < series.length; k++) {
-      final double? v = i < series[k].values.length ? series[k].values[i] : null;
+      final double? v =
+          i < series[k].values.length ? series[k].values[i] : null;
       if (v != null && v != 0 && (v > 0) == positive) return false;
     }
     return true;
@@ -1101,19 +1214,28 @@ class IddsPieChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
-    final double total = slices.fold(0, (double sum, IddsChartSlice s) => sum + math.max(0, s.value));
-    final List<Color> colors = <Color>[for (int i = 0; i < slices.length; i++) _seriesColor(i, slices[i].color)];
-    String percent(double v) => total == 0 ? '0%' : '${(v / total * 100).toStringAsFixed(v / total < 0.1 ? 1 : 0).replaceAll('.', ',')}%';
+    final double total = slices.fold(
+        0, (double sum, IddsChartSlice s) => sum + math.max(0, s.value));
+    final List<Color> colors = <Color>[
+      for (int i = 0; i < slices.length; i++) _seriesColor(i, slices[i].color)
+    ];
+    String percent(double v) => total == 0
+        ? '0%'
+        : '${(v / total * 100).toStringAsFixed(v / total < 0.1 ? 1 : 0).replaceAll('.', ',')}%';
 
     final Widget pie = SizedBox(
       width: size,
       child: _InteractiveChart(
         height: size,
-        data: Object.hashAll(<Object>[for (final IddsChartSlice s in slices) Object.hash(s.label, s.value)]),
+        data: Object.hashAll(<Object>[
+          for (final IddsChartSlice s in slices) Object.hash(s.label, s.value)
+        ]),
         semanticLabel: semanticLabel ??
             'Grafik lingkaran. ${slices.map((IddsChartSlice s) => '${s.label} ${valueFormat(s.value)} (${percent(s.value)})').join(', ')}.',
         painterBuilder: (Size sz, double t, int? hovered) => _PiePainter(
-          values: <double>[for (final IddsChartSlice s in slices) math.max(0, s.value)],
+          values: <double>[
+            for (final IddsChartSlice s in slices) math.max(0, s.value)
+          ],
           colors: colors,
           progress: t,
           hovered: hovered,
@@ -1125,7 +1247,9 @@ class IddsPieChart extends StatelessWidget {
           final Offset center = sz.center(Offset.zero);
           final Offset d = p - center;
           final double r = math.min(sz.width, sz.height) / 2;
-          if (d.distance > r || (donut && d.distance < r * 0.6) || total == 0) return null;
+          if (d.distance > r || (donut && d.distance < r * 0.6) || total == 0) {
+            return null;
+          }
           double angle = math.atan2(d.dy, d.dx) + math.pi / 2;
           if (angle < 0) angle += math.pi * 2;
           double acc = 0;
@@ -1137,7 +1261,13 @@ class IddsPieChart extends StatelessWidget {
         },
         tooltipBuilder: (int i) => _TooltipCard(
           title: slices[i].label,
-          rows: <(String, String, Color)>[('(${percent(slices[i].value)})', valueFormat(slices[i].value), colors[i])],
+          rows: <(String, String, Color)>[
+            (
+              '(${percent(slices[i].value)})',
+              valueFormat(slices[i].value),
+              colors[i]
+            )
+          ],
         ),
       ),
     );
@@ -1164,7 +1294,10 @@ class IddsPieChart extends StatelessWidget {
                     if (centerLabel != null)
                       Text(
                         centerLabel!,
-                        style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary),
+                        style: theme.textStyle(
+                            fontSize: IddsFontSize.xs,
+                            lineHeight: IddsLineHeight.xs,
+                            color: c.contentSecondary),
                       ),
                   ],
                 ),
@@ -1173,7 +1306,10 @@ class IddsPieChart extends StatelessWidget {
           );
 
     if (!showLegend) return visual;
-    final TextStyle legendStyle = theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary);
+    final TextStyle legendStyle = theme.textStyle(
+        fontSize: IddsFontSize.xs,
+        lineHeight: IddsLineHeight.xs,
+        color: c.contentSecondary);
     final Widget legend = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1184,7 +1320,12 @@ class IddsPieChart extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             spacing: IddsSpacing.s8,
             children: <Widget>[
-              Container(width: 10, height: 10, decoration: BoxDecoration(color: colors[i], borderRadius: BorderRadius.circular(2))),
+              Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                      color: colors[i],
+                      borderRadius: BorderRadius.circular(2))),
               Text(slices[i].label, style: legendStyle),
               Text(
                 '${valueFormat(slices[i].value)} · ${percent(slices[i].value)}',
@@ -1260,7 +1401,8 @@ class _PiePainter extends CustomPainter {
         for (int i = 0; i < values.length; i++) {
           final double sweep = values[i] / total * sweepTotal;
           if (sweep <= 0) continue;
-          canvas.drawLine(center, center + Offset(math.cos(start), math.sin(start)) * (r + 5), gap);
+          canvas.drawLine(center,
+              center + Offset(math.cos(start), math.sin(start)) * (r + 5), gap);
           start += sweep;
         }
       }

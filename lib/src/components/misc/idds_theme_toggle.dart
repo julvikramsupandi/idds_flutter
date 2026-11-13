@@ -73,15 +73,20 @@ class IddsThemeToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
-    final VoidCallback? onTap = onChanged == null ? null : () => onChanged!(!dark);
+    final VoidCallback? onTap =
+        onChanged == null ? null : () => onChanged!(!dark);
     final String label = dark ? darkLabel : lightLabel;
 
     // CSS `@idds/react`: tombol bulat tanpa garis tepi, latar transparan
     // (membesar 1.05 saat hover), ikon primary, label di luar tombol.
     // Penyesuaian (lintasan `__track` dan latar hover): lihat README.
     final double labelSize = switch (size) {
-      IddsThemeToggleSize.lg => iddsIsCompact(context, IddsBreakpoint.sm) ? IddsFontSize.sm : IddsFontSize.base,
-      IddsThemeToggleSize.md => iddsIsCompact(context, IddsBreakpoint.sm) ? IddsFontSize.xs : IddsFontSize.sm,
+      IddsThemeToggleSize.lg => iddsIsCompact(context, IddsBreakpoint.sm)
+          ? IddsFontSize.sm
+          : IddsFontSize.base,
+      IddsThemeToggleSize.md => iddsIsCompact(context, IddsBreakpoint.sm)
+          ? IddsFontSize.xs
+          : IddsFontSize.sm,
       IddsThemeToggleSize.sm => IddsFontSize.xs,
     };
     final double labelLineHeight = switch (labelSize) {
@@ -108,7 +113,10 @@ class IddsThemeToggle extends StatelessWidget {
             visible: state.focused,
             borderRadius: BorderRadius.circular(IddsRadius.full),
             // CSS fokus: cincin 2px latar + primary-500.
-            rings: <(double, Color)>[(2.0, c.backgroundPrimary), (2.0, c.primary.shade500)],
+            rings: <(double, Color)>[
+              (2.0, c.backgroundPrimary),
+              (2.0, c.primary.shade500)
+            ],
             child: AnimatedScale(
               scale: state.pressed
                   ? 0.95
@@ -121,13 +129,16 @@ class IddsThemeToggle extends StatelessWidget {
                 width: size.height,
                 height: size.height,
                 decoration: BoxDecoration(
-                  color: state.hovered && state.enabled ? c.backgroundTertiary : const Color(0x00000000),
+                  color: state.hovered && state.enabled
+                      ? c.backgroundTertiary
+                      : const Color(0x00000000),
                   borderRadius: BorderRadius.circular(IddsRadius.full),
                 ),
                 alignment: Alignment.center,
                 child: AnimatedSwitcher(
                   duration: IddsDuration.slow,
-                  transitionBuilder: (Widget child, Animation<double> a) => RotationTransition(
+                  transitionBuilder: (Widget child, Animation<double> a) =>
+                      RotationTransition(
                     turns: Tween<double>(begin: 0.75, end: 1).animate(a),
                     child: FadeTransition(opacity: a, child: child),
                   ),

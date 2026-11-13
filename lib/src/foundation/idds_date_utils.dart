@@ -46,7 +46,15 @@ abstract final class IddsDateNames {
   ];
 
   /// Nama hari singkat, Senin = indeks 0.
-  static const List<String> shortWeekdays = <String>['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+  static const List<String> shortWeekdays = <String>[
+    'Sen',
+    'Sel',
+    'Rab',
+    'Kam',
+    'Jum',
+    'Sab',
+    'Min'
+  ];
 }
 
 /// Rentang tanggal untuk [IddsDateRangePicker]. [end] `null` berarti
@@ -83,7 +91,8 @@ class IddsDateRange {
   }
 
   @override
-  bool operator ==(Object other) => other is IddsDateRange && other.start == start && other.end == end;
+  bool operator ==(Object other) =>
+      other is IddsDateRange && other.start == start && other.end == end;
 
   @override
   int get hashCode => Object.hash(start, end);
@@ -93,25 +102,34 @@ class IddsDateRange {
 }
 
 /// Tanggal tanpa jam (tengah malam waktu lokal).
-DateTime iddsDateOnly(DateTime date) => DateTime(date.year, date.month, date.day);
+DateTime iddsDateOnly(DateTime date) =>
+    DateTime(date.year, date.month, date.day);
 
 /// Apakah dua waktu jatuh pada tanggal yang sama.
 bool iddsIsSameDay(DateTime? a, DateTime? b) =>
-    a != null && b != null && a.year == b.year && a.month == b.month && a.day == b.day;
+    a != null &&
+    b != null &&
+    a.year == b.year &&
+    a.month == b.month &&
+    a.day == b.day;
 
 /// Selisih hari kalender dari [from] ke [to] (aman terhadap pergantian
 /// jam musim panas).
 int iddsDaysBetween(DateTime from, DateTime to) =>
-    DateTime.utc(to.year, to.month, to.day).difference(DateTime.utc(from.year, from.month, from.day)).inDays;
+    DateTime.utc(to.year, to.month, to.day)
+        .difference(DateTime.utc(from.year, from.month, from.day))
+        .inDays;
 
 /// Jumlah hari dalam bulan.
 int iddsDaysInMonth(int year, int month) => DateTime(year, month + 1, 0).day;
 
 /// Tanggal 1 pada bulan [date] ditambah [months] bulan.
-DateTime iddsAddMonths(DateTime date, int months) => DateTime(date.year, date.month + months);
+DateTime iddsAddMonths(DateTime date, int months) =>
+    DateTime(date.year, date.month + months);
 
 /// Tanggal [date] ditambah [days] hari kalender.
-DateTime iddsAddDays(DateTime date, int days) => DateTime(date.year, date.month, date.day + days);
+DateTime iddsAddDays(DateTime date, int days) =>
+    DateTime(date.year, date.month, date.day + days);
 
 /// Memformat tanggal dengan pola sederhana.
 ///
@@ -151,7 +169,8 @@ String iddsFormatDate(DateTime date, [String pattern = 'dd/MM/yyyy']) {
           _ => IddsDateNames.months[date.month - 1],
         });
       case 'y':
-        out.write(run == 2 ? '${date.year % 100}'.padLeft(2, '0') : '${date.year}');
+        out.write(
+            run == 2 ? '${date.year % 100}'.padLeft(2, '0') : '${date.year}');
       case 'E':
         out.write(run >= 4
             ? IddsDateNames.weekdays[date.weekday - 1]
@@ -206,6 +225,11 @@ DateTime? iddsParseDate(String text, [String pattern = 'dd/MM/yyyy']) {
     }
   }
   if (day == null || month == null || year == null) return null;
-  if (month < 1 || month > 12 || day < 1 || day > iddsDaysInMonth(year, month)) return null;
+  if (month < 1 ||
+      month > 12 ||
+      day < 1 ||
+      day > iddsDaysInMonth(year, month)) {
+    return null;
+  }
   return DateTime(year, month, day);
 }
