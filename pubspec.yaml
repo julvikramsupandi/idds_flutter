@@ -2,7 +2,7 @@ name: idds_flutter
 description: >-
   Unofficial Flutter port of INA Digital Design System (IDDS):
   design tokens, multi-brand theming, and UI components.
-version: 0.2.1
+version: 0.2.2
 repository: https://github.com/julvikramsupandi/idds_flutter
 issue_tracker: https://github.com/julvikramsupandi/idds_flutter/issues
 documentation: https://julvikramsupandi.github.io/idds_flutter/
@@ -15,20 +15,22 @@ topics:
   - indonesia
 
 screenshots:
-  - description: Contoh aplikasi mobile layanan publik, layar Masuk (Text Field, Password, Checkbox, Button).
+  - description: Aplikasi mobile layanan publik, layar Masuk, brand INAgov mode terang.
     path: doc/screenshots/mobile-masuk.webp
-  - description: Contoh aplikasi mobile, layar Beranda Layanan (Search, Card, Progress Bar, List).
+  - description: Layar Beranda Layanan, brand PANRB mode terang.
     path: doc/screenshots/mobile-beranda.webp
-  - description: Contoh aplikasi mobile, layar Form Pengajuan (Stepper, Text Field, Date Picker, Select).
+  - description: Layar Form Pengajuan dengan Stepper, brand LAN mode terang.
     path: doc/screenshots/mobile-form-pengajuan.webp
+  - description: Layar Masuk, brand PANRB mode gelap.
+    path: doc/screenshots/mobile-masuk-gelap.webp
+  - description: Bottom sheet detail layanan, brand BKN mode gelap.
+    path: doc/screenshots/mobile-beranda-gelap.webp
+  - description: Validasi form dan toast, brand INAgov mode gelap.
+    path: doc/screenshots/mobile-form-pengajuan-gelap.webp
   - description: Contoh dasbor web dengan brand INAgov dalam mode terang.
     path: doc/screenshots/beranda.webp
   - description: Contoh dasbor web dengan brand BKN dalam mode gelap.
     path: doc/screenshots/beranda-gelap-bkn.webp
-  - description: Text Input, Checkbox, Radio, dan Toggle beserta status validasi.
-    path: doc/screenshots/form.webp
-  - description: Grafik garis, batang, dan donat dengan palet IDDS.
-    path: doc/screenshots/grafik.webp
 
 environment:
   sdk: ^3.6.0

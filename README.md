@@ -20,9 +20,20 @@ mode gelap, dan contoh kode. Setiap halaman punya alamat sendiri, misalnya
 [`#/table`](https://julvikramsupandi.github.io/idds_flutter/#/table).
 
 <p>
-  <img src="https://raw.githubusercontent.com/julvikramsupandi/idds_flutter/main/doc/screenshots/mobile-masuk.webp" alt="Contoh layar Masuk di aplikasi mobile, brand INAgov" width="32%">
-  <img src="https://raw.githubusercontent.com/julvikramsupandi/idds_flutter/main/doc/screenshots/mobile-beranda.webp" alt="Contoh layar Beranda Layanan di aplikasi mobile, brand INAgov" width="32%">
-  <img src="https://raw.githubusercontent.com/julvikramsupandi/idds_flutter/main/doc/screenshots/mobile-form-pengajuan.webp" alt="Contoh layar Form Pengajuan di aplikasi mobile, brand INAgov" width="32%">
+  <img src="https://raw.githubusercontent.com/julvikramsupandi/idds_flutter/main/doc/screenshots/mobile-masuk.webp" alt="Layar Masuk, brand INAgov, mode terang" width="32%">
+  <img src="https://raw.githubusercontent.com/julvikramsupandi/idds_flutter/main/doc/screenshots/mobile-beranda.webp" alt="Layar Beranda Layanan, brand PANRB, mode terang" width="32%">
+  <img src="https://raw.githubusercontent.com/julvikramsupandi/idds_flutter/main/doc/screenshots/mobile-form-pengajuan.webp" alt="Layar Form Pengajuan, brand LAN, mode terang" width="32%">
+</p>
+<p>
+  <img src="https://raw.githubusercontent.com/julvikramsupandi/idds_flutter/main/doc/screenshots/mobile-masuk-gelap.webp" alt="Layar Masuk, brand PANRB, mode gelap" width="32%">
+  <img src="https://raw.githubusercontent.com/julvikramsupandi/idds_flutter/main/doc/screenshots/mobile-beranda-gelap.webp" alt="Bottom sheet detail layanan, brand BKN, mode gelap" width="32%">
+  <img src="https://raw.githubusercontent.com/julvikramsupandi/idds_flutter/main/doc/screenshots/mobile-form-pengajuan-gelap.webp" alt="Validasi form dan toast, brand INAgov, mode gelap" width="32%">
+</p>
+
+Juga berjalan di web dan desktop:
+
+<p>
+  <img src="https://raw.githubusercontent.com/julvikramsupandi/idds_flutter/main/doc/screenshots/beranda.webp" alt="Contoh dasbor web di galeri, brand INAgov, mode terang" width="100%">
 </p>
 
 ## Status

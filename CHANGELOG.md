@@ -1,4 +1,4 @@
-## Belum dirilis
+## 0.2.2
 
 - `IddsButton`: isi tombol kini di tengah saat tombol dibuat selebar induk
   (mis. `SizedBox(width: double.infinity, child: IddsButton(...))`), sesuai
@@ -7,6 +7,8 @@
   layanan publik (Masuk, Beranda Layanan, Form Pengajuan) di bingkai ponsel
   360px yang bisa dicoba langsung dari web. Contoh dasbor lama pindah ke tab
   **Web**.
+- README & pub.dev: screenshot kini menampilkan enam layar aplikasi mobile
+  (empat brand, mode terang dan gelap) dan dasbor web dengan tab baru.
 
 ## 0.2.1
 
