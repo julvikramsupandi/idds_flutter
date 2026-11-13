@@ -1,3 +1,9 @@
+## Belum dirilis
+
+- `LICENSE` kini hanya berisi teks MIT standar agar dikenali pub.dev sebagai
+  lisensi OSI. Catatan pihak ketiga (token `@idds/styles`, Tabler Icons,
+  nama/logo instansi) dipindah ke berkas `NOTICE`.
+
 ## 0.2.2
 
 - `IddsButton`: isi tombol kini di tengah saat tombol dibuat selebar induk

@@ -564,6 +564,6 @@ cd example && flutter create . && flutter run
 ## Lisensi
 
 MIT. Token diturunkan dari `@idds/styles` (MIT) milik INA Digital dan ikon
-dari Tabler Icons (MIT); lihat
-[LICENSE](LICENSE). Nama dan logo INA Digital serta lembaga pemerintah yang
+dari Tabler Icons (MIT); lihat [LICENSE](LICENSE) dan
+[NOTICE](NOTICE). Nama dan logo INA Digital serta lembaga pemerintah yang
 disebut di tema brand adalah milik pemiliknya masing-masing.
