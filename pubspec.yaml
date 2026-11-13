@@ -15,9 +15,15 @@ topics:
   - indonesia
 
 screenshots:
-  - description: Beranda galeri dengan brand INAgov dalam mode terang.
+  - description: Contoh aplikasi mobile layanan publik, layar Masuk (Text Field, Password, Checkbox, Button).
+    path: doc/screenshots/mobile-masuk.webp
+  - description: Contoh aplikasi mobile, layar Beranda Layanan (Search, Card, Progress Bar, List).
+    path: doc/screenshots/mobile-beranda.webp
+  - description: Contoh aplikasi mobile, layar Form Pengajuan (Stepper, Text Field, Date Picker, Select).
+    path: doc/screenshots/mobile-form-pengajuan.webp
+  - description: Contoh dasbor web dengan brand INAgov dalam mode terang.
     path: doc/screenshots/beranda.webp
-  - description: Beranda yang sama dengan brand BKN dalam mode gelap.
+  - description: Contoh dasbor web dengan brand BKN dalam mode gelap.
     path: doc/screenshots/beranda-gelap-bkn.webp
   - description: Text Input, Checkbox, Radio, dan Toggle beserta status validasi.
     path: doc/screenshots/form.webp

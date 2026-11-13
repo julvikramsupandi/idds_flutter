@@ -2,10 +2,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_tabler_icons/flutter_tabler_icons.dart';
 import 'package:idds_flutter/idds_flutter.dart';
 
-/// Beranda galeri: contoh dasbor seperti bagian "Pilih Tema" di situs IDDS.
-/// Ganti tema untuk melihat seluruh komponen ikut berubah warna.
+import 'brand_logo.dart';
+import 'mobile/mobile_showcase.dart';
+
+/// Tampilan contoh di Beranda.
+enum HomeShowcase { mobile, web }
+
+/// Beranda galeri. Tab Mobile (bawaan) menampilkan contoh aplikasi layanan
+/// publik di bingkai ponsel, karena idds_flutter paling banyak dipakai
+/// untuk Android/iOS. Tab Web menampilkan contoh dasbor seperti bagian
+/// "Pilih Tema" di situs IDDS. Ganti tema untuk melihat seluruh komponen
+/// ikut berubah warna.
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.brand, required this.onBrandChanged});
 
@@ -22,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   String? _emailError;
+  HomeShowcase _showcase = HomeShowcase.mobile;
 
   @override
   void dispose() {
@@ -100,7 +111,9 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'Lihat bagaimana setiap instansi menampilkan identitasnya',
+            _showcase == HomeShowcase.mobile
+                ? 'IDDS di aplikasi mobile Anda'
+                : 'Lihat bagaimana setiap instansi menampilkan identitasnya',
             style: theme.textStyle(
               fontSize: IddsFontSize.xl2,
               lineHeight: IddsLineHeight.xl,
@@ -110,63 +123,90 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: IddsSpacing.s8),
           Text(
-            'Pilih tema penerapan untuk melihat perbedaannya. Brand lain dan brand kustom ada di menu Brand & Warna.',
+            _showcase == HomeShowcase.mobile
+                ? 'Contoh aplikasi layanan publik untuk Android dan iOS. Isi setiap bingkai adalah widget idds_flutter '
+                    'dengan lebar layar 360px, jadi bisa langsung dicoba: isi form, buka layanan, atau masuk dengan kode OTP.'
+                : 'Pilih tema penerapan untuk melihat perbedaannya. Brand lain dan brand kustom ada di menu Brand & Warna.',
             style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentSecondary),
           ),
           const SizedBox(height: IddsSpacing.s24),
           Wrap(
-            spacing: IddsSpacing.s16,
-            runSpacing: IddsSpacing.s8,
+            spacing: IddsSpacing.s24,
+            runSpacing: IddsSpacing.s12,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: <Widget>[
-              Text(
-                'Pilih Tema',
-                style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentPrimary),
+              IddsTabMenu<HomeShowcase>(
+                variant: IddsTabVariant.buttonBrand,
+                value: _showcase,
+                onChanged: (HomeShowcase v) => setState(() => _showcase = v),
+                items: const <IddsTabItem<HomeShowcase>>[
+                  IddsTabItem<HomeShowcase>(value: HomeShowcase.mobile, label: _TabLabel(TablerIcons.device_mobile, 'Mobile')),
+                  IddsTabItem<HomeShowcase>(value: HomeShowcase.web, label: _TabLabel(TablerIcons.browser, 'Web')),
+                ],
               ),
-              IddsTabMenu<String>(
-                variant: IddsTabVariant.buttonWhite,
-                value: known ? widget.brand.id : null,
-                onChanged: (String id) => widget.onBrandChanged(_themes.firstWhere((IddsBrand b) => b.id == id)),
-                items: <IddsTabItem<String>>[
-                  for (final IddsBrand b in _themes) IddsTabItem<String>(value: b.id, label: Text(b.name)),
+              Wrap(
+                spacing: IddsSpacing.s16,
+                runSpacing: IddsSpacing.s8,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Pilih Tema',
+                    style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentPrimary),
+                  ),
+                  IddsTabMenu<String>(
+                    variant: IddsTabVariant.buttonWhite,
+                    value: known ? widget.brand.id : null,
+                    onChanged: (String id) => widget.onBrandChanged(_themes.firstWhere((IddsBrand b) => b.id == id)),
+                    items: <IddsTabItem<String>>[
+                      for (final IddsBrand b in _themes) IddsTabItem<String>(value: b.id, label: Text(b.name)),
+                    ],
+                  ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: IddsSpacing.s24),
-          Container(
-            padding: const EdgeInsets.all(IddsSpacing.s24),
-            decoration: BoxDecoration(
-              color: c.backgroundPrimary,
-              borderRadius: BorderRadius.circular(IddsRadius.xl),
-              border: Border.all(color: c.strokePrimary, width: 3),
-            ),
-            child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                final bool wide = constraints.maxWidth >= 760;
-                Widget pair(Widget a, int flexA, Widget b, int flexB) => wide
-                    ? _EqualHeightRow(
-                        flexes: <int>[flexA, flexB],
-                        spacing: IddsSpacing.s24,
-                        children: <Widget>[a, b],
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: IddsSpacing.s24,
-                        children: <Widget>[a, b],
-                      );
-                return Column(
+          const SizedBox(height: IddsSpacing.s32),
+          if (_showcase == HomeShowcase.mobile)
+            MobileShowcase(brand: widget.brand)
+          else
+            _webShowcase(theme),
+        ],
+      ),
+    );
+  }
+
+  Widget _webShowcase(IddsThemeData theme) {
+    final IddsColors c = theme.colors;
+    return Container(
+      padding: const EdgeInsets.all(IddsSpacing.s24),
+      decoration: BoxDecoration(
+        color: c.backgroundPrimary,
+        borderRadius: BorderRadius.circular(IddsRadius.xl),
+        border: Border.all(color: c.strokePrimary, width: 3),
+      ),
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final bool wide = constraints.maxWidth >= 760;
+          Widget pair(Widget a, int flexA, Widget b, int flexB) => wide
+              ? _EqualHeightRow(
+                  flexes: <int>[flexA, flexB],
+                  spacing: IddsSpacing.s24,
+                  children: <Widget>[a, b],
+                )
+              : Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: IddsSpacing.s24,
-                  children: <Widget>[
-                    pair(_loginCard(theme), 2, _pieCard(theme), 3),
-                    pair(_barCard(theme), 3, _surveyCard(theme), 2),
-                  ],
+                  children: <Widget>[a, b],
                 );
-              },
-            ),
-          ),
-        ],
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: IddsSpacing.s24,
+            children: <Widget>[
+              pair(_loginCard(theme), 2, _pieCard(theme), 3),
+              pair(_barCard(theme), 3, _surveyCard(theme), 2),
+            ],
+          );
+        },
       ),
     );
   }
@@ -185,7 +225,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: IddsSpacing.s16,
           children: <Widget>[
-            _BrandLogo(brand: widget.brand),
+            BrandLogo(brand: widget.brand),
             IddsTextField(
               controller: _email,
               label: const Text('Email'),
@@ -346,66 +386,21 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-/// Logo brand di kartu login. Brand tanpa berkas logo (Neutral, INApas,
-/// INAku, BGN, brand kustom) ditampilkan sebagai teks nama brand.
-class _BrandLogo extends StatelessWidget {
-  const _BrandLogo({required this.brand});
+/// Label tab dengan ikon.
+class _TabLabel extends StatelessWidget {
+  const _TabLabel(this.icon, this.text);
 
-  final IddsBrand brand;
-
-  static const Map<String, String> _assets = <String, String>{
-    'inagov': 'assets/logos/inagov.svg',
-    'panrb': 'assets/logos/panrb.svg',
-    'lan': 'assets/logos/lan.svg',
-    'bkn': 'assets/logos/bkn.svg',
-  };
+  final IconData icon;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
-    final IddsThemeData theme = IddsTheme.of(context);
-    final String? asset = _assets[brand.id];
-    if (asset == null) {
-      return Text(
-        brand.name,
-        style: theme.textStyle(
-          fontSize: IddsFontSize.xl2,
-          lineHeight: IddsLineHeight.xl,
-          fontWeight: IddsFontWeight.bold,
-          color: theme.colors.primaryMain,
-        ),
-      );
-    }
-    return Align(
-      alignment: AlignmentDirectional.centerStart,
-      child: SvgPicture.asset(
-        asset,
-        height: 32,
-        semanticsLabel: 'Logo ${brand.name}',
-        // Teks logo PANRB hampir hitam (#231F20) dan tidak terbaca di mode
-        // gelap, jadi diganti warna teks utama.
-        colorMapper: theme.isDark ? _DarkTextMapper(theme.colors.contentPrimary) : null,
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      spacing: IddsSpacing.s8,
+      children: <Widget>[Icon(icon, size: 16), Text(text)],
     );
   }
-}
-
-/// Mengganti warna hampir hitam pada logo dengan [color].
-class _DarkTextMapper extends ColorMapper {
-  const _DarkTextMapper(this.color);
-
-  final Color color;
-
-  @override
-  Color substitute(String? id, String elementName, String attributeName, Color original) {
-    final bool nearBlack = original.r < 0.2 && original.g < 0.2 && original.b < 0.2;
-    return nearBlack ? color.withValues(alpha: original.a) : original;
-  }
-
-  @override
-  bool operator ==(Object other) => other is _DarkTextMapper && other.color == color;
-
-  @override
-  int get hashCode => color.hashCode;
 }
 
 /// Mewarnai ulang ilustrasi survei mengikuti brand yang dipilih.

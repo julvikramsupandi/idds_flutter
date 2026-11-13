@@ -16,6 +16,12 @@ void main() {
     await tester.pumpWidget(const GalleryApp());
     await tester.pumpAndSettle();
     expect(find.text('IDDS Flutter'), findsOneWidget);
+    // Beranda membuka tab Mobile lebih dulu.
+    expect(find.text('Masuk ke akun Anda'), findsOneWidget);
+    expect(find.text('Distribusi Pengguna'), findsNothing);
+
+    await tester.tap(find.text('Web'));
+    await tester.pumpAndSettle();
     expect(find.text('Distribusi Pengguna'), findsOneWidget);
     expect(find.text('Masuk'), findsOneWidget);
 

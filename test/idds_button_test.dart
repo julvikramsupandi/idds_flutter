@@ -28,6 +28,22 @@ void main() {
     expect(taps, 1);
   });
 
+  testWidgets('isi tetap di tengah saat tombol selebar induk', (WidgetTester tester) async {
+    await tester.pumpWidget(_app(SizedBox(
+      width: 320,
+      child: IddsButton(onPressed: () {}, child: const Text('Masuk')),
+    )));
+    final Rect button = tester.getRect(find.byType(IddsButton));
+    final Rect label = tester.getRect(find.text('Masuk'));
+    expect(button.width, 320);
+    expect(label.center.dx, moreOrLessEquals(button.center.dx, epsilon: 0.5));
+  });
+
+  testWidgets('tanpa lebar dari induk, tombol tetap selebar isinya', (WidgetTester tester) async {
+    await tester.pumpWidget(_app(IddsButton(onPressed: () {}, child: const Text('Masuk'))));
+    expect(tester.getSize(find.byType(IddsButton)).width, lessThan(200));
+  });
+
   testWidgets('nonaktif bila onPressed null', (WidgetTester tester) async {
     await tester.pumpWidget(_app(const IddsButton(onPressed: null, child: Text('Simpan'))));
     await tester.tap(find.text('Simpan'), warnIfMissed: false);
