@@ -60,7 +60,7 @@ Juga berjalan di web dan desktop:
 
 ```yaml
 dependencies:
-  idds_flutter: ^0.2.0
+  idds_flutter: ^0.2.2
 ```
 
 ## Pemakaian
