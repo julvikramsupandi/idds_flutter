@@ -33,6 +33,11 @@ enum IddsDrawerPosition {
 /// 60%. Di layar lebih kecil, drawer kiri/kanan/bawah tampil sebagai panel
 /// dari bawah setinggi 45% layar, sama seperti versi web.
 ///
+/// Isi [bottomOnSmallScreens] dengan `false` agar drawer kiri/kanan tetap
+/// muncul dari samping di layar kecil, misalnya untuk menu navigasi aplikasi
+/// mobile (pola navigation drawer Android/iOS). Ini penyesuaian dari IDDS
+/// web, yang selalu memindahkannya ke bawah.
+///
 /// ```dart
 /// showIddsDrawer<void>(
 ///   context: context,
@@ -53,6 +58,7 @@ Future<T?> showIddsDrawer<T>({
   String barrierLabel = 'Tutup panel',
   bool useRootNavigator = true,
   RouteSettings? settings,
+  bool bottomOnSmallScreens = true,
 }) {
   return iddsPushOverlayRoute<T>(
     context,
@@ -69,11 +75,13 @@ Future<T?> showIddsDrawer<T>({
             position: position,
             width: width,
             height: height,
+            bottomOnSmallScreens: bottomOnSmallScreens,
             child: Builder(builder: builder)),
       ),
       transitionBuilder:
           (BuildContext context, Animation<double> animation, Widget child) {
-        final IddsDrawerPosition side = _effectivePosition(context, position);
+        final IddsDrawerPosition side =
+            _effectivePosition(context, position, bottomOnSmallScreens);
         // CSS: cubic-bezier(.16, 1, .3, 1) masuk, (.4, 0, .2, 1) keluar.
         final Animation<double> curved = CurvedAnimation(
           parent: animation,
@@ -97,11 +105,13 @@ Future<T?> showIddsDrawer<T>({
   );
 }
 
-/// Di layar ≤ 640px drawer kiri/kanan menjadi panel dari bawah.
-IddsDrawerPosition _effectivePosition(
-    BuildContext context, IddsDrawerPosition position) {
+/// Di layar ≤ 640px drawer kiri/kanan menjadi panel dari bawah, kecuali
+/// [bottomOnSmallScreens] bernilai `false`.
+IddsDrawerPosition _effectivePosition(BuildContext context,
+    IddsDrawerPosition position, bool bottomOnSmallScreens) {
   final double width = MediaQuery.sizeOf(context).width;
-  if (width <= 640 &&
+  if (bottomOnSmallScreens &&
+      width <= 640 &&
       (position == IddsDrawerPosition.left ||
           position == IddsDrawerPosition.right)) {
     return IddsDrawerPosition.bottom;
@@ -115,11 +125,13 @@ class _DrawerPanel extends StatelessWidget {
       {required this.position,
       required this.width,
       required this.height,
+      required this.bottomOnSmallScreens,
       required this.child});
 
   final IddsDrawerPosition position;
   final double width;
   final double? height;
+  final bool bottomOnSmallScreens;
   final Widget child;
 
   @override
@@ -127,7 +139,8 @@ class _DrawerPanel extends StatelessWidget {
     final IddsColors c = IddsTheme.of(context).colors;
     final Size screen = MediaQuery.sizeOf(context);
     final bool small = screen.width <= 640;
-    final IddsDrawerPosition side = _effectivePosition(context, position);
+    final IddsDrawerPosition side =
+        _effectivePosition(context, position, bottomOnSmallScreens);
     const Radius r = Radius.circular(IddsRadius.lg);
 
     // Sudut membulat hanya di sisi yang menghadap halaman.
@@ -170,7 +183,15 @@ class _DrawerPanel extends StatelessWidget {
             boxShadow: IddsShadow.xl),
         child: ClipRRect(
           borderRadius: radius,
-          child: _DrawerScope(small: small, child: child),
+          // Jarak aman (status bar, notch, indikator beranda) hanya di sisi
+          // yang menempel ke tepi layar.
+          child: SafeArea(
+            left: side != IddsDrawerPosition.right,
+            right: side != IddsDrawerPosition.left,
+            top: side != IddsDrawerPosition.bottom,
+            bottom: side != IddsDrawerPosition.top,
+            child: _DrawerScope(small: small, child: child),
+          ),
         ),
       ),
     );

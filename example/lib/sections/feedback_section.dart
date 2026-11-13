@@ -3,14 +3,14 @@ import 'package:idds_flutter/idds_flutter.dart';
 
 import 'common.dart';
 
-class FeedbackSection extends StatefulWidget {
-  const FeedbackSection({super.key});
+class ToastSection extends StatefulWidget {
+  const ToastSection({super.key});
 
   @override
-  State<FeedbackSection> createState() => _FeedbackSectionState();
+  State<ToastSection> createState() => _ToastSectionState();
 }
 
-class _FeedbackSectionState extends State<FeedbackSection> {
+class _ToastSectionState extends State<ToastSection> {
   IddsToastPosition _position = IddsToastPosition.topRight;
   IddsToastStyle _style = IddsToastStyle.solid;
 
@@ -41,16 +41,14 @@ class _FeedbackSectionState extends State<FeedbackSection> {
 
   @override
   Widget build(BuildContext context) {
-    final IddsThemeData theme = IddsTheme.of(context);
     return GallerySection(
-      title: 'Toast & Tooltip',
+      title: 'Toast',
       subtitle:
-          'Toast tertutup otomatis setelah 5 detik, hanya satu yang tampil (toast baru menggantikan yang lama), '
-          'dan bisa digeser menjauhi tepi layar untuk menutup. Tooltip muncul saat disorot mouse, '
-          'difokuskan dengan Tab, atau ditekan lama di layar sentuh.',
+          'Tertutup otomatis setelah 5 detik, hanya satu yang tampil (toast baru menggantikan yang lama), '
+          'dan bisa digeser menjauhi tepi layar untuk menutup.',
       usage:
-          'showIddsToast menampilkan notifikasi sementara di atas halaman dan mengembalikan controller untuk menutupnya. Bawaan replaceExisting: true (aturan IDDS satu toast); isi false untuk menumpuk. Bisa dipanggil dengan context Navigator root (mis. dari navigatorKey) atau isi overlay. IddsTooltip membungkus widget apa saja; isi title/description untuk tooltip kartu (onboarding).',
-      code: _feedbackCode,
+          'showIddsToast menampilkan notifikasi sementara di atas halaman dan mengembalikan controller untuk menutupnya. Bawaan replaceExisting: true (aturan IDDS satu toast); isi false untuk menumpuk. Bisa dipanggil dengan context Navigator root (mis. dari navigatorKey) atau isi overlay.',
+      code: _toastCode,
       children: <Widget>[
         const GalleryCaption('Posisi dan gaya toast'),
         const SizedBox(height: IddsSpacing.s8),
@@ -105,9 +103,25 @@ class _FeedbackSectionState extends State<FeedbackSection> {
             ),
           ],
         ),
-        const SizedBox(height: IddsSpacing.s24),
-        const GalleryCaption('Tooltip'),
-        const SizedBox(height: IddsSpacing.s16),
+      ],
+    );
+  }
+}
+
+class TooltipSection extends StatelessWidget {
+  const TooltipSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final IddsThemeData theme = IddsTheme.of(context);
+    return GallerySection(
+      title: 'Tooltip',
+      subtitle:
+          'Muncul saat disorot mouse, difokuskan dengan Tab, atau ditekan lama di layar sentuh.',
+      usage:
+          'IddsTooltip membungkus widget apa saja. Isi message untuk tooltip teks singkat, atau title/description untuk tooltip kartu (onboarding) dengan tombol lanjut dan tutup.',
+      code: _tooltipCode,
+      children: <Widget>[
         Wrap(
           spacing: IddsSpacing.s24,
           runSpacing: IddsSpacing.s24,
@@ -169,7 +183,7 @@ class _FeedbackSectionState extends State<FeedbackSection> {
   }
 }
 
-const String _feedbackCode = r'''
+const String _toastCode = r'''
 showIddsToast(
   context: context,
   title: const Text('Data berhasil disimpan'),
@@ -185,7 +199,9 @@ showIddsToast(
   context: navigatorKey.currentContext!,
   title: const Text('Tautan disalin'),
 );
+''';
 
+const String _tooltipCode = r'''
 IddsTooltip(
   message: 'Unduh dokumen',
   placement: IddsTooltipPlacement.top,

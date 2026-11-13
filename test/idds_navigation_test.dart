@@ -154,6 +154,51 @@ void main() {
       );
       expect(tester.getSize(find.byType(IddsTabMenu<String>)).width, 600);
     });
+
+    testWidgets('tab yang tidak muat bisa digeser, tidak meluap',
+        (WidgetTester tester) async {
+      String? result;
+      await tester.pumpWidget(
+        testApp(
+          SizedBox(
+            width: 200,
+            child: IddsTabMenu<String>(
+              items: const <IddsTabItem<String>>[
+                IddsTabItem<String>(value: 'a', label: Text('Profil')),
+                IddsTabItem<String>(value: 'b', label: Text('Dokumen')),
+                IddsTabItem<String>(value: 'c', label: Text('Riwayat')),
+                IddsTabItem<String>(value: 'd', label: Text('Pengaturan')),
+              ],
+              value: 'a',
+              onChanged: (String v) => result = v,
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      expect(tester.getSize(find.byType(IddsTabMenu<String>)).width, 200);
+
+      await tester.drag(find.text('Dokumen'), const Offset(-400, 0));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Pengaturan'));
+      expect(result, 'd');
+    });
+
+    testWidgets('di dalam Row (lebar tak terbatas) tetap selebar isinya',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        testApp(
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              IddsTabMenu<String>(items: items, value: 'a', onChanged: (_) {}),
+            ],
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      expect(find.text('Dokumen'), findsOneWidget);
+    });
   });
 
   group('IddsStepper', () {

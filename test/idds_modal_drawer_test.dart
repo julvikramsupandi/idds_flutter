@@ -218,6 +218,40 @@ void main() {
       expect(find.text('Filter'), findsNothing);
     });
 
+    testWidgets(
+        'layar kecil + bottomOnSmallScreens: false: drawer kiri tetap di samping',
+        (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(400, 800);
+      tester.view.devicePixelRatio = 1;
+      tester.view.padding = const FakeViewPadding(top: 44, bottom: 34);
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(_app((BuildContext context) => Center(
+            child: GestureDetector(
+              onTap: () => showIddsDrawer<void>(
+                context: context,
+                position: IddsDrawerPosition.left,
+                width: 300,
+                bottomOnSmallScreens: false,
+                builder: (BuildContext context) => const IddsDrawer(
+                  title: Text('Menu'),
+                  child: Text('Isi menu'),
+                ),
+              ),
+              child: const Text('Buka'),
+            ),
+          )));
+      await tester.tap(find.text('Buka'));
+      await tester.pumpAndSettle();
+
+      final Rect title = tester.getRect(find.text('Menu'));
+      expect(title.left, lessThan(40));
+      // Panel setinggi layar dari kiri, judul di bawah status bar (44px).
+      expect(title.top, greaterThan(44));
+      expect(title.top, lessThan(120));
+      expect(title.right, lessThan(300));
+    });
+
     testWidgets('drawer atas', (WidgetTester tester) async {
       await tester.pumpWidget(drawerApp(IddsDrawerPosition.top));
       await tester.tap(find.text('Buka'));

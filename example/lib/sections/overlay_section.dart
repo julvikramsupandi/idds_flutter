@@ -3,8 +3,8 @@ import 'package:idds_flutter/idds_flutter.dart';
 
 import 'common.dart';
 
-class OverlaySection extends StatelessWidget {
-  const OverlaySection({super.key});
+class ModalSection extends StatelessWidget {
+  const ModalSection({super.key});
 
   Future<void> _confirm(BuildContext context) async {
     final bool? ok = await showIddsModal<bool>(
@@ -77,10 +77,52 @@ class OverlaySection extends StatelessWidget {
     );
   }
 
-  void _drawer(BuildContext context, IddsDrawerPosition position) {
+  @override
+  Widget build(BuildContext context) {
+    return GallerySection(
+      title: 'Modal',
+      subtitle:
+          'Konfirmasi dan formulir dalam beberapa ukuran. Tutup dengan tombol X, Esc, atau menekan latar.',
+      usage:
+          'showIddsModal memakai Navigator (sudah ada di MaterialApp/CupertinoApp) dan mengembalikan Future berisi nilai dari Navigator.pop. Isi yang lebih tinggi dari layar bisa digulir; tema IDDS dari halaman pemanggil ikut terbawa.',
+      code: _modalCode,
+      children: <Widget>[
+        Wrap(
+          spacing: IddsSpacing.s8,
+          runSpacing: IddsSpacing.s8,
+          children: <Widget>[
+            IddsButton(
+                onPressed: () => _confirm(context),
+                child: const Text('Modal konfirmasi')),
+            for (final IddsModalSize size in <IddsModalSize>[
+              IddsModalSize.sm,
+              IddsModalSize.md,
+              IddsModalSize.full
+            ])
+              IddsButton(
+                hierarchy: IddsButtonHierarchy.secondary,
+                onPressed: () => _form(context, size),
+                child: Text('Modal formulir ${size.name}'),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class DrawerSection extends StatelessWidget {
+  const DrawerSection({super.key});
+
+  void _drawer(
+    BuildContext context,
+    IddsDrawerPosition position, {
+    bool bottomOnSmallScreens = true,
+  }) {
     showIddsDrawer<void>(
       context: context,
       position: position,
+      bottomOnSmallScreens: bottomOnSmallScreens,
       builder: (BuildContext context) => IddsDrawer(
         title: Text('Filter data (${position.name})'),
         actions: <Widget>[
@@ -112,33 +154,14 @@ class OverlaySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GallerySection(
-      title: 'Modal & Drawer',
+      title: 'Drawer',
       subtitle:
-          'Tutup dengan tombol X, Esc, atau menekan latar. Di layar ≤ 640px drawer kiri/kanan tampil dari bawah.',
+          'Panel dari tepi layar. Di layar ≤ 640px drawer kiri/kanan tampil dari bawah seperti IDDS web, '
+          'kecuali bottomOnSmallScreens: false (pola navigation drawer di aplikasi mobile).',
       usage:
-          'Keduanya memakai Navigator (sudah ada di MaterialApp/CupertinoApp) dan mengembalikan Future berisi nilai dari Navigator.pop. Tema IDDS dari halaman pemanggil ikut terbawa.',
-      code: _overlayCode,
+          'showIddsDrawer mengembalikan Future berisi nilai dari Navigator.pop. Untuk menu navigasi aplikasi mobile, isi bottomOnSmallScreens: false agar drawer tetap muncul dari samping, seperti menu galeri ini di HP.',
+      code: _drawerCode,
       children: <Widget>[
-        Wrap(
-          spacing: IddsSpacing.s8,
-          runSpacing: IddsSpacing.s8,
-          children: <Widget>[
-            IddsButton(
-                onPressed: () => _confirm(context),
-                child: const Text('Modal konfirmasi')),
-            for (final IddsModalSize size in <IddsModalSize>[
-              IddsModalSize.sm,
-              IddsModalSize.md,
-              IddsModalSize.full
-            ])
-              IddsButton(
-                hierarchy: IddsButtonHierarchy.secondary,
-                onPressed: () => _form(context, size),
-                child: Text('Modal formulir ${size.name}'),
-              ),
-          ],
-        ),
-        const SizedBox(height: IddsSpacing.s12),
         Wrap(
           spacing: IddsSpacing.s8,
           runSpacing: IddsSpacing.s8,
@@ -149,6 +172,15 @@ class OverlaySection extends StatelessWidget {
                 onPressed: () => _drawer(context, p),
                 child: Text('Drawer ${p.name}'),
               ),
+            IddsButton(
+              hierarchy: IddsButtonHierarchy.tertiary,
+              onPressed: () => _drawer(
+                context,
+                IddsDrawerPosition.left,
+                bottomOnSmallScreens: false,
+              ),
+              child: const Text('Kiri, tetap samping'),
+            ),
           ],
         ),
       ],
@@ -156,7 +188,7 @@ class OverlaySection extends StatelessWidget {
   }
 }
 
-const String _overlayCode = r'''
+const String _modalCode = r'''
 final bool? confirmed = await showIddsModal<bool>(
   context: context,
   builder: (BuildContext context) => IddsModal(
@@ -173,7 +205,9 @@ final bool? confirmed = await showIddsModal<bool>(
     child: const Text('Dokumen yang dihapus tidak bisa dikembalikan.'),
   ),
 );
+''';
 
+const String _drawerCode = r'''
 showIddsDrawer<void>(
   context: context,
   position: IddsDrawerPosition.right, // right, left, top, bottom
@@ -183,6 +217,18 @@ showIddsDrawer<void>(
       IddsButton(onPressed: () => Navigator.pop(context), child: const Text('Terapkan')),
     ],
     child: const FilterForm(),
+  ),
+);
+
+// Menu navigasi aplikasi mobile: tetap dari samping di layar kecil.
+showIddsDrawer<void>(
+  context: context,
+  position: IddsDrawerPosition.left,
+  width: 300,
+  bottomOnSmallScreens: false,
+  builder: (BuildContext context) => const IddsDrawer(
+    title: Text('Menu'),
+    child: AppMenu(),
   ),
 );
 ''';

@@ -42,6 +42,7 @@ void main() {
     expect(find.text('IDDS Flutter'), findsNothing);
     await tester.tap(find.bySemanticsLabel('Buka menu'));
     await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Grafik'));
     await tester.tap(find.text('Grafik'));
     await tester.pumpAndSettle();
     expect(find.text('Kanal pengajuan'), findsOneWidget);
@@ -101,6 +102,7 @@ void main() {
 
     await tester.pumpWidget(const GalleryApp());
     await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Table'));
     await tester.tap(find.text('Table'));
     await tester.pumpAndSettle();
     final Router<Object?> router =
@@ -109,4 +111,128 @@ void main() {
         (router.routerDelegate as GalleryRouterDelegate).currentConfiguration,
         'table');
   });
+
+  testWidgets('HP: menu tampil sebagai drawer samping, bukan panel bawah',
+      (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const GalleryApp());
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('Buka menu'));
+    await tester.pumpAndSettle();
+
+    final Rect title = tester.getRect(find.text('idds_flutter'));
+    expect(title.left, lessThan(40));
+    // Panel bawah IDDS dimulai sekitar setengah layar; drawer samping di atas.
+    expect(title.top, lessThan(100));
+  });
+
+  testWidgets('pencarian menu menyaring komponen', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1440, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const GalleryApp());
+    await tester.pumpAndSettle();
+    expect(find.text('Checkbox'), findsOneWidget);
+
+    await tester.enterText(find.byType(EditableText).first, 'toast');
+    await tester.pumpAndSettle();
+    expect(find.text('Toast'), findsOneWidget);
+    expect(find.text('Checkbox'), findsNothing);
+
+    await tester.enterText(find.byType(EditableText).first, 'zzz');
+    await tester.pumpAndSettle();
+    expect(find.text('Tidak ada komponen "zzz".'), findsOneWidget);
+  });
+
+  testWidgets('alamat halaman gabungan lama dialihkan ke komponen pertamanya',
+      (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1440, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const GalleryApp());
+    await tester.pumpAndSettle();
+    final Router<Object?> router =
+        tester.widget(find.byWidgetPredicate((Widget w) => w is Router));
+    (router.routerDelegate as GalleryRouterDelegate).go('content');
+    await tester.pumpAndSettle();
+    expect(find.text('Siapa yang bisa mendaftar?'), findsOneWidget);
+  });
+
+  for (final Size size in <Size>[
+    const Size(1440, 1000),
+    const Size(390, 844)
+  ]) {
+    testWidgets(
+        'semua halaman komponen tampil tanpa error (${size.width.toInt()}px)',
+        (WidgetTester tester) async {
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(const GalleryApp());
+      await tester.pumpAndSettle();
+      final Router<Object?> router =
+          tester.widget(find.byWidgetPredicate((Widget w) => w is Router));
+      final GalleryRouterDelegate delegate =
+          router.routerDelegate as GalleryRouterDelegate;
+      for (final String id in _pageIds) {
+        delegate.go(id);
+        // Spinner/progress tak tentu beranimasi terus; tunggu durasi tetap.
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
+        expect(tester.takeException(), isNull, reason: 'halaman $id');
+        expect(find.text('Cara pakai'), findsWidgets, reason: 'halaman $id');
+      }
+    });
+  }
 }
+
+/// Semua halaman komponen (selain Beranda dan Brand & Warna).
+const List<String> _pageIds = <String>[
+  'button',
+  'button-group',
+  'action-menu',
+  'text-field',
+  'text-area',
+  'password',
+  'search',
+  'phone',
+  'otp',
+  'checkbox',
+  'radio',
+  'toggle',
+  'select',
+  'dropdown',
+  'upload',
+  'date',
+  'calendar',
+  'time',
+  'month-year',
+  'avatar',
+  'badge',
+  'card',
+  'list',
+  'accordion',
+  'divider',
+  'table',
+  'chart',
+  'alert',
+  'toast',
+  'tooltip',
+  'modal',
+  'drawer',
+  'bottom-sheet',
+  'loading',
+  'tab',
+  'stepper',
+  'breadcrumb',
+  'pagination',
+  'chip',
+  'choice-grid',
+  'theme-toggle',
+];

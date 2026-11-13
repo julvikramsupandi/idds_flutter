@@ -146,7 +146,17 @@ class IddsTabMenu<T> extends StatelessWidget {
             : tabs,
       );
       menu = !fullWidth
-          ? row
+          // Tab yang tidak muat (mis. di layar HP) bisa digeser ke samping,
+          // bukan meluap. Lebar tak terbatas (di dalam Row) tetap apa adanya.
+          ? LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) =>
+                  constraints.hasBoundedWidth
+                      ? SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: row,
+                        )
+                      : row,
+            )
           : LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 final double min = 120.0 * items.length;
