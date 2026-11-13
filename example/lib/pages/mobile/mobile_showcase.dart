@@ -44,7 +44,8 @@ class MobileShowcase extends StatelessWidget {
         const double full = PhoneFrame.defaultOuterWidth;
         double width = full;
         for (int perRow = screens.length; perRow >= 1; perRow--) {
-          final double fit = (constraints.maxWidth - gap * (perRow - 1)) / perRow;
+          final double fit =
+              (constraints.maxWidth - gap * (perRow - 1)) / perRow;
           if (fit >= full * _minScale || perRow == 1) {
             width = math.min(full, fit);
             break;
@@ -57,7 +58,8 @@ class MobileShowcase extends StatelessWidget {
             spacing: gap,
             runSpacing: IddsSpacing.s40,
             children: <Widget>[
-              for (final _Screen s in screens) SizedBox(width: width, child: _FramedScreen(screen: s)),
+              for (final _Screen s in screens)
+                SizedBox(width: width, child: _FramedScreen(screen: s)),
             ],
           ),
         );
@@ -106,7 +108,10 @@ class _FramedScreen extends StatelessWidget {
           const SizedBox(height: IddsSpacing.s4),
           Text(
             screen.components,
-            style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.contentSecondary),
+            style: theme.textStyle(
+                fontSize: IddsFontSize.xs,
+                lineHeight: IddsLineHeight.xs,
+                color: c.contentSecondary),
           ),
         ],
       ),

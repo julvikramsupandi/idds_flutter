@@ -159,7 +159,9 @@ class _IddsButtonState extends State<IddsButton> {
                 color: style.foreground,
               )
               .copyWith(
-                decoration: style.underline ? TextDecoration.underline : TextDecoration.none,
+                decoration: style.underline
+                    ? TextDecoration.underline
+                    : TextDecoration.none,
                 decorationColor: style.foreground,
               );
 
@@ -170,12 +172,17 @@ class _IddsButtonState extends State<IddsButton> {
             decoration: BoxDecoration(
               color: style.background,
               borderRadius: BorderRadius.circular(metrics.radius),
-              border: style.border == null ? null : Border.all(color: style.border!),
+              border: style.border == null
+                  ? null
+                  : Border.all(color: style.border!),
               boxShadow: style.focusRing
                   ? <BoxShadow>[
                       // CSS: 0 0 0 2px background-primary, 0 0 0 3px stroke-tertiary.
-                      BoxShadow(color: theme.colors.strokeTertiary, spreadRadius: 3),
-                      BoxShadow(color: theme.colors.backgroundPrimary, spreadRadius: 2),
+                      BoxShadow(
+                          color: theme.colors.strokeTertiary, spreadRadius: 3),
+                      BoxShadow(
+                          color: theme.colors.backgroundPrimary,
+                          spreadRadius: 2),
                     ]
                   : null,
             ),
@@ -185,7 +192,8 @@ class _IddsButtonState extends State<IddsButton> {
               overflow: TextOverflow.ellipsis,
               softWrap: false,
               child: IconTheme(
-                data: IconThemeData(size: metrics.lineHeight, color: style.foreground),
+                data: IconThemeData(
+                    size: metrics.lineHeight, color: style.foreground),
                 // CSS `justify-content: center`: isi tetap di tengah saat
                 // tombol dibuat selebar induk.
                 child: Row(
@@ -209,7 +217,8 @@ class _IddsButtonState extends State<IddsButton> {
 
 /// Ukuran dari `.ina-button--{size}` (dan media query `max-width: 639px`).
 class _Metrics {
-  const _Metrics(this.fontSize, this.lineHeight, this.paddingVertical, this.paddingHorizontal, this.radius);
+  const _Metrics(this.fontSize, this.lineHeight, this.paddingVertical,
+      this.paddingHorizontal, this.radius);
 
   factory _Metrics.of(IddsButtonSize size, {required bool compact}) {
     final double radius = switch (size) {
@@ -219,19 +228,28 @@ class _Metrics {
     };
     if (compact) {
       return switch (size) {
-        IddsButtonSize.xl2 => _Metrics(IddsFontSize.sm, IddsLineHeight.sm, 12, 16, radius),
-        IddsButtonSize.xl => _Metrics(IddsFontSize.sm, IddsLineHeight.base, 10, 12, radius),
-        IddsButtonSize.lg => _Metrics(IddsFontSize.xs, IddsLineHeight.xs, 10, 12, radius),
-        IddsButtonSize.md => _Metrics(IddsFontSize.xs, IddsLineHeight.xs, 8, 8, radius),
+        IddsButtonSize.xl2 =>
+          _Metrics(IddsFontSize.sm, IddsLineHeight.sm, 12, 16, radius),
+        IddsButtonSize.xl =>
+          _Metrics(IddsFontSize.sm, IddsLineHeight.base, 10, 12, radius),
+        IddsButtonSize.lg =>
+          _Metrics(IddsFontSize.xs, IddsLineHeight.xs, 10, 12, radius),
+        IddsButtonSize.md =>
+          _Metrics(IddsFontSize.xs, IddsLineHeight.xs, 8, 8, radius),
         IddsButtonSize.sm => _Metrics(IddsFontSize.xs2, 12, 6, 8, radius),
       };
     }
     return switch (size) {
-      IddsButtonSize.xl2 => _Metrics(IddsFontSize.base, IddsLineHeight.base, 16, 16, radius),
-      IddsButtonSize.xl => _Metrics(IddsFontSize.base, IddsLineHeight.base, 12, 16, radius),
-      IddsButtonSize.lg => _Metrics(IddsFontSize.sm, IddsLineHeight.sm, 12, 12, radius),
-      IddsButtonSize.md => _Metrics(IddsFontSize.sm, IddsLineHeight.sm, 10, 12, radius),
-      IddsButtonSize.sm => _Metrics(IddsFontSize.xs, IddsLineHeight.xs, 8, 8, radius),
+      IddsButtonSize.xl2 =>
+        _Metrics(IddsFontSize.base, IddsLineHeight.base, 16, 16, radius),
+      IddsButtonSize.xl =>
+        _Metrics(IddsFontSize.base, IddsLineHeight.base, 12, 16, radius),
+      IddsButtonSize.lg =>
+        _Metrics(IddsFontSize.sm, IddsLineHeight.sm, 12, 12, radius),
+      IddsButtonSize.md =>
+        _Metrics(IddsFontSize.sm, IddsLineHeight.sm, 10, 12, radius),
+      IddsButtonSize.sm =>
+        _Metrics(IddsFontSize.xs, IddsLineHeight.xs, 8, 8, radius),
     };
   }
 
@@ -263,10 +281,15 @@ class _Style {
     final bool ring = enabled && focused;
     switch (hierarchy) {
       case IddsButtonHierarchy.primary:
-        if (!enabled) return _Style(background: c.backgroundTertiary, foreground: c.contentTertiary);
+        if (!enabled) {
+          return _Style(
+              background: c.backgroundTertiary, foreground: c.contentTertiary);
+        }
         return _Style(
           // color-mix(primary 90%, transparent)
-          background: active ? c.primaryMain.withValues(alpha: c.primaryMain.a * 0.9) : c.primaryMain,
+          background: active
+              ? c.primaryMain.withValues(alpha: c.primaryMain.a * 0.9)
+              : c.primaryMain,
           foreground: c.onPrimary,
           focusRing: ring,
         );
@@ -285,14 +308,20 @@ class _Style {
           focusRing: ring,
         );
       case IddsButtonHierarchy.tertiary:
-        if (!enabled) return _Style(background: c.backgroundTertiary, foreground: c.contentTertiary);
+        if (!enabled) {
+          return _Style(
+              background: c.backgroundTertiary, foreground: c.contentTertiary);
+        }
         return _Style(
           background: active ? c.backgroundTertiary : c.backgroundPrimary,
           foreground: c.contentPrimary,
           focusRing: ring,
         );
       case IddsButtonHierarchy.link:
-        if (!enabled) return _Style(background: c.backgroundPrimary, foreground: c.contentTertiary);
+        if (!enabled) {
+          return _Style(
+              background: c.backgroundPrimary, foreground: c.contentTertiary);
+        }
         return _Style(
           background: c.backgroundPrimary,
           foreground: active ? c.guide.shade400 : c.contentGuide,

@@ -16,9 +16,18 @@ class _FeedbackSectionState extends State<FeedbackSection> {
 
   void _toast(IddsToastState state) {
     final (String title, String description) = switch (state) {
-      IddsToastState.normal => ('Sinkronisasi berjalan', 'Data akan diperbarui dalam beberapa menit.'),
-      IddsToastState.destructive => ('Gagal menyimpan', 'Periksa koneksi internet Anda lalu coba lagi.'),
-      IddsToastState.positive => ('Data berhasil disimpan', 'Perubahan sudah tersimpan di server.'),
+      IddsToastState.normal => (
+          'Sinkronisasi berjalan',
+          'Data akan diperbarui dalam beberapa menit.'
+        ),
+      IddsToastState.destructive => (
+          'Gagal menyimpan',
+          'Periksa koneksi internet Anda lalu coba lagi.'
+        ),
+      IddsToastState.positive => (
+          'Data berhasil disimpan',
+          'Perubahan sudah tersimpan di server.'
+        ),
     };
     showIddsToast(
       context: context,
@@ -35,10 +44,12 @@ class _FeedbackSectionState extends State<FeedbackSection> {
     final IddsThemeData theme = IddsTheme.of(context);
     return GallerySection(
       title: 'Toast & Tooltip',
-      subtitle: 'Toast tertutup otomatis setelah 5 detik, hanya satu yang tampil (toast baru menggantikan yang lama), '
+      subtitle:
+          'Toast tertutup otomatis setelah 5 detik, hanya satu yang tampil (toast baru menggantikan yang lama), '
           'dan bisa digeser menjauhi tepi layar untuk menutup. Tooltip muncul saat disorot mouse, '
           'difokuskan dengan Tab, atau ditekan lama di layar sentuh.',
-      usage: 'showIddsToast menampilkan notifikasi sementara di atas halaman dan mengembalikan controller untuk menutupnya. Bawaan replaceExisting: true (aturan IDDS satu toast); isi false untuk menumpuk. Bisa dipanggil dengan context Navigator root (mis. dari navigatorKey) atau isi overlay. IddsTooltip membungkus widget apa saja; isi title/description untuk tooltip kartu (onboarding).',
+      usage:
+          'showIddsToast menampilkan notifikasi sementara di atas halaman dan mengembalikan controller untuk menutupnya. Bawaan replaceExisting: true (aturan IDDS satu toast); isi false untuk menumpuk. Bisa dipanggil dengan context Navigator root (mis. dari navigatorKey) atau isi overlay. IddsTooltip membungkus widget apa saja; isi title/description untuk tooltip kartu (onboarding).',
       code: _feedbackCode,
       children: <Widget>[
         const GalleryCaption('Posisi dan gaya toast'),
@@ -48,7 +59,8 @@ class _FeedbackSectionState extends State<FeedbackSection> {
           child: IddsSelect<IddsToastPosition>(
             size: IddsDropdownSize.sm,
             value: _position,
-            onChanged: (IddsToastPosition? p) => setState(() => _position = p ?? _position),
+            onChanged: (IddsToastPosition? p) =>
+                setState(() => _position = p ?? _position),
             options: <IddsSelectOption<IddsToastPosition>>[
               for (final IddsToastPosition p in IddsToastPosition.values)
                 IddsSelectOption<IddsToastPosition>(value: p, label: p.name),
@@ -59,10 +71,13 @@ class _FeedbackSectionState extends State<FeedbackSection> {
         IddsChipGroup<IddsToastStyle>(
           size: IddsChipSize.small,
           selected: <IddsToastStyle>{_style},
-          onChanged: (Set<IddsToastStyle> v) => setState(() => _style = v.isEmpty ? _style : v.first),
+          onChanged: (Set<IddsToastStyle> v) =>
+              setState(() => _style = v.isEmpty ? _style : v.first),
           options: const <IddsChipOption<IddsToastStyle>>[
-            IddsChipOption<IddsToastStyle>(value: IddsToastStyle.solid, label: 'Solid'),
-            IddsChipOption<IddsToastStyle>(value: IddsToastStyle.outline, label: 'Outline'),
+            IddsChipOption<IddsToastStyle>(
+                value: IddsToastStyle.solid, label: 'Solid'),
+            IddsChipOption<IddsToastStyle>(
+                value: IddsToastStyle.outline, label: 'Outline'),
           ],
         ),
         const SizedBox(height: IddsSpacing.s12),
@@ -70,7 +85,9 @@ class _FeedbackSectionState extends State<FeedbackSection> {
           spacing: IddsSpacing.s8,
           runSpacing: IddsSpacing.s8,
           children: <Widget>[
-            IddsButton(onPressed: () => _toast(IddsToastState.normal), child: const Text('Toast info')),
+            IddsButton(
+                onPressed: () => _toast(IddsToastState.normal),
+                child: const Text('Toast info')),
             IddsButton(
               hierarchy: IddsButtonHierarchy.secondary,
               onPressed: () => _toast(IddsToastState.positive),
@@ -116,9 +133,11 @@ class _FeedbackSectionState extends State<FeedbackSection> {
               variant: IddsTooltipVariant.light,
               placement: IddsTooltipPlacement.bottom,
               title: 'Ekspor laporan',
-              description: 'Laporan bulanan kini bisa diekspor ke PDF dan Excel.',
+              description:
+                  'Laporan bulanan kini bisa diekspor ke PDF dan Excel.',
               onClose: () {},
-              onNext: () => showGallerySnack(context, 'Lanjut ke langkah berikutnya'),
+              onNext: () =>
+                  showGallerySnack(context, 'Lanjut ke langkah berikutnya'),
               child: const IddsBadge(child: Text('Kartu terang')),
             ),
             IddsTooltip(
@@ -137,7 +156,8 @@ class _FeedbackSectionState extends State<FeedbackSection> {
               image: Container(
                 color: theme.colors.primary.shade100,
                 alignment: Alignment.center,
-                child: IddsIcon(IddsIcons.box, size: 48, color: theme.colors.primary.shade600),
+                child: IddsIcon(IddsIcons.box,
+                    size: 48, color: theme.colors.primary.shade600),
               ),
               onNext: () {},
               child: const IddsBadge(child: Text('Kartu media')),

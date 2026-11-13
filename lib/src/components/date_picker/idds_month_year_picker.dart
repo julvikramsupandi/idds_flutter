@@ -67,7 +67,11 @@ class IddsMonthPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     final int? v = value;
     return _GridPickerField(
-      text: v == null ? null : (shortNames ? IddsDateNames.shortMonths : IddsDateNames.months)[v - 1],
+      text: v == null
+          ? null
+          : (shortNames
+              ? IddsDateNames.shortMonths
+              : IddsDateNames.months)[v - 1],
       placeholder: placeholder,
       size: size,
       showIcon: showIcon,
@@ -84,7 +88,8 @@ class IddsMonthPicker extends StatelessWidget {
                       label: IddsDateNames.shortMonths[m - 1],
                       semanticLabel: IddsDateNames.months[m - 1],
                       selected: m == v,
-                      enabled: (firstMonth == null || m >= firstMonth!) && (lastMonth == null || m <= lastMonth!),
+                      enabled: (firstMonth == null || m >= firstMonth!) &&
+                          (lastMonth == null || m <= lastMonth!),
                       onTap: () {
                         onChanged!(m);
                         close();
@@ -201,21 +206,26 @@ class _YearGridState extends State<_YearGrid> {
   Widget build(BuildContext context) {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
-    final int end = (_start + widget.yearsPerPage - 1).clamp(widget.firstYear, widget.lastYear);
+    final int end = (_start + widget.yearsPerPage - 1)
+        .clamp(widget.firstYear, widget.lastYear);
     final bool small = iddsScreenWidth(context) < IddsBreakpoint.sm;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s8, vertical: IddsSpacing.s8),
-          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: c.strokePrimary))),
+          padding: const EdgeInsets.symmetric(
+              horizontal: IddsSpacing.s8, vertical: IddsSpacing.s8),
+          decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: c.strokePrimary))),
           child: Row(
             children: <Widget>[
               _NavButton(
                 icon: IddsIcons.chevronLeft,
                 label: 'Tahun sebelumnya',
-                onTap: _start > widget.firstYear ? () => setState(() => _start -= widget.yearsPerPage) : null,
+                onTap: _start > widget.firstYear
+                    ? () => setState(() => _start -= widget.yearsPerPage)
+                    : null,
               ),
               Expanded(
                 child: Text(
@@ -232,7 +242,9 @@ class _YearGridState extends State<_YearGrid> {
               _NavButton(
                 icon: IddsIcons.chevronRight,
                 label: 'Tahun berikutnya',
-                onTap: end < widget.lastYear ? () => setState(() => _start += widget.yearsPerPage) : null,
+                onTap: end < widget.lastYear
+                    ? () => setState(() => _start += widget.yearsPerPage)
+                    : null,
               ),
             ],
           ),
@@ -312,17 +324,26 @@ class _GridPickerFieldState extends State<_GridPickerField> {
       child: IddsInteractive(
         focusNode: _focus,
         onTap: enabled ? () => setState(() => _open = !_open) : null,
-        builder: (BuildContext context, IddsInteractionState state) => IddsDropdownTriggerBox(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsDropdownTriggerBox(
           state: state,
           open: _open,
           metrics: m,
-          prefix: widget.showIcon ? IddsIcon(IddsIcons.calendar, size: m.iconSize, color: c.contentSecondary) : null,
+          prefix: widget.showIcon
+              ? IddsIcon(IddsIcons.calendar,
+                  size: m.iconSize, color: c.contentSecondary)
+              : null,
           child: Row(
             children: <Widget>[
               Expanded(
-                child: Text(text ?? widget.placeholder, style: TextStyle(color: text == null ? c.contentTertiary : null)),
+                child: Text(text ?? widget.placeholder,
+                    style: TextStyle(
+                        color: text == null ? c.contentTertiary : null)),
               ),
-              if (widget.clearable && text != null && enabled && widget.onClear != null)
+              if (widget.clearable &&
+                  text != null &&
+                  enabled &&
+                  widget.onClear != null)
                 Semantics(
                   button: true,
                   label: 'Hapus',
@@ -331,7 +352,11 @@ class _GridPickerFieldState extends State<_GridPickerField> {
                   child: IddsInteractive(
                     onTap: widget.onClear,
                     builder: (BuildContext context, IddsInteractionState s) =>
-                        IddsIcon(IddsIcons.x, size: 16, color: s.hovered ? c.contentPrimary : c.contentSecondary),
+                        IddsIcon(IddsIcons.x,
+                            size: 16,
+                            color: s.hovered
+                                ? c.contentPrimary
+                                : c.contentSecondary),
                   ),
                 ),
             ],
@@ -345,19 +370,29 @@ class _GridPickerFieldState extends State<_GridPickerField> {
       onDismiss: _close,
       matchAnchorWidth: true,
       minWidth: 240,
-      panelBuilder: (BuildContext context) => IddsPopoverSurface(child: widget.panelBuilder!(context, _close)),
+      panelBuilder: (BuildContext context) =>
+          IddsPopoverSurface(child: widget.panelBuilder!(context, _close)),
       child: trigger,
     );
-    if (widget.width != null) return SizedBox(width: widget.width, child: field);
+    if (widget.width != null) {
+      return SizedBox(width: widget.width, child: field);
+    }
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) =>
-          constraints.hasBoundedWidth ? field : SizedBox(width: 200, child: field),
+          constraints.hasBoundedWidth
+              ? field
+              : SizedBox(width: 200, child: field),
     );
   }
 }
 
 class _Cell {
-  const _Cell({required this.label, required this.selected, required this.enabled, required this.onTap, this.semanticLabel});
+  const _Cell(
+      {required this.label,
+      required this.selected,
+      required this.enabled,
+      required this.onTap,
+      this.semanticLabel});
 
   final String label;
   final String? semanticLabel;
@@ -400,10 +435,16 @@ class _Grid extends StatelessWidget {
                             excludeSemantics: true,
                             child: IddsInteractive(
                               onTap: cells[i].enabled ? cells[i].onTap : null,
-                              builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+                              builder: (BuildContext context,
+                                      IddsInteractionState state) =>
+                                  IddsInsetRing(
                                 visible: state.focused,
-                                borderRadius: BorderRadius.circular(IddsRadius.md),
-                                rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, c.strokeTertiary)],
+                                borderRadius:
+                                    BorderRadius.circular(IddsRadius.md),
+                                rings: <(double, Color)>[
+                                  (2.0, c.backgroundPrimary),
+                                  (1.0, c.strokeTertiary)
+                                ],
                                 child: Container(
                                   height: 36,
                                   alignment: Alignment.center,
@@ -417,7 +458,8 @@ class _Grid extends StatelessWidget {
                                             : state.hovered
                                                 ? c.backgroundSecondary
                                                 : null,
-                                    borderRadius: BorderRadius.circular(IddsRadius.md),
+                                    borderRadius:
+                                        BorderRadius.circular(IddsRadius.md),
                                   ),
                                   child: Opacity(
                                     opacity: cells[i].enabled ? 1 : 0.4,
@@ -449,7 +491,8 @@ class _Grid extends StatelessWidget {
 }
 
 class _NavButton extends StatelessWidget {
-  const _NavButton({required this.icon, required this.label, required this.onTap});
+  const _NavButton(
+      {required this.icon, required this.label, required this.onTap});
 
   final IddsIconData icon;
   final String label;
@@ -466,16 +509,22 @@ class _NavButton extends StatelessWidget {
       excludeSemantics: true,
       child: IddsInteractive(
         onTap: onTap,
-        builder: (BuildContext context, IddsInteractionState state) => Container(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            Container(
           width: 28,
           height: 28,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: state.hovered || state.focused ? c.backgroundSecondary : null,
+            color:
+                state.hovered || state.focused ? c.backgroundSecondary : null,
             borderRadius: BorderRadius.circular(IddsRadius.base),
-            border: state.focused ? Border.all(color: c.contentSecondary, width: 2) : null,
+            border: state.focused
+                ? Border.all(color: c.contentSecondary, width: 2)
+                : null,
           ),
-          child: Opacity(opacity: onTap == null ? 0.5 : 1, child: IddsIcon(icon, size: 20, color: c.contentPrimary)),
+          child: Opacity(
+              opacity: onTap == null ? 0.5 : 1,
+              child: IddsIcon(icon, size: 20, color: c.contentPrimary)),
         ),
       ),
     );

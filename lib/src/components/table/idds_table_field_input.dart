@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart' show InputDecoration, TextField, VisualDensity;
-import 'package:flutter/services.dart' show LogicalKeyboardKey, TextInputFormatter, TextInputType;
+import 'package:flutter/material.dart'
+    show InputDecoration, TextField, VisualDensity;
+import 'package:flutter/services.dart'
+    show LogicalKeyboardKey, TextInputFormatter, TextInputType;
 import 'package:flutter/widgets.dart';
 
 import '../../foundation/idds_icon.dart';
@@ -98,7 +100,10 @@ class _IddsTableFieldInputState extends State<IddsTableFieldInput> {
             : _hovered
                 ? c.strokeSecondary
                 : c.strokePrimary;
-    final TextStyle style = theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentPrimary);
+    final TextStyle style = theme.textStyle(
+        fontSize: IddsFontSize.sm,
+        lineHeight: IddsLineHeight.sm,
+        color: c.contentPrimary);
 
     final Widget field = MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
@@ -106,7 +111,8 @@ class _IddsTableFieldInputState extends State<IddsTableFieldInput> {
       child: AnimatedContainer(
         duration: IddsDuration.base,
         padding: const EdgeInsets.symmetric(vertical: IddsSpacing.s4),
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: underline, width: 2))),
+        decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: underline, width: 2))),
         child: iddsMaterialShim(
           context,
           TextField(
@@ -161,7 +167,10 @@ class _IddsTableFieldInputState extends State<IddsTableFieldInput> {
           if (invalid)
             Text(
               widget.errorText!,
-              style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: c.negative.shade600),
+              style: theme.textStyle(
+                  fontSize: IddsFontSize.xs,
+                  lineHeight: IddsLineHeight.xs,
+                  color: c.negative.shade600),
             ),
         ],
       ),
@@ -195,7 +204,8 @@ class _ActionButton extends StatelessWidget {
       excludeSemantics: true,
       child: IddsInteractive(
         onTap: onTap,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: BorderRadius.circular(IddsRadius.base),
           rings: <(double, Color)>[(2.0, color)],
@@ -214,7 +224,10 @@ class _ActionButton extends StatelessWidget {
                         : null,
                 borderRadius: BorderRadius.circular(IddsRadius.base),
               ),
-              child: IddsIcon(icon, size: 20, strokeWidth: strokeWidth, color: state.hovered ? hoverColor : color),
+              child: IddsIcon(icon,
+                  size: 20,
+                  strokeWidth: strokeWidth,
+                  color: state.hovered ? hoverColor : color),
             ),
           ),
         ),

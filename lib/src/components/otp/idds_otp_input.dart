@@ -1,7 +1,16 @@
 import 'dart:math' as math;
 
 import 'package:flutter/services.dart'
-    show AutofillHints, Clipboard, ClipboardData, FilteringTextInputFormatter, LengthLimitingTextInputFormatter, SystemMouseCursors, TextInputFormatter, TextInputType, TextSelection;
+    show
+        AutofillHints,
+        Clipboard,
+        ClipboardData,
+        FilteringTextInputFormatter,
+        LengthLimitingTextInputFormatter,
+        SystemMouseCursors,
+        TextInputFormatter,
+        TextInputType,
+        TextSelection;
 import 'package:flutter/widgets.dart';
 
 import '../../foundation/idds_interactive.dart';
@@ -56,15 +65,19 @@ class IddsOtpInput extends StatefulWidget {
   /// sendiri, lalu deretan yang sama setelah spasi/tanda hubung di antara
   /// angka dibuang, lalu
   /// karakter yang diizinkan dari awal teks. Hasil kosong bila tidak ada.
-  static String codeFromText(String text, {int length = 6, bool numeric = true}) {
+  static String codeFromText(String text,
+      {int length = 6, bool numeric = true}) {
     final String unit = numeric ? r'\d' : '[A-Za-z0-9]';
-    final RegExp exact = RegExp('(?<![A-Za-z0-9])$unit{$length}(?![A-Za-z0-9])');
+    final RegExp exact =
+        RegExp('(?<![A-Za-z0-9])$unit{$length}(?![A-Za-z0-9])');
     final RegExpMatch? direct = exact.firstMatch(text);
     if (direct != null) return direct.group(0)!;
     // "123 456" / "123-456": pemisah di antara angka saja yang dibuang.
-    final RegExpMatch? joined = exact.firstMatch(text.replaceAll(RegExp(r'(?<=\d)[\s-]+(?=\d)'), ''));
+    final RegExpMatch? joined =
+        exact.firstMatch(text.replaceAll(RegExp(r'(?<=\d)[\s-]+(?=\d)'), ''));
     if (joined != null) return joined.group(0)!;
-    final String allowed = text.replaceAll(RegExp(numeric ? r'\D' : '[^A-Za-z0-9]'), '');
+    final String allowed =
+        text.replaceAll(RegExp(numeric ? r'\D' : '[^A-Za-z0-9]'), '');
     return allowed.length > length ? allowed.substring(0, length) : allowed;
   }
 
@@ -121,14 +134,16 @@ class IddsOtpInput extends StatefulWidget {
 }
 
 class _IddsOtpInputState extends State<IddsOtpInput> {
-  late final TextEditingController _controller = TextEditingController(text: widget.value);
+  late final TextEditingController _controller =
+      TextEditingController(text: widget.value);
   FocusNode? _ownFocus;
 
   /// Menu "Tempel" (tekan lama). Kolom tersembunyi tidak punya menu konteks
   /// sendiri karena ditutup kotak-kotak dan tidak menerima sentuhan.
   bool _pasteMenu = false;
 
-  FocusNode get _focus => widget.focusNode ?? (_ownFocus ??= FocusNode(debugLabel: 'IddsOtpInput'));
+  FocusNode get _focus =>
+      widget.focusNode ?? (_ownFocus ??= FocusNode(debugLabel: 'IddsOtpInput'));
 
   @override
   void initState() {
@@ -167,9 +182,11 @@ class _IddsOtpInputState extends State<IddsOtpInput> {
   Future<void> _paste() async {
     setState(() => _pasteMenu = false);
     final ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
-    final String code = IddsOtpInput.codeFromText(data?.text ?? '', length: widget.length, numeric: widget.numeric);
+    final String code = IddsOtpInput.codeFromText(data?.text ?? '',
+        length: widget.length, numeric: widget.numeric);
     if (!mounted || code.isEmpty) return;
-    _controller.value = TextEditingValue(text: code, selection: TextSelection.collapsed(offset: code.length));
+    _controller.value = TextEditingValue(
+        text: code, selection: TextSelection.collapsed(offset: code.length));
     _focus.requestFocus();
     _changed(code);
   }
@@ -216,7 +233,8 @@ class _IddsOtpInputState extends State<IddsOtpInput> {
         backgroundCursorColor: const Color(0x00000000),
         showCursor: false,
         enableInteractiveSelection: false,
-        keyboardType: widget.numeric ? TextInputType.number : TextInputType.text,
+        keyboardType:
+            widget.numeric ? TextInputType.number : TextInputType.text,
         autofillHints: const <String>[AutofillHints.oneTimeCode],
         autocorrect: false,
         enableSuggestions: false,
@@ -239,24 +257,35 @@ class _IddsOtpInputState extends State<IddsOtpInput> {
           : isActive
               ? c.contentPrimary
               : c.strokePrimary;
-      final Color background = !widget.enabled || widget.readOnly ? c.backgroundTertiary : c.backgroundPrimary;
+      final Color background = !widget.enabled || widget.readOnly
+          ? c.backgroundTertiary
+          : c.backgroundPrimary;
       final BorderRadius radius = BorderRadius.circular(IddsRadius.lg);
       return IddsInsetRing(
         visible: isActive,
         borderRadius: radius,
         inset: 1,
-        rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, widget.error ? c.negative.shade500 : c.contentPrimary)],
+        rings: <(double, Color)>[
+          (2.0, c.backgroundPrimary),
+          (1.0, widget.error ? c.negative.shade500 : c.contentPrimary)
+        ],
         child: AnimatedContainer(
           duration: IddsDuration.fast,
           width: size,
           height: size,
           alignment: Alignment.center,
-          decoration: BoxDecoration(color: background, borderRadius: radius, border: Border.all(color: border)),
+          decoration: BoxDecoration(
+              color: background,
+              borderRadius: radius,
+              border: Border.all(color: border)),
           child: filled
               ? Text(widget.obscure ? '•' : text[i], style: digitStyle)
               : (isActive
                   // Kursor berkedip sederhana di kotak aktif.
-                  ? Container(width: 1.5, height: small ? 20 : 24, color: c.contentPrimary)
+                  ? Container(
+                      width: 1.5,
+                      height: small ? 20 : 24,
+                      color: c.contentPrimary)
                   : null),
         ),
       );
@@ -271,7 +300,8 @@ class _IddsOtpInputState extends State<IddsOtpInput> {
         builder: (BuildContext context, BoxConstraints constraints) {
           final double gap = small ? IddsSpacing.s8 : IddsSpacing.s12;
           final double fit = constraints.hasBoundedWidth
-              ? (constraints.maxWidth - gap * (widget.length - 1)) / widget.length
+              ? (constraints.maxWidth - gap * (widget.length - 1)) /
+                  widget.length
               : box;
           final double size = math.max(0, math.min(box, fit));
           return Row(
@@ -313,11 +343,16 @@ class _IddsOtpInputState extends State<IddsOtpInput> {
               padding: const EdgeInsets.only(bottom: IddsSpacing.s16),
               child: Text(
                 widget.description!,
-                style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentSecondary),
+                style: theme.textStyle(
+                    fontSize: IddsFontSize.sm,
+                    lineHeight: IddsLineHeight.sm,
+                    color: c.contentSecondary),
               ),
             ),
           MouseRegion(
-            cursor: interactive ? SystemMouseCursors.text : SystemMouseCursors.basic,
+            cursor: interactive
+                ? SystemMouseCursors.text
+                : SystemMouseCursors.basic,
             child: IddsPopover(
               open: _pasteMenu,
               onDismiss: () => setState(() => _pasteMenu = false),
@@ -331,9 +366,11 @@ class _IddsOtpInputState extends State<IddsOtpInput> {
                     behavior: HitTestBehavior.opaque,
                     onTap: _paste,
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(minHeight: 48, minWidth: 96),
+                      constraints:
+                          const BoxConstraints(minHeight: 48, minWidth: 96),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s16),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: IddsSpacing.s16),
                         // widthFactor/heightFactor 1: menu setinggi isinya.
                         // Tanpa heightFactor, Center memakai seluruh tinggi
                         // yang tersedia (panel memanjang ke atas layar).
@@ -358,7 +395,9 @@ class _IddsOtpInputState extends State<IddsOtpInput> {
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: interactive ? _focus.requestFocus : null,
-                onLongPress: interactive ? () => setState(() => _pasteMenu = true) : null,
+                onLongPress: interactive
+                    ? () => setState(() => _pasteMenu = true)
+                    : null,
                 child: Stack(
                   children: <Widget>[
                     ExcludeSemantics(child: boxes),

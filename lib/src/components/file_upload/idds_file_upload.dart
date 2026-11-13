@@ -57,7 +57,12 @@ class IddsUploadFile {
   final String? error;
 
   /// Salinan dengan perubahan.
-  IddsUploadFile copyWith({String? name, int? size, IddsFileStatus? status, double? progress, String? error}) {
+  IddsUploadFile copyWith(
+      {String? name,
+      int? size,
+      IddsFileStatus? status,
+      double? progress,
+      String? error}) {
     return IddsUploadFile(
       name: name ?? this.name,
       size: size ?? this.size,
@@ -73,7 +78,8 @@ class IddsUploadFile {
 String iddsFormatFileSize(int bytes) {
   if (bytes <= 0) return '0 Bytes';
   const List<String> units = <String>['Bytes', 'KB', 'MB', 'GB'];
-  final int i = math.min(units.length - 1, (math.log(bytes) / math.log(1024)).floor());
+  final int i =
+      math.min(units.length - 1, (math.log(bytes) / math.log(1024)).floor());
   final double value = bytes / math.pow(1024, i);
   String text = value.toStringAsFixed(2);
   // Seperti parseFloat(toFixed(2)) di versi web: buang nol di belakang.
@@ -86,15 +92,24 @@ String iddsFormatFileSize(int bytes) {
 ///
 /// [allowedExtensions] tanpa titik, misalnya `['pdf', 'png']`. [maxSize]
 /// dalam byte.
-String? iddsValidateFile({required String name, required int size, List<String>? allowedExtensions, int? maxSize}) {
+String? iddsValidateFile(
+    {required String name,
+    required int size,
+    List<String>? allowedExtensions,
+    int? maxSize}) {
   if (RegExp(r'''[<>"'/\\\x00-\x1F\x7F]''').hasMatch(name)) {
     return 'Nama file mengandung karakter yang tidak diizinkan';
   }
   if (allowedExtensions != null && allowedExtensions.isNotEmpty) {
     final int dot = name.lastIndexOf('.');
     final String ext = dot < 0 ? '' : name.substring(dot + 1).toLowerCase();
-    final List<String> allowed = <String>[for (final String e in allowedExtensions) e.toLowerCase().replaceFirst('.', '')];
-    if (!allowed.contains(ext)) return 'Ekstensi file harus: ${allowed.join(', ')}';
+    final List<String> allowed = <String>[
+      for (final String e in allowedExtensions)
+        e.toLowerCase().replaceFirst('.', '')
+    ];
+    if (!allowed.contains(ext)) {
+      return 'Ekstensi file harus: ${allowed.join(', ')}';
+    }
   }
   if (maxSize != null && maxSize > 0 && size > maxSize) {
     return 'Ukuran file maksimal ${(maxSize / 1048576).toStringAsFixed(2)} MB';
@@ -201,8 +216,10 @@ class _IddsFileUploadState extends State<IddsFileUpload> {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
     final bool enabled = widget.onPick != null;
-    final bool collapsible = widget.collapseAfter > 0 && widget.files.length > widget.collapseAfter;
-    final int shown = collapsible && !_expanded ? widget.collapseAfter : widget.files.length;
+    final bool collapsible =
+        widget.collapseAfter > 0 && widget.files.length > widget.collapseAfter;
+    final int shown =
+        collapsible && !_expanded ? widget.collapseAfter : widget.files.length;
     final BorderRadius radius = BorderRadius.circular(IddsRadius.lg);
 
     final Widget dropzone = Semantics(
@@ -225,21 +242,29 @@ class _IddsFileUploadState extends State<IddsFileUpload> {
             child: IddsInsetRing(
               visible: state.focused,
               borderRadius: radius,
-              rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, c.contentPrimary)],
+              rings: <(double, Color)>[
+                (2.0, c.backgroundPrimary),
+                (1.0, c.contentPrimary)
+              ],
               child: CustomPaint(
-                painter: _DashedBorderPainter(color: border, radius: IddsRadius.lg),
+                painter:
+                    _DashedBorderPainter(color: border, radius: IddsRadius.lg),
                 child: AnimatedContainer(
                   duration: IddsDuration.base,
-                  padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s24, vertical: IddsSpacing.s40),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: IddsSpacing.s24, vertical: IddsSpacing.s40),
                   decoration: BoxDecoration(
-                    color: highlight && enabled ? c.backgroundSecondary : c.backgroundPrimary,
+                    color: highlight && enabled
+                        ? c.backgroundSecondary
+                        : c.backgroundPrimary,
                     borderRadius: radius,
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     spacing: IddsSpacing.s16,
                     children: <Widget>[
-                      IddsIcon(IddsIcons.upload, size: 24, color: c.contentPrimary),
+                      IddsIcon(IddsIcons.upload,
+                          size: 24, color: c.contentPrimary),
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         spacing: IddsSpacing.s4,
@@ -268,7 +293,9 @@ class _IddsFileUploadState extends State<IddsFileUpload> {
                       // Tombol hanya tampilan; seluruh area sudah bisa ditekan.
                       ExcludeSemantics(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s16, vertical: IddsSpacing.s8 - 1),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: IddsSpacing.s16,
+                              vertical: IddsSpacing.s8 - 1),
                           decoration: BoxDecoration(
                             color: c.backgroundPrimary,
                             borderRadius: radius,
@@ -299,18 +326,24 @@ class _IddsFileUploadState extends State<IddsFileUpload> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        if (widget.label != null) IddsFieldLabel(label: widget.label!, required: widget.required, small: false),
+        if (widget.label != null)
+          IddsFieldLabel(
+              label: widget.label!, required: widget.required, small: false),
         dropzone,
         if (widget.files.isNotEmpty) ...<Widget>[
           const SizedBox(height: IddsSpacing.s24),
           for (int i = 0; i < shown; i++)
             Padding(
-              padding: EdgeInsets.only(bottom: i == shown - 1 ? 0 : IddsSpacing.s8),
+              padding:
+                  EdgeInsets.only(bottom: i == shown - 1 ? 0 : IddsSpacing.s8),
               child: _FileRow(
                 file: widget.files[i],
-                onRemove: widget.onRemove == null ? null : () => widget.onRemove!(i),
-                onRetry: widget.onRetry == null ? null : () => widget.onRetry!(i),
-                onCancel: widget.onCancel == null ? null : () => widget.onCancel!(i),
+                onRemove:
+                    widget.onRemove == null ? null : () => widget.onRemove!(i),
+                onRetry:
+                    widget.onRetry == null ? null : () => widget.onRetry!(i),
+                onCancel:
+                    widget.onCancel == null ? null : () => widget.onCancel!(i),
               ),
             ),
         ],
@@ -332,7 +365,9 @@ class _IddsFileUploadState extends State<IddsFileUpload> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: IddsSpacing.s4,
-              children: <Widget>[for (final String e in widget.errors) _ErrorMessage(e)],
+              children: <Widget>[
+                for (final String e in widget.errors) _ErrorMessage(e)
+              ],
             ),
           ),
       ],
@@ -341,7 +376,11 @@ class _IddsFileUploadState extends State<IddsFileUpload> {
 }
 
 class _FileRow extends StatelessWidget {
-  const _FileRow({required this.file, required this.onRemove, required this.onRetry, required this.onCancel});
+  const _FileRow(
+      {required this.file,
+      required this.onRemove,
+      required this.onRetry,
+      required this.onCancel});
 
   final IddsUploadFile file;
   final VoidCallback? onRemove;
@@ -361,18 +400,23 @@ class _FileRow extends StatelessWidget {
     };
     final Widget indicator = switch (file.status) {
       IddsFileStatus.uploading => _Spinner(color: c.contentSecondary),
-      IddsFileStatus.error => IddsIcon(IddsIcons.circleX, size: 20, color: c.negative.shade500),
+      IddsFileStatus.error =>
+        IddsIcon(IddsIcons.circleX, size: 20, color: c.negative.shade500),
       // Versi web juga menampilkan centang untuk berkas yang baru dipilih.
-      _ => IddsIcon(IddsIcons.circleCheck, size: 20, color: c.positive.shade600),
+      _ =>
+        IddsIcon(IddsIcons.circleCheck, size: 20, color: c.positive.shade600),
     };
-    final int? percent = file.status == IddsFileStatus.uploading && file.progress != null
-        ? (file.progress!.clamp(0, 1) * 100).round()
-        : null;
+    final int? percent =
+        file.status == IddsFileStatus.uploading && file.progress != null
+            ? (file.progress!.clamp(0, 1) * 100).round()
+            : null;
 
     final String statusText = switch (file.status) {
-      IddsFileStatus.uploading => ', sedang diunggah${percent == null ? '' : ' $percent%'}',
+      IddsFileStatus.uploading =>
+        ', sedang diunggah${percent == null ? '' : ' $percent%'}',
       IddsFileStatus.success => ', berhasil diunggah',
-      IddsFileStatus.error => ', gagal${file.error == null ? '' : ': ${file.error}'}',
+      IddsFileStatus.error =>
+        ', gagal${file.error == null ? '' : ': ${file.error}'}',
       IddsFileStatus.idle => '',
     };
 
@@ -395,7 +439,8 @@ class _FileRow extends StatelessWidget {
             ExcludeSemantics(
               child: Padding(
                 padding: const EdgeInsets.only(top: 2),
-                child: SizedBox(width: 24, height: 24, child: Center(child: indicator)),
+                child: SizedBox(
+                    width: 24, height: 24, child: Center(child: indicator)),
               ),
             ),
             Expanded(
@@ -416,14 +461,17 @@ class _FileRow extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      percent == null ? iddsFormatFileSize(file.size) : '${iddsFormatFileSize(file.size)} · $percent%',
+                      percent == null
+                          ? iddsFormatFileSize(file.size)
+                          : '${iddsFormatFileSize(file.size)} · $percent%',
                       style: theme.textStyle(
                         fontSize: IddsFontSize.xs,
                         lineHeight: IddsLineHeight.xs,
                         color: c.contentSecondary,
                       ),
                     ),
-                    if (file.status == IddsFileStatus.uploading && file.progress != null)
+                    if (file.status == IddsFileStatus.uploading &&
+                        file.progress != null)
                       _ProgressBar(value: file.progress!),
                     if (isError && file.error != null)
                       Text(
@@ -444,11 +492,23 @@ class _FileRow extends StatelessWidget {
               children: <Widget>[
                 if (file.status == IddsFileStatus.uploading)
                   if (onCancel != null)
-                    _IconAction(icon: IddsIcons.x, label: 'Batalkan unggah ${file.name}', danger: true, onTap: onCancel!),
+                    _IconAction(
+                        icon: IddsIcons.x,
+                        label: 'Batalkan unggah ${file.name}',
+                        danger: true,
+                        onTap: onCancel!),
                 if (isError && onRetry != null)
-                  _IconAction(icon: IddsIcons.refresh, label: 'Coba lagi ${file.name}', danger: false, onTap: onRetry!),
+                  _IconAction(
+                      icon: IddsIcons.refresh,
+                      label: 'Coba lagi ${file.name}',
+                      danger: false,
+                      onTap: onRetry!),
                 if (file.status != IddsFileStatus.uploading && onRemove != null)
-                  _IconAction(icon: IddsIcons.trash, label: 'Hapus ${file.name}', danger: true, onTap: onRemove!),
+                  _IconAction(
+                      icon: IddsIcons.trash,
+                      label: 'Hapus ${file.name}',
+                      danger: true,
+                      onTap: onRemove!),
               ],
             ),
           ],
@@ -505,7 +565,8 @@ class IddsSingleFileUpload extends StatelessWidget {
     final IddsUploadFile? file = this.file;
     final bool enabled = onPick != null;
     final bool hasFile = file != null && file.status == IddsFileStatus.success;
-    final bool uploading = file != null && file.status == IddsFileStatus.uploading;
+    final bool uploading =
+        file != null && file.status == IddsFileStatus.uploading;
     final bool isError = file != null && file.status == IddsFileStatus.error;
     final bool canPick = enabled && !hasFile && !uploading;
     final BorderRadius radius = BorderRadius.circular(IddsRadius.lg);
@@ -540,7 +601,11 @@ class IddsSingleFileUpload extends StatelessWidget {
               spacing: IddsSpacing.s4,
               children: <Widget>[
                 _ProgressBar(value: progress ?? 0),
-                Text(progress == null ? 'Mengunggah...' : '${(progress.clamp(0, 1) * 100).round()}%', style: descStyle),
+                Text(
+                    progress == null
+                        ? 'Mengunggah...'
+                        : '${(progress.clamp(0, 1) * 100).round()}%',
+                    style: descStyle),
               ],
             ),
           ),
@@ -551,7 +616,8 @@ class IddsSingleFileUpload extends StatelessWidget {
             width: 32,
             height: 32,
             alignment: Alignment.center,
-            decoration: BoxDecoration(color: c.backgroundSecondary, borderRadius: radius),
+            decoration: BoxDecoration(
+                color: c.backgroundSecondary, borderRadius: radius),
             child: IddsIcon(IddsIcons.file, size: 16, color: c.contentPrimary),
           ),
           Expanded(
@@ -560,20 +626,34 @@ class IddsSingleFileUpload extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 2,
               children: <Widget>[
-                Text(file.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: titleStyle),
-                Text(description, maxLines: 1, overflow: TextOverflow.ellipsis, style: descStyle),
+                Text(file.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: titleStyle),
+                Text(description,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: descStyle),
               ],
             ),
           ),
           if (onRemove != null && enabled)
-            _IconAction(icon: IddsIcons.trash, label: 'Hapus ${file.name}', danger: true, size: 18, onTap: onRemove!),
+            _IconAction(
+                icon: IddsIcons.trash,
+                label: 'Hapus ${file.name}',
+                danger: true,
+                size: 18,
+                onTap: onRemove!),
         ];
       } else {
         children = <Widget>[
           SizedBox(
             width: 32,
             height: 32,
-            child: Center(child: IddsIcon(IddsIcons.upload, size: 24, color: enabled ? c.contentPrimary : c.contentTertiary)),
+            child: Center(
+                child: IddsIcon(IddsIcons.upload,
+                    size: 24,
+                    color: enabled ? c.contentPrimary : c.contentTertiary)),
           ),
           Expanded(
             child: Column(
@@ -581,7 +661,10 @@ class IddsSingleFileUpload extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 2,
               children: <Widget>[
-                Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: titleStyle),
+                Text(title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: titleStyle),
                 Text(
                   isError ? (file.error ?? description) : description,
                   maxLines: 1,
@@ -598,7 +681,10 @@ class IddsSingleFileUpload extends StatelessWidget {
         visible: state.focused,
         borderRadius: radius,
         inset: 1,
-        rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, c.contentPrimary)],
+        rings: <(double, Color)>[
+          (2.0, c.backgroundPrimary),
+          (1.0, c.contentPrimary)
+        ],
         child: AnimatedContainer(
           duration: IddsDuration.base,
           height: 72,
@@ -622,27 +708,39 @@ class IddsSingleFileUpload extends StatelessWidget {
     final Widget box = Semantics(
       button: canPick,
       enabled: enabled,
-      label: hasFile ? '${file.name}, $description' : '$title, ${isError ? (file.error ?? description) : description}',
+      label: hasFile
+          ? '${file.name}, $description'
+          : '$title, ${isError ? (file.error ?? description) : description}',
       onTap: canPick ? onPick : null,
       child: IddsInteractive(
         onTap: canPick ? onPick : null,
         canRequestFocus: canPick,
         mouseCursor: canPick ? null : MouseCursor.defer,
-        builder: (BuildContext context, IddsInteractionState state) => content(state),
+        builder: (BuildContext context, IddsInteractionState state) =>
+            content(state),
       ),
     );
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final double w = width ?? 300;
-        return SizedBox(width: constraints.hasBoundedWidth ? math.min(w, constraints.maxWidth) : w, child: box);
+        return SizedBox(
+            width: constraints.hasBoundedWidth
+                ? math.min(w, constraints.maxWidth)
+                : w,
+            child: box);
       },
     );
   }
 }
 
 class _IconAction extends StatelessWidget {
-  const _IconAction({required this.icon, required this.label, required this.danger, required this.onTap, this.size = 20});
+  const _IconAction(
+      {required this.icon,
+      required this.label,
+      required this.danger,
+      required this.onTap,
+      this.size = 20});
 
   final IddsIconData icon;
   final String label;
@@ -674,7 +772,9 @@ class _IconAction extends StatelessWidget {
               height: size + 4,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: !danger && state.hovered ? (theme.isDark ? c.backgroundSecondary : c.primary.shade25) : null,
+                color: !danger && state.hovered
+                    ? (theme.isDark ? c.backgroundSecondary : c.primary.shade25)
+                    : null,
                 borderRadius: BorderRadius.circular(IddsRadius.base),
               ),
               child: IddsIcon(icon, size: size, color: color),
@@ -687,7 +787,8 @@ class _IconAction extends StatelessWidget {
 }
 
 class _ShowMoreButton extends StatelessWidget {
-  const _ShowMoreButton({required this.label, required this.expanded, required this.onTap});
+  const _ShowMoreButton(
+      {required this.label, required this.expanded, required this.onTap});
 
   final String label;
   final bool expanded;
@@ -707,7 +808,9 @@ class _ShowMoreButton extends StatelessWidget {
         builder: (BuildContext context, IddsInteractionState state) {
           // CSS: primary-500; di dark mode warna terang mode gelap dipakai
           // agar tetap terbaca.
-          final Color color = theme.isDark ? c.primaryMain : (state.hovered ? c.primary.shade600 : c.primary.shade500);
+          final Color color = theme.isDark
+              ? c.primaryMain
+              : (state.hovered ? c.primary.shade600 : c.primary.shade500);
           return IddsInsetRing(
             visible: state.focused,
             borderRadius: BorderRadius.circular(IddsRadius.sm),
@@ -719,16 +822,22 @@ class _ShowMoreButton extends StatelessWidget {
                 Text(
                   label,
                   style: theme
-                      .textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: color)
+                      .textStyle(
+                          fontSize: IddsFontSize.sm,
+                          lineHeight: IddsLineHeight.sm,
+                          color: color)
                       .copyWith(
-                        decoration: state.hovered ? TextDecoration.underline : TextDecoration.none,
+                        decoration: state.hovered
+                            ? TextDecoration.underline
+                            : TextDecoration.none,
                         decorationColor: color,
                       ),
                 ),
                 AnimatedRotation(
                   turns: expanded ? 0.5 : 0,
                   duration: IddsDuration.base,
-                  child: IddsIcon(IddsIcons.chevronDown, size: 16, color: color),
+                  child:
+                      IddsIcon(IddsIcons.chevronDown, size: 16, color: color),
                 ),
               ],
             ),
@@ -749,7 +858,8 @@ class _ErrorMessage extends StatelessWidget {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s12 - 1, vertical: IddsSpacing.s8 - 1),
+      padding: const EdgeInsets.symmetric(
+          horizontal: IddsSpacing.s12 - 1, vertical: IddsSpacing.s8 - 1),
       decoration: BoxDecoration(
         // CSS: latar error-25; di dark mode latar terang diganti latar biasa.
         color: theme.isDark ? c.backgroundPrimary : c.negative.shade50,
@@ -808,9 +918,11 @@ class _Spinner extends StatefulWidget {
   State<_Spinner> createState() => _SpinnerState();
 }
 
-class _SpinnerState extends State<_Spinner> with SingleTickerProviderStateMixin {
+class _SpinnerState extends State<_Spinner>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller =
-      AnimationController(vsync: this, duration: const Duration(seconds: 1))..repeat();
+      AnimationController(vsync: this, duration: const Duration(seconds: 1))
+        ..repeat();
 
   @override
   void dispose() {
@@ -850,12 +962,16 @@ class _DashedBorderPainter extends CustomPainter {
     for (final PathMetric metric in path.computeMetrics()) {
       double distance = 0;
       while (distance < metric.length) {
-        canvas.drawPath(metric.extractPath(distance, math.min(distance + dash, metric.length)), paint);
+        canvas.drawPath(
+            metric.extractPath(
+                distance, math.min(distance + dash, metric.length)),
+            paint);
         distance += dash + gap;
       }
     }
   }
 
   @override
-  bool shouldRepaint(_DashedBorderPainter oldDelegate) => oldDelegate.color != color || oldDelegate.radius != radius;
+  bool shouldRepaint(_DashedBorderPainter oldDelegate) =>
+      oldDelegate.color != color || oldDelegate.radius != radius;
 }

@@ -35,7 +35,8 @@ class _NavigationSectionState extends State<NavigationSection> {
       children: <Widget>[
         GallerySection(
           title: 'Chip',
-          usage: 'IddsChipGroup untuk memilih satu (bawaan) atau banyak nilai (multiple: true). customization menambahkan chip "Kustomisasi" berisi isian; IddsChipCustomization.integer dan .text tersedia sebagai bentuk siap pakai.',
+          usage:
+              'IddsChipGroup untuk memilih satu (bawaan) atau banyak nilai (multiple: true). customization menambahkan chip "Kustomisasi" berisi isian; IddsChipCustomization.integer dan .text tersedia sebagai bentuk siap pakai.',
           code: _chipCode,
           children: <Widget>[
             const GalleryCaption('Satu pilihan (outline) dengan Kustomisasi'),
@@ -48,14 +49,17 @@ class _NavigationSectionState extends State<NavigationSection> {
                 format: (String value) => value,
                 placeholder: 'Jumlah hari',
                 keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
                 suffix: 'hari',
               ),
               options: const <IddsChipOption<String>>[
                 IddsChipOption<String>(value: '7', label: '7 hari'),
                 IddsChipOption<String>(value: '30', label: '30 hari'),
                 IddsChipOption<String>(value: '90', label: '90 hari'),
-                IddsChipOption<String>(value: '365', label: '1 tahun', enabled: false),
+                IddsChipOption<String>(
+                    value: '365', label: '1 tahun', enabled: false),
               ],
             ),
             const SizedBox(height: IddsSpacing.s16),
@@ -68,7 +72,8 @@ class _NavigationSectionState extends State<NavigationSection> {
               selected: _topics,
               onChanged: (Set<String> v) => setState(() => _topics = v),
               options: const <IddsChipOption<String>>[
-                IddsChipOption<String>(value: 'pendidikan', label: 'Pendidikan'),
+                IddsChipOption<String>(
+                    value: 'pendidikan', label: 'Pendidikan'),
                 IddsChipOption<String>(value: 'kesehatan', label: 'Kesehatan'),
                 IddsChipOption<String>(value: 'pajak', label: 'Pajak'),
               ],
@@ -77,24 +82,30 @@ class _NavigationSectionState extends State<NavigationSection> {
         ),
         GallerySection(
           title: 'Button Group',
-          usage: 'Sekumpulan tombol yang saling terhubung untuk memilih satu nilai, misalnya periode laporan.',
+          usage:
+              'Sekumpulan tombol yang saling terhubung untuk memilih satu nilai, misalnya periode laporan.',
           code: _buttonGroupCode,
           children: <Widget>[
             IddsButtonGroup<String>(
               value: _period,
               onChanged: (String v) => setState(() => _period = v),
               options: const <IddsButtonGroupOption<String>>[
-                IddsButtonGroupOption<String>(value: 'harian', label: Text('Harian')),
-                IddsButtonGroupOption<String>(value: 'mingguan', label: Text('Mingguan')),
-                IddsButtonGroupOption<String>(value: 'bulanan', label: Text('Bulanan')),
-                IddsButtonGroupOption<String>(value: 'tahunan', label: Text('Tahunan'), enabled: false),
+                IddsButtonGroupOption<String>(
+                    value: 'harian', label: Text('Harian')),
+                IddsButtonGroupOption<String>(
+                    value: 'mingguan', label: Text('Mingguan')),
+                IddsButtonGroupOption<String>(
+                    value: 'bulanan', label: Text('Bulanan')),
+                IddsButtonGroupOption<String>(
+                    value: 'tahunan', label: Text('Tahunan'), enabled: false),
               ],
             ),
           ],
         ),
         GallerySection(
           title: 'Breadcrumb',
-          usage: 'Item terakhir adalah halaman saat ini (tanpa onTap). maxLength memotong label yang terlalu panjang.',
+          usage:
+              'Item terakhir adalah halaman saat ini (tanpa onTap). maxLength memotong label yang terlalu panjang.',
           code: _breadcrumbCode,
           children: <Widget>[
             IddsBreadcrumb(
@@ -105,16 +116,20 @@ class _NavigationSectionState extends State<NavigationSection> {
                   icon: const Icon(TablerIcons.home),
                   onTap: () => showGallerySnack(context, 'Ke Beranda'),
                 ),
-                IddsBreadcrumbItem(label: 'Layanan', onTap: () => showGallerySnack(context, 'Ke Layanan')),
+                IddsBreadcrumbItem(
+                    label: 'Layanan',
+                    onTap: () => showGallerySnack(context, 'Ke Layanan')),
                 const IddsBreadcrumbItem(label: 'Arsip', enabled: false),
-                const IddsBreadcrumbItem(label: 'Sistem Informasi Beasiswa Provinsi Gorontalo'),
+                const IddsBreadcrumbItem(
+                    label: 'Sistem Informasi Beasiswa Provinsi Gorontalo'),
               ],
             ),
           ],
         ),
         GallerySection(
           title: 'Tab Menu',
-          usage: 'IddsTabMenu hanya menampilkan tab dan melaporkan pilihan; tampilkan isi tab sendiri berdasarkan nilai terpilih (misalnya dengan switch atau IndexedStack).',
+          usage:
+              'IddsTabMenu hanya menampilkan tab dan melaporkan pilihan; tampilkan isi tab sendiri berdasarkan nilai terpilih (misalnya dengan switch atau IndexedStack).',
           code: _tabCode,
           children: <Widget>[
             for (final IddsTabVariant v in IddsTabVariant.values) ...<Widget>[
@@ -159,8 +174,10 @@ class _NavigationSectionState extends State<NavigationSection> {
         ),
         GallerySection(
           title: 'Stepper',
-          subtitle: 'Tekan langkah untuk berpindah. Langkah 3 ditandai bermasalah.',
-          usage: 'currentStep dimulai dari 0. Langkah sebelum currentStep ditandai selesai; errorSteps menandai langkah bermasalah. Isi onStepTap bila pengguna boleh melompat antarlangkah.',
+          subtitle:
+              'Tekan langkah untuk berpindah. Langkah 3 ditandai bermasalah.',
+          usage:
+              'currentStep dimulai dari 0. Langkah sebelum currentStep ditandai selesai; errorSteps menandai langkah bermasalah. Isi onStepTap bila pengguna boleh melompat antarlangkah.',
           code: _stepperCode,
           children: <Widget>[
             IddsStepper(
@@ -190,8 +207,10 @@ class _NavigationSectionState extends State<NavigationSection> {
         ),
         GallerySection(
           title: 'Pagination',
-          subtitle: '"Halaman … dari …" tampil di layar ≥ 580px. Ukuran membesar di ≥ 1024px dan ≥ 1280px. Pilihan jumlah baris muncul bila onPageSizeChanged diisi.',
-          usage: 'Halaman dimulai dari 1. Pilihan jumlah baris per halaman muncul bila pageSize dan onPageSizeChanged diisi.',
+          subtitle:
+              '"Halaman … dari …" tampil di layar ≥ 580px. Ukuran membesar di ≥ 1024px dan ≥ 1280px. Pilihan jumlah baris muncul bila onPageSizeChanged diisi.',
+          usage:
+              'Halaman dimulai dari 1. Pilihan jumlah baris per halaman muncul bila pageSize dan onPageSizeChanged diisi.',
           code: _paginationCode,
           children: <Widget>[
             IddsPagination(
@@ -205,7 +224,8 @@ class _NavigationSectionState extends State<NavigationSection> {
               }),
             ),
             const SizedBox(height: IddsSpacing.s12),
-            const IddsPagination(currentPage: 3, totalPages: 12, onPageChanged: null),
+            const IddsPagination(
+                currentPage: 3, totalPages: 12, onPageChanged: null),
           ],
         ),
       ],

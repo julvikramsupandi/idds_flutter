@@ -116,24 +116,56 @@ class IddsCard extends StatelessWidget {
     final Color descColor = overlay ? c.baseWhite : c.contentSecondary;
 
     // Ukuran teks: < 640px, < 1024px, lalu ukuran penuh.
-    final (double titleSize, double titleLine, double descSize, double descLine, double avatarSize) = small
-        ? (IddsFontSize.base, IddsLineHeight.sm, IddsFontSize.xs, IddsLineHeight.xs, 36.0)
+    final (
+      double titleSize,
+      double titleLine,
+      double descSize,
+      double descLine,
+      double avatarSize
+    ) = small
+        ? (
+            IddsFontSize.base,
+            IddsLineHeight.sm,
+            IddsFontSize.xs,
+            IddsLineHeight.xs,
+            36.0
+          )
         : medium
-            ? (IddsFontSize.lg, IddsLineHeight.base, IddsFontSize.sm, IddsLineHeight.sm, 40.0)
-            : (IddsFontSize.xl, IddsLineHeight.lg, IddsFontSize.base, IddsLineHeight.base, 48.0);
-    final double padding = small ? IddsSpacing.s12 : (overlay && medium ? IddsSpacing.s16 : IddsSpacing.s24);
-    final double gap = small ? IddsSpacing.s8 : (medium ? IddsSpacing.s12 : IddsSpacing.s16);
+            ? (
+                IddsFontSize.lg,
+                IddsLineHeight.base,
+                IddsFontSize.sm,
+                IddsLineHeight.sm,
+                40.0
+              )
+            : (
+                IddsFontSize.xl,
+                IddsLineHeight.lg,
+                IddsFontSize.base,
+                IddsLineHeight.base,
+                48.0
+              );
+    final double padding = small
+        ? IddsSpacing.s12
+        : (overlay && medium ? IddsSpacing.s16 : IddsSpacing.s24);
+    final double gap =
+        small ? IddsSpacing.s8 : (medium ? IddsSpacing.s12 : IddsSpacing.s16);
 
     final Widget content = Padding(
       padding: EdgeInsets.all(padding),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: overlay && position == IddsCardMediaPosition.top ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: overlay && position == IddsCardMediaPosition.top
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: gap,
         children: <Widget>[
           if (avatar != null)
-            SizedBox(width: avatarSize, height: avatarSize, child: ClipOval(child: FittedBox(child: avatar))),
+            SizedBox(
+                width: avatarSize,
+                height: avatarSize,
+                child: ClipOval(child: FittedBox(child: avatar))),
           if (title != null || description != null)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,7 +182,10 @@ class IddsCard extends StatelessWidget {
                           fontWeight: IddsFontWeight.semibold,
                           color: titleColor,
                         ),
-                        child: IconTheme(data: IconThemeData(size: titleLine - 4, color: titleColor), child: title!),
+                        child: IconTheme(
+                            data: IconThemeData(
+                                size: titleLine - 4, color: titleColor),
+                            child: title!),
                       ),
                     ),
                   ),
@@ -158,7 +193,10 @@ class IddsCard extends StatelessWidget {
                   DefaultTextStyle(
                     maxLines: descriptionMaxLines,
                     overflow: TextOverflow.ellipsis,
-                    style: theme.textStyle(fontSize: descSize, lineHeight: descLine, color: descColor),
+                    style: theme.textStyle(
+                        fontSize: descSize,
+                        lineHeight: descLine,
+                        color: descColor),
                     child: description!,
                   ),
               ],
@@ -176,15 +214,18 @@ class IddsCard extends StatelessWidget {
             ? null
             : ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 202),
-                child: AspectRatio(aspectRatio: 16 / 9, child: SizedBox.expand(child: media)),
+                child: AspectRatio(
+                    aspectRatio: 16 / 9, child: SizedBox.expand(child: media)),
               );
         body = Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (mediaBox != null && position == IddsCardMediaPosition.top) mediaBox,
+            if (mediaBox != null && position == IddsCardMediaPosition.top)
+              mediaBox,
             content,
-            if (mediaBox != null && position != IddsCardMediaPosition.top) mediaBox,
+            if (mediaBox != null && position != IddsCardMediaPosition.top)
+              mediaBox,
           ],
         );
       case IddsCardVariant.horizontal:
@@ -196,13 +237,18 @@ class IddsCard extends StatelessWidget {
               if (media != null)
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxHeight: 202),
-                  child: AspectRatio(aspectRatio: 16 / 9, child: SizedBox.expand(child: media)),
+                  child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: SizedBox.expand(child: media)),
                 ),
               content,
             ],
           );
         } else {
-          final Widget mediaBox = SizedBox(width: 264, child: AspectRatio(aspectRatio: 5 / 4, child: SizedBox.expand(child: media)));
+          final Widget mediaBox = SizedBox(
+              width: 264,
+              child: AspectRatio(
+                  aspectRatio: 5 / 4, child: SizedBox.expand(child: media)));
           body = Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -212,7 +258,8 @@ class IddsCard extends StatelessWidget {
             ],
           );
         }
-        body = ConstrainedBox(constraints: const BoxConstraints(maxWidth: 720), child: body);
+        body = ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 720), child: body);
       case IddsCardVariant.overlay:
         final bool top = position != IddsCardMediaPosition.bottom;
         final double minHeight = small ? 300 : 362;
@@ -228,7 +275,11 @@ class IddsCard extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: top ? Alignment.bottomCenter : Alignment.topCenter,
                       end: top ? Alignment.topCenter : Alignment.bottomCenter,
-                      colors: const <Color>[Color(0xB3000000), Color(0xE6000000), Color(0x00000000)],
+                      colors: const <Color>[
+                        Color(0xB3000000),
+                        Color(0xE6000000),
+                        Color(0x00000000)
+                      ],
                       stops: const <double>[0, 0.36, 0.6],
                     ),
                   ),
@@ -236,7 +287,9 @@ class IddsCard extends StatelessWidget {
               ),
               ConstrainedBox(
                 constraints: BoxConstraints(minHeight: minHeight),
-                child: Align(alignment: top ? Alignment.bottomLeft : Alignment.topLeft, child: content),
+                child: Align(
+                    alignment: top ? Alignment.bottomLeft : Alignment.topLeft,
+                    child: content),
               ),
             ],
           ),
@@ -249,10 +302,13 @@ class IddsCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: c.backgroundPrimary,
             borderRadius: radius,
-            border: Border.all(color: hovered ? c.strokeSecondary : c.strokePrimary),
+            border: Border.all(
+                color: hovered ? c.strokeSecondary : c.strokePrimary),
             boxShadow: hovered ? IddsShadow.md : const <BoxShadow>[],
           ),
-          child: ClipRRect(borderRadius: BorderRadius.circular(IddsRadius.lg - 1), child: body),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(IddsRadius.lg - 1),
+              child: body),
         );
 
     if (onTap == null) return Semantics(container: true, child: card(false));
@@ -262,7 +318,8 @@ class IddsCard extends StatelessWidget {
       onTap: onTap,
       child: IddsInteractive(
         onTap: onTap,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: radius,
           rings: <(double, Color)>[(2.0, c.contentPrimary)],

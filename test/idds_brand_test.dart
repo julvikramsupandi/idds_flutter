@@ -20,8 +20,10 @@ void main() {
 
     test('override dark mode diterapkan', () {
       expect(IddsBrand.panrb.primaryMainDark, IddsBrand.panrb.primary.shade400);
-      expect(IddsBrand.inagov.primaryMainDark, IddsBrand.inagov.primary.shade400);
-      expect(IddsBrand.inapas.primaryMainDark, IddsBrand.inapas.primary.shade400);
+      expect(
+          IddsBrand.inagov.primaryMainDark, IddsBrand.inagov.primary.shade400);
+      expect(
+          IddsBrand.inapas.primaryMainDark, IddsBrand.inapas.primary.shade400);
       expect(IddsBrand.inaku.primaryMainDark, IddsBrand.inaku.primary.shade300);
       // Brand tanpa override tetap memakai warna terang.
       expect(IddsBrand.bkn.primaryMainDark, IddsBrand.bkn.primaryMainLight);
@@ -42,7 +44,8 @@ void main() {
 
     test('secondary yang tidak didefinisikan diwarisi dari :root', () {
       expect(IddsBrand.inapas.secondary, IddsBrand.neutral.secondary);
-      expect(IddsBrand.inagov.secondary.shade900, IddsBrand.neutral.secondary.shade900);
+      expect(IddsBrand.inagov.secondary.shade900,
+          IddsBrand.neutral.secondary.shade900);
     });
 
     test('ada 8 brand dengan id unik', () {
@@ -53,8 +56,10 @@ void main() {
 
   group('IddsColors.resolve', () {
     test('menggabungkan brand dan token semantik', () {
-      final IddsColors light = IddsColors.resolve(IddsBrand.panrb, Brightness.light);
-      final IddsColors dark = IddsColors.resolve(IddsBrand.panrb, Brightness.dark);
+      final IddsColors light =
+          IddsColors.resolve(IddsBrand.panrb, Brightness.light);
+      final IddsColors dark =
+          IddsColors.resolve(IddsBrand.panrb, Brightness.dark);
       expect(light.primaryMain, const Color(0xFFB42B2D));
       expect(dark.primaryMain, const Color(0xFFE15254));
       expect(light.backgroundPrimary, const Color(0xFFFFFFFF));
@@ -75,21 +80,31 @@ void main() {
     });
 
     test('skala urut dari terang ke gelap', () {
-      final List<double> lum = brand.primary.colors.map(IddsColorUtils.relativeLuminance).toList();
+      final List<double> lum =
+          brand.primary.colors.map(IddsColorUtils.relativeLuminance).toList();
       for (int i = 1; i < lum.length; i++) {
-        expect(lum[i], lessThan(lum[i - 1]), reason: 'langkah ${IddsColorScale.steps[i]}');
+        expect(lum[i], lessThan(lum[i - 1]),
+            reason: 'langkah ${IddsColorScale.steps[i]}');
       }
     });
 
     test('warna teks memenuhi kontras', () {
-      expect(IddsColorUtils.contrastRatio(brand.primaryMainLight, brand.onPrimaryLight), greaterThanOrEqualTo(4.5));
+      expect(
+          IddsColorUtils.contrastRatio(
+              brand.primaryMainLight, brand.onPrimaryLight),
+          greaterThanOrEqualTo(4.5));
     });
 
     test('warna utama dark mode terlihat di latar gelap', () {
-      for (final Color seed in <Color>[purple, const Color(0xFF06264D), const Color(0xFFB42B2D)]) {
+      for (final Color seed in <Color>[
+        purple,
+        const Color(0xFF06264D),
+        const Color(0xFFB42B2D)
+      ]) {
         final IddsBrand b = IddsBrand.fromSeed(seed);
         expect(
-          IddsColorUtils.contrastRatio(b.primaryMainDark, const Color(0xFF141414)),
+          IddsColorUtils.contrastRatio(
+              b.primaryMainDark, const Color(0xFF141414)),
           greaterThanOrEqualTo(3),
           reason: '$seed',
         );
@@ -114,13 +129,18 @@ void main() {
   group('IddsColorUtils', () {
     test('kontras hitam-putih = 21', () {
       expect(
-        IddsColorUtils.contrastRatio(const Color(0xFF000000), const Color(0xFFFFFFFF)),
+        IddsColorUtils.contrastRatio(
+            const Color(0xFF000000), const Color(0xFFFFFFFF)),
         closeTo(21, 0.01),
       );
     });
 
     test('OKLCH bolak-balik mempertahankan warna', () {
-      for (final Color c in <Color>[const Color(0xFF196BCD), const Color(0xFFB42B2D), const Color(0xFF808080)]) {
+      for (final Color c in <Color>[
+        const Color(0xFF196BCD),
+        const Color(0xFFB42B2D),
+        const Color(0xFF808080)
+      ]) {
         final Color back = IddsColorUtils.fromOklch(IddsColorUtils.toOklch(c));
         expect(back, c);
       }
@@ -129,7 +149,8 @@ void main() {
 
   group('IddsThemeData.textStyle', () {
     test('memenuhi syarat TextField untuk gaya inherit: false', () {
-      final TextStyle style = IddsThemeData().textStyle(fontSize: 14, lineHeight: 20);
+      final TextStyle style =
+          IddsThemeData().textStyle(fontSize: 14, lineHeight: 20);
       expect(style.inherit, isFalse);
       expect(style.fontSize, 14);
       expect(style.textBaseline, isNotNull);
@@ -144,18 +165,21 @@ void main() {
   });
 
   group('IddsThemeData.textStyleBuilder', () {
-    TextStyle mark(TextStyle s) => s.copyWith(fontFamily: 'Font_${s.fontWeight?.value}');
+    TextStyle mark(TextStyle s) =>
+        s.copyWith(fontFamily: 'Font_${s.fontWeight?.value}');
 
     test('setiap gaya teks melewati builder, termasuk ketebalannya', () {
       final IddsThemeData theme = IddsThemeData(textStyleBuilder: mark);
-      final TextStyle style = theme.textStyle(fontSize: 14, lineHeight: 20, fontWeight: IddsFontWeight.semibold);
+      final TextStyle style = theme.textStyle(
+          fontSize: 14, lineHeight: 20, fontWeight: IddsFontWeight.semibold);
       expect(style.fontFamily, 'Font_600');
       expect(style.fontSize, 14);
     });
 
     test('ikut disalin dan memengaruhi kesamaan tema', () {
       final IddsThemeData a = IddsThemeData(textStyleBuilder: mark);
-      expect(a.copyWith(brightness: Brightness.dark).textStyleBuilder, same(mark));
+      expect(
+          a.copyWith(brightness: Brightness.dark).textStyleBuilder, same(mark));
       expect(a == IddsThemeData(textStyleBuilder: mark), isTrue);
       expect(a == IddsThemeData(), isFalse);
     });

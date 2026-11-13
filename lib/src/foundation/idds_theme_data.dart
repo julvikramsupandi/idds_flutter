@@ -1,4 +1,5 @@
-import 'dart:ui' show Brightness, Color, FontWeight, TextBaseline, TextLeadingDistribution;
+import 'dart:ui'
+    show Brightness, Color, FontWeight, TextBaseline, TextLeadingDistribution;
 
 import 'package:flutter/foundation.dart' show immutable, listEquals;
 import 'package:flutter/painting.dart' show TextStyle;
@@ -137,15 +138,18 @@ class IddsThemeData {
   }) {
     final IddsBrand newBrand = brand ?? this.brand;
     final Brightness newBrightness = brightness ?? this.brightness;
-    final bool recolor = newBrand != this.brand || newBrightness != this.brightness;
+    final bool recolor =
+        newBrand != this.brand || newBrightness != this.brightness;
     return IddsThemeData.raw(
       brand: newBrand,
       brightness: newBrightness,
-      colors: colors ?? (recolor ? IddsColors.resolve(newBrand, newBrightness) : this.colors),
+      colors: colors ??
+          (recolor ? IddsColors.resolve(newBrand, newBrightness) : this.colors),
       fontFamily: fontFamily ?? this.fontFamily,
       fontFamilyFallback: fontFamilyFallback ?? this.fontFamilyFallback,
       textStyleBuilder: textStyleBuilder ?? this.textStyleBuilder,
-      compactOnSmallScreens: compactOnSmallScreens ?? this.compactOnSmallScreens,
+      compactOnSmallScreens:
+          compactOnSmallScreens ?? this.compactOnSmallScreens,
     );
   }
 

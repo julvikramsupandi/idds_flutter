@@ -3,6 +3,8 @@
 - `LICENSE` kini hanya berisi teks MIT standar agar dikenali pub.dev sebagai
   lisensi OSI. Catatan pihak ketiga (token `@idds/styles`, Tabler Icons,
   nama/logo instansi) dipindah ke berkas `NOTICE`.
+- Seluruh kode diformat dengan `dart format` (lebar baris bawaan 80) agar
+  lolos pemeriksaan analisis statis pub.dev. Tidak ada perubahan perilaku.
 
 ## 0.2.2
 

@@ -69,7 +69,8 @@ class _FileUploadSectionState extends State<FileUploadSection> {
 
   void _upload(String name) {
     _timers[name]?.cancel();
-    _timers[name] = Timer.periodic(const Duration(milliseconds: 200), (Timer t) {
+    _timers[name] =
+        Timer.periodic(const Duration(milliseconds: 200), (Timer t) {
       final int i = _files.indexWhere((IddsUploadFile f) => f.name == name);
       if (i < 0) {
         t.cancel();
@@ -78,7 +79,10 @@ class _FileUploadSectionState extends State<FileUploadSection> {
       final double progress = (_files[i].progress ?? 0) + 0.1;
       setState(() {
         _files[i] = progress >= 1
-            ? IddsUploadFile(name: name, size: _files[i].size, status: IddsFileStatus.success)
+            ? IddsUploadFile(
+                name: name,
+                size: _files[i].size,
+                status: IddsFileStatus.success)
             : _files[i].copyWith(progress: progress);
       });
       if (progress >= 1) t.cancel();
@@ -86,13 +90,18 @@ class _FileUploadSectionState extends State<FileUploadSection> {
   }
 
   void _pickSingle() {
-    setState(() => _single = const IddsUploadFile(name: 'npwp.pdf', size: 409600, status: IddsFileStatus.uploading, progress: 0));
+    setState(() => _single = const IddsUploadFile(
+        name: 'npwp.pdf',
+        size: 409600,
+        status: IddsFileStatus.uploading,
+        progress: 0));
     _singleTimer?.cancel();
     _singleTimer = Timer.periodic(const Duration(milliseconds: 150), (Timer t) {
       final double progress = (_single?.progress ?? 0) + 0.1;
       setState(() {
         _single = progress >= 1
-            ? const IddsUploadFile(name: 'npwp.pdf', size: 409600, status: IddsFileStatus.success)
+            ? const IddsUploadFile(
+                name: 'npwp.pdf', size: 409600, status: IddsFileStatus.success)
             : _single!.copyWith(progress: progress);
       });
       if (progress >= 1) t.cancel();
@@ -103,9 +112,11 @@ class _FileUploadSectionState extends State<FileUploadSection> {
   Widget build(BuildContext context) {
     return GallerySection(
       title: 'File Upload',
-      subtitle: 'Hanya tampilan: aplikasi memilih dan mengunggah berkas sendiri, lalu mengisi status. '
+      subtitle:
+          'Hanya tampilan: aplikasi memilih dan mengunggah berkas sendiri, lalu mengisi status. '
           'Di sini prosesnya disimulasikan; installer.exe sengaja ditolak oleh iddsValidateFile.',
-      usage: 'Komponen ini hanya tampilan. Pilih berkas dengan package pilihan Anda (misalnya file_picker), validasi dengan iddsValidateFile, unggah sendiri, lalu perbarui status dan progress tiap berkas di state.',
+      usage:
+          'Komponen ini hanya tampilan. Pilih berkas dengan package pilihan Anda (misalnya file_picker), validasi dengan iddsValidateFile, unggah sendiri, lalu perbarui status dan progress tiap berkas di state.',
       code: _uploadCode,
       children: <Widget>[
         ConstrainedBox(
@@ -128,7 +139,8 @@ class _FileUploadSectionState extends State<FileUploadSection> {
             }),
             onRetry: (int i) => setState(() => _errors
               ..clear()
-              ..add('${_files[i].name}: berkas ini tetap ditolak, pilih berkas lain.')),
+              ..add(
+                  '${_files[i].name}: berkas ini tetap ditolak, pilih berkas lain.')),
           ),
         ),
         const SizedBox(height: IddsSpacing.s24),
@@ -145,7 +157,11 @@ class _FileUploadSectionState extends State<FileUploadSection> {
               onRemove: () => setState(() => _single = null),
             ),
             const IddsSingleFileUpload(
-              file: IddsUploadFile(name: 'foto.exe', size: 1, status: IddsFileStatus.error, error: 'Ekstensi file harus: pdf'),
+              file: IddsUploadFile(
+                  name: 'foto.exe',
+                  size: 1,
+                  status: IddsFileStatus.error,
+                  error: 'Ekstensi file harus: pdf'),
               onPick: null,
               description: 'Nonaktif',
             ),

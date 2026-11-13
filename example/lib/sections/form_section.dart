@@ -20,14 +20,19 @@ class _FormSectionState extends State<FormSection> {
   bool _notify = true;
   bool _darkPreview = false;
 
-  static const List<String> _allHobbies = <String>['Membaca', 'Olahraga', 'Musik'];
+  static const List<String> _allHobbies = <String>[
+    'Membaca',
+    'Olahraga',
+    'Musik'
+  ];
 
   @override
   Widget build(BuildContext context) {
     final bool allHobbies = _hobbies.length == _allHobbies.length;
     return GallerySection(
       title: 'Form',
-      usage: 'Semua isian dikendalikan dari luar: simpan nilai di state (atau TextEditingController) dan perbarui lewat onChanged. Status error/warning/success menampilkan pesan lewat statusMessage.',
+      usage:
+          'Semua isian dikendalikan dari luar: simpan nilai di state (atau TextEditingController) dan perbarui lewat onChanged. Status error/warning/success menampilkan pesan lewat statusMessage.',
       code: _formCode,
       children: <Widget>[
         const IddsTextField(
@@ -90,15 +95,18 @@ class _FormSectionState extends State<FormSection> {
         IddsCheckbox(
           value: allHobbies,
           indeterminate: _hobbies.isNotEmpty && !allHobbies,
-          onChanged: (bool v) => setState(() => v ? _hobbies.addAll(_allHobbies) : _hobbies.clear()),
+          onChanged: (bool v) => setState(
+              () => v ? _hobbies.addAll(_allHobbies) : _hobbies.clear()),
           label: 'Semua hobi',
         ),
         for (final String hobby in _allHobbies)
           Padding(
-            padding: const EdgeInsets.only(left: IddsSpacing.s32, top: IddsSpacing.s8),
+            padding: const EdgeInsets.only(
+                left: IddsSpacing.s32, top: IddsSpacing.s8),
             child: IddsCheckbox(
               value: _hobbies.contains(hobby),
-              onChanged: (bool v) => setState(() => v ? _hobbies.add(hobby) : _hobbies.remove(hobby)),
+              onChanged: (bool v) => setState(
+                  () => v ? _hobbies.add(hobby) : _hobbies.remove(hobby)),
               label: hobby,
             ),
           ),
@@ -126,7 +134,8 @@ class _FormSectionState extends State<FormSection> {
           options: const <IddsRadioOption<String>>[
             IddsRadioOption<String>(value: 'basic', label: 'Basic'),
             IddsRadioOption<String>(value: 'pro', label: 'Pro'),
-            IddsRadioOption<String>(value: 'gov', label: 'Instansi', enabled: false),
+            IddsRadioOption<String>(
+                value: 'gov', label: 'Instansi', enabled: false),
           ],
         ),
         const SizedBox(height: IddsSpacing.s32),

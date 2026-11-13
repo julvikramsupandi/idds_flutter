@@ -28,7 +28,8 @@ extension IddsMaterialTheme on IddsThemeData {
       primary: c.primaryMain,
       onPrimary: c.onPrimary,
       secondary: secondary,
-      onSecondary: IddsColorUtils.bestContrast(secondary, <Color>[c.baseWhite, c.baseBlack]),
+      onSecondary: IddsColorUtils.bestContrast(
+          secondary, <Color>[c.baseWhite, c.baseBlack]),
       error: c.contentNegative,
       onError: c.baseWhite,
       surface: c.backgroundPrimary,
@@ -72,6 +73,8 @@ extension IddsMaterialTheme on IddsThemeData {
           labelMedium: f(t.labelMedium),
           labelSmall: f(t.labelSmall),
         );
-    return base.copyWith(textTheme: map(base.textTheme), primaryTextTheme: map(base.primaryTextTheme));
+    return base.copyWith(
+        textTheme: map(base.textTheme),
+        primaryTextTheme: map(base.primaryTextTheme));
   }
 }

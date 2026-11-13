@@ -17,8 +17,20 @@ final List<_Application> _all = <_Application>[
   for (int i = 0; i < 47; i++)
     _Application(
       i + 1,
-      const <String>['Andi Pratama', 'Budi Santoso', 'Citra Lestari', 'Dewi Anggraini', 'Eko Saputra', 'Fitri Handayani'][i % 6],
-      const <String>['KTP Elektronik', 'Kartu Keluarga', 'Akta Kelahiran', 'Beasiswa'][i % 4],
+      const <String>[
+        'Andi Pratama',
+        'Budi Santoso',
+        'Citra Lestari',
+        'Dewi Anggraini',
+        'Eko Saputra',
+        'Fitri Handayani'
+      ][i % 6],
+      const <String>[
+        'KTP Elektronik',
+        'Kartu Keluarga',
+        'Akta Kelahiran',
+        'Beasiswa'
+      ][i % 4],
       DateTime(2026, 1 + i % 9, 1 + (i * 7) % 28),
       const <String>['Diproses', 'Selesai', 'Ditolak'][i % 3],
     ),
@@ -53,7 +65,10 @@ class _TableSectionState extends State<TableSection> {
   List<_Application> get _filtered {
     final String q = _query.toLowerCase();
     final List<_Application> list = _all
-        .where((_Application p) => q.isEmpty || p.name.toLowerCase().contains(q) || p.service.toLowerCase().contains(q))
+        .where((_Application p) =>
+            q.isEmpty ||
+            p.name.toLowerCase().contains(q) ||
+            p.service.toLowerCase().contains(q))
         .toList();
     final IddsTableSort? sort = _sort;
     if (sort != null) {
@@ -72,14 +87,17 @@ class _TableSectionState extends State<TableSection> {
     final List<_Application> filtered = _filtered;
     final int totalPages = (filtered.length / _pageSize).ceil().clamp(1, 9999);
     final int page = _page.clamp(1, totalPages);
-    final List<_Application> rows = filtered.skip((page - 1) * _pageSize).take(_pageSize).toList();
+    final List<_Application> rows =
+        filtered.skip((page - 1) * _pageSize).take(_pageSize).toList();
 
     return GallerySection(
       title: 'Table',
-      subtitle: 'Data diurutkan, dicari, dan dipotong per halaman oleh aplikasi; tabel hanya menampilkan. '
+      subtitle:
+          'Data diurutkan, dicari, dan dipotong per halaman oleh aplikasi; tabel hanya menampilkan. '
           'Di layar sempit tabel bisa digeser ke samping; kolom Aksi tetap menempel di kanan. '
           'Ketuk nama untuk mengeditnya langsung.',
-      usage: 'Tabel tidak mengambil, mengurutkan, atau memotong data sendiri: berikan rows untuk halaman saat ini dan tanggapi onSortChanged, onSearch, dan onPageChanged (misalnya dengan memanggil API). Kolom dengan editor bisa diedit langsung di sel.',
+      usage:
+          'Tabel tidak mengambil, mengurutkan, atau memotong data sendiri: berikan rows untuk halaman saat ini dan tanggapi onSortChanged, onSearch, dan onPageChanged (misalnya dengan memanggil API). Kolom dengan editor bisa diedit langsung di sel.',
       code: _tableCode,
       children: <Widget>[
         Wrap(
@@ -87,9 +105,13 @@ class _TableSectionState extends State<TableSection> {
           runSpacing: IddsSpacing.s8,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: <Widget>[
-            IddsToggle(value: _striped, onChanged: (bool v) => setState(() => _striped = v), semanticLabel: 'Belang'),
+            IddsToggle(
+                value: _striped,
+                onChanged: (bool v) => setState(() => _striped = v),
+                semanticLabel: 'Belang'),
             const Text('Belang'),
-            if (_selected.isNotEmpty) GalleryCaption('${_selected.length} baris dipilih'),
+            if (_selected.isNotEmpty)
+              GalleryCaption('${_selected.length} baris dipilih'),
           ],
         ),
         const SizedBox(height: IddsSpacing.s12),
@@ -109,7 +131,8 @@ class _TableSectionState extends State<TableSection> {
           onSortChanged: (IddsTableSort s) => _reload(() => _sort = s),
           selectedKeys: _selected,
           onSelectionChanged: (Set<Object> s) => setState(() => _selected = s),
-          onRowTap: (_Application p) => showGallerySnack(context, 'Membuka permohonan #${p.id}'),
+          onRowTap: (_Application p) =>
+              showGallerySnack(context, 'Membuka permohonan #${p.id}'),
           page: page,
           totalPages: totalPages,
           onPageChanged: (int p) => _reload(() => _page = p),
@@ -132,15 +155,20 @@ class _TableSectionState extends State<TableSection> {
               editor: IddsTableCellEditor<_Application>(
                 value: (_Application p) => p.name,
                 enabled: (_Application p) => p.status != 'Selesai',
-                validator: (String v) => v.trim().length < 3 ? 'Minimal 3 huruf' : null,
-                onSubmitted: (_Application p, String v) => setState(() => p.name = v.trim()),
+                validator: (String v) =>
+                    v.trim().length < 3 ? 'Minimal 3 huruf' : null,
+                onSubmitted: (_Application p, String v) =>
+                    setState(() => p.name = v.trim()),
               ),
             ),
-            IddsTableColumn<_Application>(header: 'Layanan', cell: (BuildContext c, _Application p) => Text(p.service)),
+            IddsTableColumn<_Application>(
+                header: 'Layanan',
+                cell: (BuildContext c, _Application p) => Text(p.service)),
             IddsTableColumn<_Application>(
               header: 'Tanggal',
               sortKey: 'date',
-              cell: (BuildContext c, _Application p) => Text(iddsFormatDate(p.date, 'd MMM yyyy')),
+              cell: (BuildContext c, _Application p) =>
+                  Text(iddsFormatDate(p.date, 'd MMM yyyy')),
             ),
             IddsTableColumn<_Application>(
               header: 'Status',
@@ -158,7 +186,8 @@ class _TableSectionState extends State<TableSection> {
               cell: (BuildContext c, _Application p) => IddsButton(
                 size: IddsButtonSize.sm,
                 hierarchy: IddsButtonHierarchy.secondary,
-                onPressed: () => showGallerySnack(context, 'Mengunduh berkas #${p.id}'),
+                onPressed: () =>
+                    showGallerySnack(context, 'Mengunduh berkas #${p.id}'),
                 child: const Text('Unduh'),
               ),
             ),

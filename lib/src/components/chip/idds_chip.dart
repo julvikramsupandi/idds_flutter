@@ -1,6 +1,11 @@
 import 'dart:math' as math;
 
-import 'package:flutter/services.dart' show FilteringTextInputFormatter, TextInputAction, TextInputFormatter, TextInputType;
+import 'package:flutter/services.dart'
+    show
+        FilteringTextInputFormatter,
+        TextInputAction,
+        TextInputFormatter,
+        TextInputType;
 import 'package:flutter/widgets.dart';
 
 import '../../foundation/idds_color_utils.dart';
@@ -90,16 +95,21 @@ class IddsChip extends StatelessWidget {
           if (!enabled) {
             background = c.backgroundTertiary;
             foreground = c.contentTertiary;
-            border = variant == IddsChipVariant.filled ? c.backgroundTertiary : c.strokePrimary;
+            border = variant == IddsChipVariant.filled
+                ? c.backgroundTertiary
+                : c.strokePrimary;
           } else if (variant == IddsChipVariant.filled) {
             if (selected) {
               background = c.primary.shade300;
               // CSS: teks putih; tidak terbaca di atas primary-300 brand terang
               // (mis. Neutral #D4D4D4). Dipilih putih/hitam berdasarkan kontras.
-              foreground = IddsColorUtils.bestContrast(background, <Color>[c.baseWhite, onLight]);
+              foreground = IddsColorUtils.bestContrast(
+                  background, <Color>[c.baseWhite, onLight]);
               border = c.primary.shade300;
             } else {
-              background = state.hovered || state.focused ? c.primary.shade50 : c.primary.shade25;
+              background = state.hovered || state.focused
+                  ? c.primary.shade50
+                  : c.primary.shade25;
               foreground = onLight;
               border = c.primary.shade25;
             }
@@ -111,8 +121,11 @@ class IddsChip extends StatelessWidget {
             } else {
               // CSS: neutral-25 (putih tetap). Dipakai background-primary agar
               // mengikuti dark mode.
-              background = state.hovered || state.focused ? c.primary.shade25 : c.backgroundPrimary;
-              foreground = state.hovered || state.focused ? onLight : c.contentPrimary;
+              background = state.hovered || state.focused
+                  ? c.primary.shade25
+                  : c.backgroundPrimary;
+              foreground =
+                  state.hovered || state.focused ? onLight : c.contentPrimary;
               border = c.strokePrimary;
             }
           }
@@ -129,7 +142,8 @@ class IddsChip extends StatelessWidget {
               duration: IddsDuration.fast,
               curve: IddsCurves.standard,
               height: small ? 24 : 32,
-              padding: EdgeInsets.symmetric(horizontal: (small ? 10 : 12) - borderWidth),
+              padding: EdgeInsets.symmetric(
+                  horizontal: (small ? 10 : 12) - borderWidth),
               decoration: BoxDecoration(
                 color: background,
                 borderRadius: BorderRadius.circular(IddsRadius.full),
@@ -139,20 +153,21 @@ class IddsChip extends StatelessWidget {
               child: Center(
                 widthFactor: 1,
                 child: DefaultTextStyle(
-                style: theme.textStyle(
-                  fontSize: small ? IddsFontSize.xs : IddsFontSize.sm,
-                  lineHeight: small ? IddsLineHeight.xs : IddsLineHeight.sm,
-                  fontWeight: IddsFontWeight.medium,
-                  color: foreground,
+                  style: theme.textStyle(
+                    fontSize: small ? IddsFontSize.xs : IddsFontSize.sm,
+                    lineHeight: small ? IddsLineHeight.xs : IddsLineHeight.sm,
+                    fontWeight: IddsFontWeight.medium,
+                    color: foreground,
+                  ),
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  child: IconTheme(
+                    data:
+                        IconThemeData(size: small ? 14 : 16, color: foreground),
+                    child: label,
+                  ),
                 ),
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.ellipsis,
-                child: IconTheme(
-                  data: IconThemeData(size: small ? 14 : 16, color: foreground),
-                  child: label,
-                ),
-              ),
               ),
             ),
           );
@@ -166,7 +181,8 @@ class IddsChip extends StatelessWidget {
 @immutable
 class IddsChipOption<T> {
   /// Membuat pilihan.
-  const IddsChipOption({required this.value, required this.label, this.enabled = true});
+  const IddsChipOption(
+      {required this.value, required this.label, this.enabled = true});
 
   /// Nilai pilihan.
   final T value;
@@ -230,7 +246,9 @@ class IddsChipCustomization<T> {
       label: label,
       placeholder: placeholder,
       keyboardType: TextInputType.number,
-      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly
+      ],
       suffix: suffix,
       showValueInLabel: showValueInLabel,
     );
@@ -336,7 +354,10 @@ class _IddsChipGroupState<T> extends State<IddsChipGroup<T>> {
   @override
   void didUpdateWidget(IddsChipGroup<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (_editing && (widget.customization == null || widget.onChanged == null)) _editing = false;
+    if (_editing &&
+        (widget.customization == null || widget.onChanged == null)) {
+      _editing = false;
+    }
   }
 
   @override
@@ -359,7 +380,8 @@ class _IddsChipGroupState<T> extends State<IddsChipGroup<T>> {
     return found ? last : null;
   }
 
-  bool get _hasCustom => widget.selected.any((T v) => !widget.options.any((IddsChipOption<T> o) => o.value == v));
+  bool get _hasCustom => widget.selected
+      .any((T v) => !widget.options.any((IddsChipOption<T> o) => o.value == v));
 
   void _toggle(T value) {
     final Set<T> selected = widget.selected;
@@ -414,7 +436,10 @@ class _IddsChipGroupState<T> extends State<IddsChipGroup<T>> {
 
     String customLabel = custom?.label ?? '';
     final T? customValue = hasCustom ? _custom : null;
-    if (custom != null && hasCustom && custom.showValueInLabel && customValue != null) {
+    if (custom != null &&
+        hasCustom &&
+        custom.showValueInLabel &&
+        customValue != null) {
       final String suffix = custom.suffix == null ? '' : ' ${custom.suffix}';
       customLabel = '${custom.label}: ${custom.format(customValue)}$suffix';
     }
@@ -427,7 +452,8 @@ class _IddsChipGroupState<T> extends State<IddsChipGroup<T>> {
           IddsChip(
             label: Text(option.label),
             selected: widget.selected.contains(option.value),
-            onPressed: enabled && option.enabled ? () => _toggle(option.value) : null,
+            onPressed:
+                enabled && option.enabled ? () => _toggle(option.value) : null,
             size: widget.size,
             variant: widget.variant,
           ),
@@ -459,13 +485,16 @@ class _IddsChipGroupState<T> extends State<IddsChipGroup<T>> {
                     // 25% di atasnya; ditambah lebar minimal 200px agar tetap
                     // bisa diisi di wadah sempit.
                     final double screen = iddsScreenWidth(context);
-                    final double max = constraints.hasBoundedWidth ? constraints.maxWidth : 400;
+                    final double max = constraints.hasBoundedWidth
+                        ? constraints.maxWidth
+                        : 400;
                     final double fraction = screen < IddsBreakpoint.sm
                         ? 1
                         : screen < IddsBreakpoint.md
                             ? 0.5
                             : 0.25;
-                    final double width = (max * fraction).clamp(math.min(200, max), max);
+                    final double width =
+                        (max * fraction).clamp(math.min(200, max), max);
                     return SizedBox(
                       width: width,
                       child: IddsTextField(

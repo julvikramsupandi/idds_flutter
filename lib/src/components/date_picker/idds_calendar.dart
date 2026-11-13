@@ -1,4 +1,11 @@
-import 'package:flutter/services.dart' show HardwareKeyboard, KeyDownEvent, KeyEvent, KeyRepeatEvent, LogicalKeyboardKey, SystemMouseCursors;
+import 'package:flutter/services.dart'
+    show
+        HardwareKeyboard,
+        KeyDownEvent,
+        KeyEvent,
+        KeyRepeatEvent,
+        LogicalKeyboardKey,
+        SystemMouseCursors;
 import 'package:flutter/widgets.dart';
 
 import '../../foundation/idds_date_utils.dart';
@@ -50,7 +57,8 @@ class IddsCalendar extends StatefulWidget {
     this.monthCount,
     this.autofocus = false,
     this.focusNode,
-  }) : assert(firstDayOfWeek >= DateTime.monday && firstDayOfWeek <= DateTime.sunday);
+  }) : assert(firstDayOfWeek >= DateTime.monday &&
+            firstDayOfWeek <= DateTime.sunday);
 
   /// Cara memilih.
   final IddsCalendarMode mode;
@@ -109,20 +117,27 @@ class _IddsCalendarState extends State<IddsCalendar> {
   late int _yearPageStart;
   FocusNode? _ownFocus;
 
-  FocusNode get _focus => widget.focusNode ?? (_ownFocus ??= FocusNode(debugLabel: 'IddsCalendar'));
+  FocusNode get _focus =>
+      widget.focusNode ?? (_ownFocus ??= FocusNode(debugLabel: 'IddsCalendar'));
 
   DateTime get _today => iddsDateOnly(widget.currentDate ?? DateTime.now());
 
-  List<DateTime> get _selected => <DateTime>[for (final DateTime d in widget.selected) iddsDateOnly(d)];
+  List<DateTime> get _selected =>
+      <DateTime>[for (final DateTime d in widget.selected) iddsDateOnly(d)];
 
   @override
   void initState() {
     super.initState();
     final List<DateTime> selected = _selected;
-    DateTime anchor = selected.isNotEmpty ? selected.first : (widget.initialMonth ?? _today);
+    DateTime anchor =
+        selected.isNotEmpty ? selected.first : (widget.initialMonth ?? _today);
     if (selected.isEmpty && widget.initialMonth == null) {
-      if (widget.firstDate != null && anchor.isBefore(widget.firstDate!)) anchor = widget.firstDate!;
-      if (widget.lastDate != null && anchor.isAfter(widget.lastDate!)) anchor = widget.lastDate!;
+      if (widget.firstDate != null && anchor.isBefore(widget.firstDate!)) {
+        anchor = widget.firstDate!;
+      }
+      if (widget.lastDate != null && anchor.isAfter(widget.lastDate!)) {
+        anchor = widget.lastDate!;
+      }
     }
     _month = DateTime(anchor.year, anchor.month);
     _focused = selected.isNotEmpty ? selected.first : iddsDateOnly(anchor);
@@ -144,16 +159,29 @@ class _IddsCalendarState extends State<IddsCalendar> {
   }
 
   bool _selectable(DateTime day) {
-    if (widget.firstDate != null && day.isBefore(iddsDateOnly(widget.firstDate!))) return false;
-    if (widget.lastDate != null && day.isAfter(iddsDateOnly(widget.lastDate!))) return false;
+    if (widget.firstDate != null &&
+        day.isBefore(iddsDateOnly(widget.firstDate!))) {
+      return false;
+    }
+    if (widget.lastDate != null &&
+        day.isAfter(iddsDateOnly(widget.lastDate!))) {
+      return false;
+    }
     return widget.selectableDayPredicate?.call(day) ?? true;
   }
 
   bool _monthHasSelectable(DateTime month) {
     final DateTime first = DateTime(month.year, month.month);
-    final DateTime last = DateTime(month.year, month.month, iddsDaysInMonth(month.year, month.month));
-    if (widget.firstDate != null && last.isBefore(iddsDateOnly(widget.firstDate!))) return false;
-    if (widget.lastDate != null && first.isAfter(iddsDateOnly(widget.lastDate!))) return false;
+    final DateTime last = DateTime(
+        month.year, month.month, iddsDaysInMonth(month.year, month.month));
+    if (widget.firstDate != null &&
+        last.isBefore(iddsDateOnly(widget.firstDate!))) {
+      return false;
+    }
+    if (widget.lastDate != null &&
+        first.isAfter(iddsDateOnly(widget.lastDate!))) {
+      return false;
+    }
     return true;
   }
 
@@ -171,19 +199,25 @@ class _IddsCalendarState extends State<IddsCalendar> {
       case IddsCalendarMode.multiple:
         final bool had = selected.any((DateTime d) => iddsIsSameDay(d, day));
         onChanged(had
-            ? <DateTime>[for (final DateTime d in selected) if (!iddsIsSameDay(d, day)) d]
+            ? <DateTime>[
+                for (final DateTime d in selected)
+                  if (!iddsIsSameDay(d, day)) d
+              ]
             : <DateTime>[...selected, day]);
       case IddsCalendarMode.range:
         if (selected.length == 1) {
           final DateTime start = selected.first;
-          onChanged(day.isBefore(start) ? <DateTime>[day, start] : <DateTime>[start, day]);
+          onChanged(day.isBefore(start)
+              ? <DateTime>[day, start]
+              : <DateTime>[start, day]);
         } else {
           onChanged(<DateTime>[day]);
         }
     }
   }
 
-  void _showMonth(DateTime month) => setState(() => _month = DateTime(month.year, month.month));
+  void _showMonth(DateTime month) =>
+      setState(() => _month = DateTime(month.year, month.month));
 
   void _moveFocus(DateTime day, int columns) {
     final DateTime d = iddsDateOnly(day);
@@ -191,7 +225,8 @@ class _IddsCalendarState extends State<IddsCalendar> {
     DateTime month = _month;
     if (d.isBefore(_month)) {
       month = DateTime(d.year, d.month);
-    } else if (d.isAfter(DateTime(lastVisible.year, lastVisible.month, iddsDaysInMonth(lastVisible.year, lastVisible.month)))) {
+    } else if (d.isAfter(DateTime(lastVisible.year, lastVisible.month,
+        iddsDaysInMonth(lastVisible.year, lastVisible.month)))) {
       month = iddsAddMonths(DateTime(d.year, d.month), -(columns - 1));
     }
     setState(() {
@@ -203,10 +238,14 @@ class _IddsCalendarState extends State<IddsCalendar> {
 
   /// Tanggal awal rentang yang menunggu tanggal akhir.
   DateTime? get _pendingStart =>
-      widget.mode == IddsCalendarMode.range && widget.selected.length == 1 ? iddsDateOnly(widget.selected.first) : null;
+      widget.mode == IddsCalendarMode.range && widget.selected.length == 1
+          ? iddsDateOnly(widget.selected.first)
+          : null;
 
   KeyEventResult _onKey(FocusNode node, KeyEvent event, int columns) {
-    if (event is! KeyDownEvent && event is! KeyRepeatEvent) return KeyEventResult.ignored;
+    if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
+      return KeyEventResult.ignored;
+    }
     if (_view != _View.days) return KeyEventResult.ignored;
     final LogicalKeyboardKey key = event.logicalKey;
     final bool shift = HardwareKeyboard.instance.isShiftPressed;
@@ -224,10 +263,13 @@ class _IddsCalendarState extends State<IddsCalendar> {
       target = iddsAddDays(_focused, -offset);
     } else if (key == LogicalKeyboardKey.end) {
       target = iddsAddDays(_focused, 6 - offset);
-    } else if (key == LogicalKeyboardKey.pageUp || key == LogicalKeyboardKey.pageDown) {
-      final int delta = (key == LogicalKeyboardKey.pageUp ? -1 : 1) * (shift ? 12 : 1);
+    } else if (key == LogicalKeyboardKey.pageUp ||
+        key == LogicalKeyboardKey.pageDown) {
+      final int delta =
+          (key == LogicalKeyboardKey.pageUp ? -1 : 1) * (shift ? 12 : 1);
       final DateTime m = iddsAddMonths(_focused, delta);
-      target = DateTime(m.year, m.month, _focused.day.clamp(1, iddsDaysInMonth(m.year, m.month)));
+      target = DateTime(m.year, m.month,
+          _focused.day.clamp(1, iddsDaysInMonth(m.year, m.month)));
     } else if (key == LogicalKeyboardKey.enter ||
         key == LogicalKeyboardKey.numpadEnter ||
         key == LogicalKeyboardKey.space) {
@@ -251,7 +293,8 @@ class _IddsCalendarState extends State<IddsCalendar> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: _columnGap,
           children: <Widget>[
-            for (int i = 0; i < columns; i++) _buildMonthColumn(context, i, columns, small),
+            for (int i = 0; i < columns; i++)
+              _buildMonthColumn(context, i, columns, small),
           ],
         ),
       _View.months => _buildMonthPicker(context, columns),
@@ -265,13 +308,15 @@ class _IddsCalendarState extends State<IddsCalendar> {
         focusNode: _focus,
         autofocus: widget.autofocus,
         onFocusChange: (_) => setState(() {}),
-        onKeyEvent: (FocusNode node, KeyEvent event) => _onKey(node, event, columns),
+        onKeyEvent: (FocusNode node, KeyEvent event) =>
+            _onKey(node, event, columns),
         child: SizedBox(width: width, child: content),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context, DateTime month, int column, int columns) {
+  Widget _buildHeader(
+      BuildContext context, DateTime month, int column, int columns) {
     final bool first = column == 0;
     final bool last = column == columns - 1;
     final DateTime prev = iddsAddMonths(_month, -1);
@@ -317,7 +362,9 @@ class _IddsCalendarState extends State<IddsCalendar> {
             _NavButton(
               icon: IddsIcons.chevronRight,
               label: 'Bulan berikutnya',
-              onTap: _monthHasSelectable(next) ? () => _showMonth(iddsAddMonths(_month, 1)) : null,
+              onTap: _monthHasSelectable(next)
+                  ? () => _showMonth(iddsAddMonths(_month, 1))
+                  : null,
             )
           else
             const SizedBox(width: 28),
@@ -326,19 +373,25 @@ class _IddsCalendarState extends State<IddsCalendar> {
     );
   }
 
-  Widget _buildMonthColumn(BuildContext context, int column, int columns, bool small) {
+  Widget _buildMonthColumn(
+      BuildContext context, int column, int columns, bool small) {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
     final DateTime month = iddsAddMonths(_month, column);
     final double cellHeight = small ? 32 : 40;
-    final int lead = (DateTime(month.year, month.month).weekday - widget.firstDayOfWeek + 7) % 7;
+    final int lead = (DateTime(month.year, month.month).weekday -
+            widget.firstDayOfWeek +
+            7) %
+        7;
     final int days = iddsDaysInMonth(month.year, month.month);
     final int rows = ((lead + days) / 7).ceil();
-    final DateTime gridStart = iddsAddDays(DateTime(month.year, month.month), -lead);
+    final DateTime gridStart =
+        iddsAddDays(DateTime(month.year, month.month), -lead);
 
     final List<DateTime> selected = _selected;
     final DateTime? pending = _pendingStart;
-    final bool complete = widget.mode == IddsCalendarMode.range && selected.length == 2;
+    final bool complete =
+        widget.mode == IddsCalendarMode.range && selected.length == 2;
     final DateTime? rangeStart = complete ? selected[0] : null;
     final DateTime? rangeEnd = complete ? selected[1] : null;
     DateTime? previewStart;
@@ -347,7 +400,8 @@ class _IddsCalendarState extends State<IddsCalendar> {
       previewStart = _hover!.isBefore(pending) ? _hover : pending;
       previewEnd = _hover!.isBefore(pending) ? pending : _hover;
     }
-    final bool showRing = _focus.hasFocus && FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
+    final bool showRing = _focus.hasFocus &&
+        FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
 
     final TextStyle headerStyle = theme.textStyle(
       fontSize: small ? IddsFontSize.xs2 : IddsFontSize.xs,
@@ -373,7 +427,8 @@ class _IddsCalendarState extends State<IddsCalendar> {
                     height: cellHeight,
                     child: Center(
                       child: Text(
-                        IddsDateNames.shortWeekdays[(widget.firstDayOfWeek - 1 + i) % 7],
+                        IddsDateNames
+                            .shortWeekdays[(widget.firstDayOfWeek - 1 + i) % 7],
                         style: headerStyle,
                       ),
                     ),
@@ -387,10 +442,17 @@ class _IddsCalendarState extends State<IddsCalendar> {
                 for (int i = 0; i < 7; i++)
                   () {
                     final DateTime day = iddsAddDays(gridStart, r * 7 + i);
-                    final bool isSelected = selected.any((DateTime d) => iddsIsSameDay(d, day));
-                    final bool inRange = (rangeStart != null && day.isAfter(rangeStart) && day.isBefore(rangeEnd!)) ||
-                        (previewStart != null && day.isAfter(previewStart) && day.isBefore(previewEnd!));
-                    final bool previewEdge = previewEnd != null && iddsIsSameDay(day, _hover) && !isSelected;
+                    final bool isSelected =
+                        selected.any((DateTime d) => iddsIsSameDay(d, day));
+                    final bool inRange = (rangeStart != null &&
+                            day.isAfter(rangeStart) &&
+                            day.isBefore(rangeEnd!)) ||
+                        (previewStart != null &&
+                            day.isAfter(previewStart) &&
+                            day.isBefore(previewEnd!));
+                    final bool previewEdge = previewEnd != null &&
+                        iddsIsSameDay(day, _hover) &&
+                        !isSelected;
                     return _DayCell(
                       day: day,
                       width: _cellWidth,
@@ -449,12 +511,17 @@ class _IddsCalendarState extends State<IddsCalendar> {
     final int start = _yearPageStart;
     final int end = start + _yearsPerPage - 1;
     bool yearEnabled(int y) =>
-        (widget.firstDate == null || y >= widget.firstDate!.year) && (widget.lastDate == null || y <= widget.lastDate!.year);
+        (widget.firstDate == null || y >= widget.firstDate!.year) &&
+        (widget.lastDate == null || y <= widget.lastDate!.year);
     return _PickerGrid(
       title: '$start – $end',
       crossAxisCount: 4,
-      onPrevious: start > 1900 ? () => setState(() => _yearPageStart -= _yearsPerPage) : null,
-      onNext: end < 2100 ? () => setState(() => _yearPageStart += _yearsPerPage) : null,
+      onPrevious: start > 1900
+          ? () => setState(() => _yearPageStart -= _yearsPerPage)
+          : null,
+      onNext: end < 2100
+          ? () => setState(() => _yearPageStart += _yearsPerPage)
+          : null,
       items: <_PickerItem>[
         for (int y = start; y <= end; y++)
           _PickerItem(
@@ -509,7 +576,8 @@ class _DayCell extends StatelessWidget {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
     // CSS dark mode: hover memakai background-secondary.
-    final Color hoverColor = theme.isDark ? c.backgroundSecondary : c.backgroundTertiary;
+    final Color hoverColor =
+        theme.isDark ? c.backgroundSecondary : c.backgroundTertiary;
     final Color foreground = selected
         ? c.onPrimary
         : (!enabled || outside)
@@ -522,7 +590,9 @@ class _DayCell extends StatelessWidget {
           : (inRange || previewEdge || (hovered && enabled))
               ? (inRange ? c.backgroundTertiary : hoverColor)
               : null;
-      final BorderRadius radius = inRange && !selected ? BorderRadius.zero : BorderRadius.circular(IddsRadius.lg);
+      final BorderRadius radius = inRange && !selected
+          ? BorderRadius.zero
+          : BorderRadius.circular(IddsRadius.lg);
       final Widget number = Text(
         '${day.day}',
         style: theme.textStyle(
@@ -535,7 +605,10 @@ class _DayCell extends StatelessWidget {
       return IddsInsetRing(
         visible: focusRing,
         borderRadius: radius,
-        rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, c.strokeTertiary)],
+        rings: <(double, Color)>[
+          (2.0, c.backgroundPrimary),
+          (1.0, c.strokeTertiary)
+        ],
         child: AnimatedContainer(
           duration: IddsDuration.fast,
           width: width,
@@ -547,7 +620,10 @@ class _DayCell extends StatelessWidget {
               ? Container(
                   padding: const EdgeInsets.only(top: 1),
                   decoration: BoxDecoration(
-                    border: Border(top: BorderSide(color: selected ? c.onPrimary : c.contentPrimary, width: 2)),
+                    border: Border(
+                        top: BorderSide(
+                            color: selected ? c.onPrimary : c.contentPrimary,
+                            width: 2)),
                   ),
                   child: number,
                 )
@@ -576,7 +652,11 @@ class _DayCell extends StatelessWidget {
 /// Area yang bisa ditekan dan mendeteksi hover, tanpa ikut urutan fokus
 /// (fokus keyboard dikelola oleh grid).
 class _Hoverable extends StatefulWidget {
-  const _Hoverable({required this.enabled, required this.onTap, required this.builder, this.onHover});
+  const _Hoverable(
+      {required this.enabled,
+      required this.onTap,
+      required this.builder,
+      this.onHover});
 
   final bool enabled;
   final VoidCallback onTap;
@@ -599,7 +679,9 @@ class _HoverableState extends State<_Hoverable> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      cursor: widget.enabled ? SystemMouseCursors.click : SystemMouseCursors.forbidden,
+      cursor: widget.enabled
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.forbidden,
       onEnter: widget.enabled ? (_) => _set(true) : null,
       onExit: (_) => _set(false),
       child: GestureDetector(
@@ -612,7 +694,8 @@ class _HoverableState extends State<_Hoverable> {
 }
 
 class _NavButton extends StatelessWidget {
-  const _NavButton({required this.icon, required this.label, required this.onTap});
+  const _NavButton(
+      {required this.icon, required this.label, required this.onTap});
 
   final IddsIconData icon;
   final String label;
@@ -630,10 +713,14 @@ class _NavButton extends StatelessWidget {
       excludeSemantics: true,
       child: IddsInteractive(
         onTap: onTap,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: BorderRadius.circular(IddsRadius.base),
-          rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, c.strokeTertiary)],
+          rings: <(double, Color)>[
+            (2.0, c.backgroundPrimary),
+            (1.0, c.strokeTertiary)
+          ],
           child: Opacity(
             opacity: state.enabled ? 1 : 0.4,
             child: Container(
@@ -641,10 +728,16 @@ class _NavButton extends StatelessWidget {
               height: 28,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: state.hovered ? (theme.isDark ? c.backgroundSecondary : c.backgroundTertiary) : null,
+                color: state.hovered
+                    ? (theme.isDark
+                        ? c.backgroundSecondary
+                        : c.backgroundTertiary)
+                    : null,
                 borderRadius: BorderRadius.circular(IddsRadius.base),
               ),
-              child: IddsIcon(icon, size: 20, color: state.hovered ? c.contentPrimary : c.contentSecondary),
+              child: IddsIcon(icon,
+                  size: 20,
+                  color: state.hovered ? c.contentPrimary : c.contentSecondary),
             ),
           ),
         ),
@@ -654,7 +747,8 @@ class _NavButton extends StatelessWidget {
 }
 
 class _HeaderButton extends StatelessWidget {
-  const _HeaderButton({required this.label, required this.semanticLabel, required this.onTap});
+  const _HeaderButton(
+      {required this.label, required this.semanticLabel, required this.onTap});
 
   final String label;
   final String semanticLabel;
@@ -672,18 +766,24 @@ class _HeaderButton extends StatelessWidget {
       excludeSemantics: true,
       child: IddsInteractive(
         onTap: onTap,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: radius,
           inset: 1,
-          rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, c.contentPrimary)],
+          rings: <(double, Color)>[
+            (2.0, c.backgroundPrimary),
+            (1.0, c.contentPrimary)
+          ],
           child: Container(
             height: 28,
             padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s6),
             decoration: BoxDecoration(
-              color: state.hovered ? c.backgroundSecondary : c.backgroundPrimary,
+              color:
+                  state.hovered ? c.backgroundSecondary : c.backgroundPrimary,
               borderRadius: radius,
-              border: Border.all(color: state.focused ? c.strokeTertiary : c.strokePrimary),
+              border: Border.all(
+                  color: state.focused ? c.strokeTertiary : c.strokePrimary),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -698,7 +798,8 @@ class _HeaderButton extends StatelessWidget {
                     color: c.contentPrimary,
                   ),
                 ),
-                IddsIcon(IddsIcons.chevronDown, size: 14, color: c.contentSecondary),
+                IddsIcon(IddsIcons.chevronDown,
+                    size: 14, color: c.contentSecondary),
               ],
             ),
           ),
@@ -756,16 +857,25 @@ class _PickerGrid extends StatelessWidget {
           child: Row(
             children: <Widget>[
               if (onPrevious != null || onNext != null)
-                _NavButton(icon: IddsIcons.chevronLeft, label: 'Sebelumnya', onTap: onPrevious)
+                _NavButton(
+                    icon: IddsIcons.chevronLeft,
+                    label: 'Sebelumnya',
+                    onTap: onPrevious)
               else
                 const SizedBox(width: 28),
               Expanded(
                 child: Center(
-                  child: _HeaderButton(label: title, semanticLabel: 'Kembali ke kalender', onTap: onBack),
+                  child: _HeaderButton(
+                      label: title,
+                      semanticLabel: 'Kembali ke kalender',
+                      onTap: onBack),
                 ),
               ),
               if (onPrevious != null || onNext != null)
-                _NavButton(icon: IddsIcons.chevronRight, label: 'Berikutnya', onTap: onNext)
+                _NavButton(
+                    icon: IddsIcons.chevronRight,
+                    label: 'Berikutnya',
+                    onTap: onNext)
               else
                 const SizedBox(width: 28),
             ],
@@ -778,9 +888,13 @@ class _PickerGrid extends StatelessWidget {
             child: Row(
               spacing: IddsSpacing.s4,
               children: <Widget>[
-                for (int i = r * crossAxisCount; i < (r + 1) * crossAxisCount; i++)
+                for (int i = r * crossAxisCount;
+                    i < (r + 1) * crossAxisCount;
+                    i++)
                   Expanded(
-                    child: i < items.length ? _PickerCell(item: items[i]) : const SizedBox(),
+                    child: i < items.length
+                        ? _PickerCell(item: items[i])
+                        : const SizedBox(),
                   ),
               ],
             ),
@@ -809,10 +923,14 @@ class _PickerCell extends StatelessWidget {
       excludeSemantics: true,
       child: IddsInteractive(
         onTap: item.enabled ? item.onTap : null,
-        builder: (BuildContext context, IddsInteractionState state) => IddsInsetRing(
+        builder: (BuildContext context, IddsInteractionState state) =>
+            IddsInsetRing(
           visible: state.focused,
           borderRadius: radius,
-          rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, c.strokeTertiary)],
+          rings: <(double, Color)>[
+            (2.0, c.backgroundPrimary),
+            (1.0, c.strokeTertiary)
+          ],
           child: Container(
             height: 40,
             alignment: Alignment.center,
@@ -820,7 +938,9 @@ class _PickerCell extends StatelessWidget {
               color: item.selected
                   ? c.primaryMain
                   : state.hovered
-                      ? (theme.isDark ? c.backgroundSecondary : c.backgroundTertiary)
+                      ? (theme.isDark
+                          ? c.backgroundSecondary
+                          : c.backgroundTertiary)
                       : null,
               borderRadius: radius,
             ),
@@ -829,7 +949,9 @@ class _PickerCell extends StatelessWidget {
               style: theme.textStyle(
                 fontSize: IddsFontSize.xs,
                 lineHeight: IddsLineHeight.xs,
-                fontWeight: item.current || item.selected ? IddsFontWeight.semibold : IddsFontWeight.medium,
+                fontWeight: item.current || item.selected
+                    ? IddsFontWeight.semibold
+                    : IddsFontWeight.medium,
                 color: item.selected
                     ? c.onPrimary
                     : item.enabled

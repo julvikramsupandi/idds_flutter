@@ -79,9 +79,11 @@ class IddsSpinner extends StatefulWidget {
   State<IddsSpinner> createState() => _IddsSpinnerState();
 }
 
-class _IddsSpinnerState extends State<IddsSpinner> with SingleTickerProviderStateMixin {
+class _IddsSpinnerState extends State<IddsSpinner>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller =
-      AnimationController(vsync: this, duration: const Duration(seconds: 1))..repeat();
+      AnimationController(vsync: this, duration: const Duration(seconds: 1))
+        ..repeat();
 
   @override
   void dispose() {
@@ -130,7 +132,10 @@ class _IddsSpinnerState extends State<IddsSpinner> with SingleTickerProviderStat
                   Text(
                     widget.subtitle!,
                     textAlign: TextAlign.center,
-                    style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentSecondary),
+                    style: theme.textStyle(
+                        fontSize: IddsFontSize.sm,
+                        lineHeight: IddsLineHeight.sm,
+                        color: c.contentSecondary),
                   ),
               ],
             ),
@@ -140,7 +145,12 @@ class _IddsSpinnerState extends State<IddsSpinner> with SingleTickerProviderStat
 
 /// Jalur lingkaran dengan busur sepanjang [progress] (0–1) mulai dari atas.
 class _ArcPainter extends CustomPainter {
-  _ArcPainter({required this.track, required this.color, required this.strokeWidth, required this.progress, this.round = false});
+  _ArcPainter(
+      {required this.track,
+      required this.color,
+      required this.strokeWidth,
+      required this.progress,
+      this.round = false});
 
   final Color track;
   final Color color;
@@ -171,7 +181,11 @@ class _ArcPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_ArcPainter old) =>
-      old.track != track || old.color != color || old.strokeWidth != strokeWidth || old.progress != progress || old.round != round;
+      old.track != track ||
+      old.color != color ||
+      old.strokeWidth != strokeWidth ||
+      old.progress != progress ||
+      old.round != round;
 }
 
 /// Kemajuan berbentuk lingkaran kecil (Circle Progress Bar IDDS).
@@ -273,8 +287,10 @@ class IddsProgressBar extends StatefulWidget {
   State<IddsProgressBar> createState() => _IddsProgressBarState();
 }
 
-class _IddsProgressBarState extends State<IddsProgressBar> with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+class _IddsProgressBarState extends State<IddsProgressBar>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller =
+      AnimationController(vsync: this, duration: const Duration(seconds: 2));
 
   @override
   void initState() {
@@ -313,7 +329,9 @@ class _IddsProgressBarState extends State<IddsProgressBar> with SingleTickerProv
         borderRadius: BorderRadius.circular(h),
         child: Container(
           height: h,
-          color: theme.isDark ? c.backgroundTertiary : IddsPrimitives.neutral.shade200,
+          color: theme.isDark
+              ? c.backgroundTertiary
+              : IddsPrimitives.neutral.shade200,
           child: value != null
               ? Align(
                   alignment: Alignment.centerLeft,
@@ -327,7 +345,8 @@ class _IddsProgressBarState extends State<IddsProgressBar> with SingleTickerProv
                 )
               : AnimatedBuilder(
                   animation: _controller,
-                  builder: (BuildContext context, Widget? child) => FractionallySizedBox(
+                  builder: (BuildContext context, Widget? child) =>
+                      FractionallySizedBox(
                     // CSS: potongan 30% bergerak dari kiri ke kanan.
                     alignment: Alignment(-1.6 + 3.2 * _controller.value, 0),
                     widthFactor: 0.3,
@@ -380,7 +399,8 @@ class IddsSkeleton extends StatefulWidget {
   });
 
   /// Membuat skeleton lingkaran, misalnya untuk avatar.
-  const IddsSkeleton.circle({super.key, double size = 48, this.color = IddsSkeletonColor.gray})
+  const IddsSkeleton.circle(
+      {super.key, double size = 48, this.color = IddsSkeletonColor.gray})
       : width = size,
         height = size,
         radius = 9999;
@@ -401,9 +421,11 @@ class IddsSkeleton extends StatefulWidget {
   State<IddsSkeleton> createState() => _IddsSkeletonState();
 }
 
-class _IddsSkeletonState extends State<IddsSkeleton> with SingleTickerProviderStateMixin {
+class _IddsSkeletonState extends State<IddsSkeleton>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller =
-      AnimationController(vsync: this, duration: const Duration(seconds: 1))..repeat(reverse: true);
+      AnimationController(vsync: this, duration: const Duration(seconds: 1))
+        ..repeat(reverse: true);
 
   @override
   void dispose() {
@@ -419,20 +441,25 @@ class _IddsSkeletonState extends State<IddsSkeleton> with SingleTickerProviderSt
     // CSS memakai warna 100/200; di dark mode warna terang diganti agar
     // tidak menyilaukan.
     final Color color = switch (widget.color) {
-      IddsSkeletonColor.gray => dark ? c.backgroundTertiary : IddsPrimitives.neutral.shade200,
+      IddsSkeletonColor.gray =>
+        dark ? c.backgroundTertiary : IddsPrimitives.neutral.shade200,
       IddsSkeletonColor.blue => dark ? c.primary.shade800 : c.primary.shade100,
-      IddsSkeletonColor.green => dark ? c.positive.shade800 : c.positive.shade100,
+      IddsSkeletonColor.green =>
+        dark ? c.positive.shade800 : c.positive.shade100,
       IddsSkeletonColor.red => dark ? c.negative.shade800 : c.negative.shade100,
-      IddsSkeletonColor.yellow => dark ? c.warning.shade800 : c.warning.shade100,
+      IddsSkeletonColor.yellow =>
+        dark ? c.warning.shade800 : c.warning.shade100,
     };
     return ExcludeSemantics(
       child: FadeTransition(
         // CSS: opacity 1 → 0,5 → 1 dalam 2 detik.
-        opacity: Tween<double>(begin: 1, end: 0.5).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut)),
+        opacity: Tween<double>(begin: 1, end: 0.5).animate(
+            CurvedAnimation(parent: _controller, curve: Curves.easeInOut)),
         child: Container(
           width: widget.width ?? double.infinity,
           height: widget.height,
-          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(widget.radius)),
+          decoration: BoxDecoration(
+              color: color, borderRadius: BorderRadius.circular(widget.radius)),
         ),
       ),
     );

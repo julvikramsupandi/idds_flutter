@@ -6,7 +6,11 @@ import 'package:idds_flutter/idds_flutter.dart';
 /// judul, dan aksi di kanan. Memberi jarak status bar lewat
 /// `MediaQuery.padding.top`.
 class MobileAppBar extends StatelessWidget {
-  const MobileAppBar({super.key, required this.title, this.onBack, this.actions = const <Widget>[]});
+  const MobileAppBar(
+      {super.key,
+      required this.title,
+      this.onBack,
+      this.actions = const <Widget>[]});
 
   final Widget title;
   final VoidCallback? onBack;
@@ -112,7 +116,9 @@ class MobileBottomBar extends StatelessWidget {
       ),
       child: Row(
         spacing: IddsSpacing.s12,
-        children: <Widget>[for (final Widget child in children) Expanded(child: child)],
+        children: <Widget>[
+          for (final Widget child in children) Expanded(child: child)
+        ],
       ),
     );
   }

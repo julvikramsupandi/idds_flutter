@@ -1,4 +1,5 @@
-import 'package:flutter/services.dart' show LogicalKeyboardKey, MouseCursor, SystemMouseCursors;
+import 'package:flutter/services.dart'
+    show LogicalKeyboardKey, MouseCursor, SystemMouseCursors;
 import 'package:flutter/widgets.dart';
 
 import 'idds_theme.dart';
@@ -50,7 +51,8 @@ class IddsInteractive extends StatefulWidget {
   final VoidCallback? onTap;
 
   /// Membangun tampilan berdasarkan state interaksi.
-  final Widget Function(BuildContext context, IddsInteractionState state) builder;
+  final Widget Function(BuildContext context, IddsInteractionState state)
+      builder;
 
   /// Focus node opsional.
   final FocusNode? focusNode;
@@ -73,14 +75,17 @@ class _IddsInteractiveState extends State<IddsInteractive> {
   bool _focused = false;
   bool _pressed = false;
 
-  static final Map<ShortcutActivator, Intent> _shortcuts = <ShortcutActivator, Intent>{
+  static final Map<ShortcutActivator, Intent> _shortcuts =
+      <ShortcutActivator, Intent>{
     const SingleActivator(LogicalKeyboardKey.enter): const ActivateIntent(),
-    const SingleActivator(LogicalKeyboardKey.numpadEnter): const ActivateIntent(),
+    const SingleActivator(LogicalKeyboardKey.numpadEnter):
+        const ActivateIntent(),
     const SingleActivator(LogicalKeyboardKey.space): const ActivateIntent(),
   };
 
   late final Map<Type, Action<Intent>> _actions = <Type, Action<Intent>>{
-    ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) => _activate()),
+    ActivateIntent:
+        CallbackAction<ActivateIntent>(onInvoke: (_) => _activate()),
   };
 
   bool get _enabled => widget.onTap != null;
@@ -111,7 +116,9 @@ class _IddsInteractiveState extends State<IddsInteractive> {
       autofocus: widget.autofocus,
       shortcuts: _shortcuts,
       actions: _actions,
-      mouseCursor: enabled ? (widget.mouseCursor ?? SystemMouseCursors.click) : SystemMouseCursors.forbidden,
+      mouseCursor: enabled
+          ? (widget.mouseCursor ?? SystemMouseCursors.click)
+          : SystemMouseCursors.forbidden,
       onShowHoverHighlight: (bool value) => setState(() => _hovered = value),
       onShowFocusHighlight: (bool value) => setState(() => _focused = value),
       child: GestureDetector(
@@ -145,7 +152,8 @@ bool iddsIsCompact(BuildContext context, double breakpoint) {
 }
 
 /// Lebar layar saat ini, atau tak hingga bila tidak ada [MediaQuery].
-double iddsScreenWidth(BuildContext context) => MediaQuery.maybeSizeOf(context)?.width ?? double.infinity;
+double iddsScreenWidth(BuildContext context) =>
+    MediaQuery.maybeSizeOf(context)?.width ?? double.infinity;
 
 /// Menggambar cincin di dalam tepi [child], seperti `box-shadow: inset 0 0 0 Npx`
 /// di CSS. [rings] diurutkan dari luar ke dalam: lebar dan warnanya.
@@ -181,7 +189,8 @@ class IddsInsetRing extends StatelessWidget {
     // dibungkus/dilepas bergantian, Flutter membuat ulang seluruh subtree
     // (mis. TextField kehilangan koneksi keyboard dan fokusnya).
     return CustomPaint(
-      foregroundPainter: visible ? _InsetRingPainter(rings, borderRadius, inset) : null,
+      foregroundPainter:
+          visible ? _InsetRingPainter(rings, borderRadius, inset) : null,
       child: child,
     );
   }
@@ -198,7 +207,8 @@ class _InsetRingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     double offset = inset;
     for (final (double width, Color color) in rings) {
-      final RRect outer = borderRadius.toRRect(Offset.zero & size).deflate(offset);
+      final RRect outer =
+          borderRadius.toRRect(Offset.zero & size).deflate(offset);
       final RRect inner = outer.deflate(width);
       canvas.drawDRRect(outer, inner, Paint()..color = color);
       offset += width;

@@ -110,7 +110,8 @@ class IddsColorScale {
   Color operator [](int step) {
     final int index = steps.indexOf(step);
     if (index < 0) {
-      throw ArgumentError.value(step, 'step', 'Langkah tidak valid; pilih salah satu dari $steps');
+      throw ArgumentError.value(
+          step, 'step', 'Langkah tidak valid; pilih salah satu dari $steps');
     }
     return colors[index];
   }
@@ -227,7 +228,8 @@ class IddsPalette {
   Color operator [](int step) {
     final int index = steps.indexOf(step);
     if (index < 0) {
-      throw ArgumentError.value(step, 'step', 'Langkah tidak valid; pilih salah satu dari $steps');
+      throw ArgumentError.value(
+          step, 'step', 'Langkah tidak valid; pilih salah satu dari $steps');
     }
     return colors[index];
   }

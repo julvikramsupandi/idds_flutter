@@ -75,51 +75,72 @@ class _GalleryShellState extends State<GalleryShell> {
         GalleryShell.homePage,
         'Beranda',
         TablerIcons.layout_dashboard,
-        (BuildContext context) => HomePage(brand: widget.brand, onBrandChanged: widget.onBrandChanged),
+        (BuildContext context) => HomePage(
+            brand: widget.brand, onBrandChanged: widget.onBrandChanged),
       ),
       _Page(
         'brand',
         'Brand & Warna',
         TablerIcons.palette,
-        (BuildContext context) => _scroll(BrandPage(brand: widget.brand, onBrandChanged: widget.onBrandChanged)),
+        (BuildContext context) => _scroll(BrandPage(
+            brand: widget.brand, onBrandChanged: widget.onBrandChanged)),
       ),
     ]),
     _Group('Aksi & Tampilan', <_Page>[
-      _Page('button', 'Button', TablerIcons.click, (_) => _scroll(const ButtonSection())),
-      _Page('badge', 'Badge', TablerIcons.tag, (_) => _scroll(const BadgeSection())),
-      _Page('avatar', 'Avatar', TablerIcons.user_circle, (_) => _scroll(const AvatarSection())),
-      _Page('alert', 'Alert', TablerIcons.alert_triangle, (_) => _scroll(const AlertSection())),
-      _Page('content', 'Accordion, Card & Loading', TablerIcons.layout_cards, (_) => _scroll(const ContentSection())),
+      _Page('button', 'Button', TablerIcons.click,
+          (_) => _scroll(const ButtonSection())),
+      _Page('badge', 'Badge', TablerIcons.tag,
+          (_) => _scroll(const BadgeSection())),
+      _Page('avatar', 'Avatar', TablerIcons.user_circle,
+          (_) => _scroll(const AvatarSection())),
+      _Page('alert', 'Alert', TablerIcons.alert_triangle,
+          (_) => _scroll(const AlertSection())),
+      _Page('content', 'Accordion, Card & Loading', TablerIcons.layout_cards,
+          (_) => _scroll(const ContentSection())),
     ]),
     _Group('Form', <_Page>[
-      _Page('form', 'Text Input, Checkbox & Radio', TablerIcons.forms, (_) => _scroll(const FormSection())),
-      _Page('inputs', 'Input lainnya', TablerIcons.password, (_) => _scroll(const MoreInputsSection())),
-      _Page('dropdown', 'Dropdown', TablerIcons.selector, (_) => _scroll(const DropdownSection())),
-      _Page('date', 'Date Picker', TablerIcons.calendar, (_) => _scroll(const DateSection())),
-      _Page('upload', 'File Upload', TablerIcons.file_upload, (_) => _scroll(const FileUploadSection())),
+      _Page('form', 'Text Input, Checkbox & Radio', TablerIcons.forms,
+          (_) => _scroll(const FormSection())),
+      _Page('inputs', 'Input lainnya', TablerIcons.password,
+          (_) => _scroll(const MoreInputsSection())),
+      _Page('dropdown', 'Dropdown', TablerIcons.selector,
+          (_) => _scroll(const DropdownSection())),
+      _Page('date', 'Date Picker', TablerIcons.calendar,
+          (_) => _scroll(const DateSection())),
+      _Page('upload', 'File Upload', TablerIcons.file_upload,
+          (_) => _scroll(const FileUploadSection())),
     ]),
     _Group('Umpan Balik', <_Page>[
-      _Page('overlay', 'Modal & Drawer', TablerIcons.app_window, (_) => _scroll(const OverlaySection())),
-      _Page('feedback', 'Toast & Tooltip', TablerIcons.bell, (_) => _scroll(const FeedbackSection())),
+      _Page('overlay', 'Modal & Drawer', TablerIcons.app_window,
+          (_) => _scroll(const OverlaySection())),
+      _Page('feedback', 'Toast & Tooltip', TablerIcons.bell,
+          (_) => _scroll(const FeedbackSection())),
     ]),
     _Group('Data', <_Page>[
-      _Page('table', 'Table', TablerIcons.table, (_) => _scroll(const TableSection())),
-      _Page('chart', 'Grafik', TablerIcons.chart_line, (_) => _scroll(const ChartSection())),
+      _Page('table', 'Table', TablerIcons.table,
+          (_) => _scroll(const TableSection())),
+      _Page('chart', 'Grafik', TablerIcons.chart_line,
+          (_) => _scroll(const ChartSection())),
     ]),
     _Group('Navigasi', <_Page>[
-      _Page('navigation', 'Chip, Tab, Stepper & Pagination', TablerIcons.route, (_) => _scroll(const NavigationSection())),
-      _Page('misc', 'Lainnya', TablerIcons.components, (_) => _scroll(const MiscSection())),
+      _Page('navigation', 'Chip, Tab, Stepper & Pagination', TablerIcons.route,
+          (_) => _scroll(const NavigationSection())),
+      _Page('misc', 'Lainnya', TablerIcons.components,
+          (_) => _scroll(const MiscSection())),
     ]),
   ];
 
   static Widget _scroll(Widget child) => SingleChildScrollView(
         padding: const EdgeInsets.all(IddsSpacing.s24),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[child]),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[child]),
       );
 
   Iterable<_Page> get _pages => _groups.expand((_Group g) => g.pages);
 
-  _Page get _page => _pages.firstWhere((_Page p) => p.id == widget.page, orElse: () => _pages.first);
+  _Page get _page => _pages.firstWhere((_Page p) => p.id == widget.page,
+      orElse: () => _pages.first);
 
   String get _current => _page.id;
 
@@ -156,7 +177,8 @@ class _GalleryShellState extends State<GalleryShell> {
     final Widget topBar = Container(
       height: 64,
       padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s16),
-      decoration: BoxDecoration(color: c.backgroundPrimary, border: Border(bottom: line)),
+      decoration: BoxDecoration(
+          color: c.backgroundPrimary, border: Border(bottom: line)),
       child: Row(
         spacing: IddsSpacing.s12,
         children: <Widget>[
@@ -187,25 +209,32 @@ class _GalleryShellState extends State<GalleryShell> {
               child: IddsSelect<String>(
                 size: IddsDropdownSize.sm,
                 options: <IddsSelectOption<String>>[
-                  for (final IddsBrand b in galleryBrands) IddsSelectOption<String>(value: b.id, label: b.name),
+                  for (final IddsBrand b in galleryBrands)
+                    IddsSelectOption<String>(value: b.id, label: b.name),
                 ],
                 value: widget.brand.id,
                 onChanged: (String? id) {
-                  if (id != null) widget.onBrandChanged(galleryBrands.firstWhere((IddsBrand b) => b.id == id));
+                  if (id != null) {
+                    widget.onBrandChanged(
+                        galleryBrands.firstWhere((IddsBrand b) => b.id == id));
+                  }
                 },
               ),
             ),
           IddsThemeToggle(
             dark: widget.brightness == Brightness.dark,
             size: IddsThemeToggleSize.md,
-            onChanged: (bool dark) => widget.onBrightnessChanged(dark ? Brightness.dark : Brightness.light),
+            onChanged: (bool dark) => widget
+                .onBrightnessChanged(dark ? Brightness.dark : Brightness.light),
           ),
         ],
       ),
     );
 
     // Key per halaman: state tiap halaman dibuat baru saat berpindah menu.
-    final Widget content = KeyedSubtree(key: ValueKey<String>(_current), child: Builder(builder: _page.builder));
+    final Widget content = KeyedSubtree(
+        key: ValueKey<String>(_current),
+        child: Builder(builder: _page.builder));
 
     // Judul tab browser mengikuti halaman yang dibuka.
     return Title(
@@ -220,13 +249,15 @@ class _GalleryShellState extends State<GalleryShell> {
               if (wide)
                 Container(
                   width: 280,
-                  decoration: BoxDecoration(color: c.backgroundPrimary, border: Border(right: line)),
+                  decoration: BoxDecoration(
+                      color: c.backgroundPrimary, border: Border(right: line)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Container(
                         height: 64,
-                        padding: const EdgeInsets.symmetric(horizontal: IddsSpacing.s16),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: IddsSpacing.s16),
                         alignment: AlignmentDirectional.centerStart,
                         decoration: BoxDecoration(border: Border(bottom: line)),
                         child: Text(
@@ -241,7 +272,10 @@ class _GalleryShellState extends State<GalleryShell> {
                       ),
                       Expanded(
                         child: SingleChildScrollView(
-                          child: _Menu(groups: _groups, current: _current, onSelected: _select),
+                          child: _Menu(
+                              groups: _groups,
+                              current: _current,
+                              onSelected: _select),
                         ),
                       ),
                     ],
@@ -262,7 +296,8 @@ class _GalleryShellState extends State<GalleryShell> {
 }
 
 class _Menu extends StatelessWidget {
-  const _Menu({required this.groups, required this.current, required this.onSelected});
+  const _Menu(
+      {required this.groups, required this.current, required this.onSelected});
 
   final List<_Group> groups;
   final String current;

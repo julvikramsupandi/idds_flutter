@@ -72,13 +72,16 @@ class IddsDivider extends StatelessWidget {
     final IddsThemeData theme = IddsTheme.of(context);
     final IddsColors c = theme.colors;
     final Color color = light ? c.strokeSecondary : c.strokePrimary;
-    final double start = variant == IddsDividerVariant.fullWidth ? 0 : IddsSpacing.s16;
-    final double end = variant == IddsDividerVariant.middle ? IddsSpacing.s16 : 0;
+    final double start =
+        variant == IddsDividerVariant.fullWidth ? 0 : IddsSpacing.s16;
+    final double end =
+        variant == IddsDividerVariant.middle ? IddsSpacing.s16 : 0;
 
     if (axis == Axis.vertical) {
       return ExcludeSemantics(
         child: Padding(
-          padding: EdgeInsets.only(left: spacing, right: spacing, top: start, bottom: end),
+          padding: EdgeInsets.only(
+              left: spacing, right: spacing, top: start, bottom: end),
           child: Container(width: 1, height: height, color: color),
         ),
       );
@@ -109,7 +112,8 @@ class IddsDivider extends StatelessWidget {
       );
     }
     return Padding(
-      padding: EdgeInsets.only(left: start, right: end, top: spacing, bottom: spacing),
+      padding: EdgeInsets.only(
+          left: start, right: end, top: spacing, bottom: spacing),
       child: child,
     );
   }

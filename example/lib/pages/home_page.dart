@@ -17,7 +17,8 @@ enum HomeShowcase { mobile, web }
 /// "Pilih Tema" di situs IDDS. Ganti tema untuk melihat seluruh komponen
 /// ikut berubah warna.
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.brand, required this.onBrandChanged});
+  const HomePage(
+      {super.key, required this.brand, required this.onBrandChanged});
 
   final IddsBrand brand;
   final ValueChanged<IddsBrand> onBrandChanged;
@@ -27,7 +28,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const List<IddsBrand> _themes = <IddsBrand>[IddsBrand.inagov, IddsBrand.panrb, IddsBrand.lan, IddsBrand.bkn];
+  static const List<IddsBrand> _themes = <IddsBrand>[
+    IddsBrand.inagov,
+    IddsBrand.panrb,
+    IddsBrand.lan,
+    IddsBrand.bkn
+  ];
 
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
@@ -76,7 +82,10 @@ class _HomePageState extends State<HomePage> {
                   ? null
                   : () {
                       Navigator.pop(context);
-                      showIddsToast(context: this.context, title: const Text('Terima kasih atas tanggapan Anda'));
+                      showIddsToast(
+                          context: this.context,
+                          title:
+                              const Text('Terima kasih atas tanggapan Anda'));
                     },
               child: const Text('Kirim'),
             ),
@@ -127,7 +136,10 @@ class _HomePageState extends State<HomePage> {
                 ? 'Contoh aplikasi layanan publik untuk Android dan iOS. Isi setiap bingkai adalah widget idds_flutter '
                     'dengan lebar layar 360px, jadi bisa langsung dicoba: isi form, buka layanan, atau masuk dengan kode OTP.'
                 : 'Pilih tema penerapan untuk melihat perbedaannya. Brand lain dan brand kustom ada di menu Brand & Warna.',
-            style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentSecondary),
+            style: theme.textStyle(
+                fontSize: IddsFontSize.sm,
+                lineHeight: IddsLineHeight.sm,
+                color: c.contentSecondary),
           ),
           const SizedBox(height: IddsSpacing.s24),
           Wrap(
@@ -140,8 +152,12 @@ class _HomePageState extends State<HomePage> {
                 value: _showcase,
                 onChanged: (HomeShowcase v) => setState(() => _showcase = v),
                 items: const <IddsTabItem<HomeShowcase>>[
-                  IddsTabItem<HomeShowcase>(value: HomeShowcase.mobile, label: _TabLabel(TablerIcons.device_mobile, 'Mobile')),
-                  IddsTabItem<HomeShowcase>(value: HomeShowcase.web, label: _TabLabel(TablerIcons.browser, 'Web')),
+                  IddsTabItem<HomeShowcase>(
+                      value: HomeShowcase.mobile,
+                      label: _TabLabel(TablerIcons.device_mobile, 'Mobile')),
+                  IddsTabItem<HomeShowcase>(
+                      value: HomeShowcase.web,
+                      label: _TabLabel(TablerIcons.browser, 'Web')),
                 ],
               ),
               Wrap(
@@ -151,14 +167,19 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   Text(
                     'Pilih Tema',
-                    style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentPrimary),
+                    style: theme.textStyle(
+                        fontSize: IddsFontSize.sm,
+                        lineHeight: IddsLineHeight.sm,
+                        color: c.contentPrimary),
                   ),
                   IddsTabMenu<String>(
                     variant: IddsTabVariant.buttonWhite,
                     value: known ? widget.brand.id : null,
-                    onChanged: (String id) => widget.onBrandChanged(_themes.firstWhere((IddsBrand b) => b.id == id)),
+                    onChanged: (String id) => widget.onBrandChanged(
+                        _themes.firstWhere((IddsBrand b) => b.id == id)),
                     items: <IddsTabItem<String>>[
-                      for (final IddsBrand b in _themes) IddsTabItem<String>(value: b.id, label: Text(b.name)),
+                      for (final IddsBrand b in _themes)
+                        IddsTabItem<String>(value: b.id, label: Text(b.name)),
                     ],
                   ),
                 ],
@@ -231,7 +252,9 @@ class _HomePageState extends State<HomePage> {
               label: const Text('Email'),
               placeholder: 'Masukkan email Anda',
               keyboardType: TextInputType.emailAddress,
-              status: _emailError == null ? IddsTextFieldStatus.neutral : IddsTextFieldStatus.error,
+              status: _emailError == null
+                  ? IddsTextFieldStatus.neutral
+                  : IddsTextFieldStatus.error,
               statusMessage: _emailError,
               onChanged: (_) {
                 if (_emailError != null) setState(() => _emailError = null);
@@ -248,11 +271,17 @@ class _HomePageState extends State<HomePage> {
               child: IddsButton(
                 hierarchy: IddsButtonHierarchy.link,
                 size: IddsButtonSize.sm,
-                onPressed: () => showIddsToast(context: context, title: const Text('Tautan atur ulang kata sandi telah dikirim')),
+                onPressed: () => showIddsToast(
+                    context: context,
+                    title: const Text(
+                        'Tautan atur ulang kata sandi telah dikirim')),
                 child: const Text('Lupa Kata Sandi?'),
               ),
             ),
-            SizedBox(width: double.infinity, child: IddsButton(onPressed: _login, child: const Text('Masuk'))),
+            SizedBox(
+                width: double.infinity,
+                child:
+                    IddsButton(onPressed: _login, child: const Text('Masuk'))),
           ],
         ),
       ),
@@ -289,7 +318,9 @@ class _HomePageState extends State<HomePage> {
             size: 180,
             valueFormat: (double v) => '${v.toStringAsFixed(0)}%',
             slices: <IddsChartSlice>[
-              for (int i = 0; i < data.length; i++) IddsChartSlice(label: data[i].$1, value: data[i].$2, color: shades[i]),
+              for (int i = 0; i < data.length; i++)
+                IddsChartSlice(
+                    label: data[i].$1, value: data[i].$2, color: shades[i]),
             ],
           ),
         ],
@@ -314,7 +345,10 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Text(
                       'Total Transaksi',
-                      style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentSecondary),
+                      style: theme.textStyle(
+                          fontSize: IddsFontSize.sm,
+                          lineHeight: IddsLineHeight.sm,
+                          color: c.contentSecondary),
                     ),
                     Text(
                       '9.778.392',
@@ -328,16 +362,31 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              const IddsBadge(variant: IddsBadgeVariant.success, child: Text('+20.294 minggu ini')),
+              const IddsBadge(
+                  variant: IddsBadgeVariant.success,
+                  child: Text('+20.294 minggu ini')),
             ],
           ),
           IddsBarChart(
             height: 260,
-            labels: const <String>['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4', 'Minggu 5', 'Minggu 6'],
+            labels: const <String>[
+              'Minggu 1',
+              'Minggu 2',
+              'Minggu 3',
+              'Minggu 4',
+              'Minggu 5',
+              'Minggu 6'
+            ],
             valueFormat: (double v) => '${v.toStringAsFixed(0)} rb',
             series: <IddsChartSeries>[
-              IddsChartSeries(name: 'Transaksi baru', values: const <double?>[12, 18, 25, 20, 30, 45], color: c.primary.shade600),
-              IddsChartSeries(name: 'Transaksi selesai', values: const <double?>[10, 14, 22, 28, 26, 38], color: c.primary.shade300),
+              IddsChartSeries(
+                  name: 'Transaksi baru',
+                  values: const <double?>[12, 18, 25, 20, 30, 45],
+                  color: c.primary.shade600),
+              IddsChartSeries(
+                  name: 'Transaksi selesai',
+                  values: const <double?>[10, 14, 22, 28, 26, 38],
+                  color: c.primary.shade300),
             ],
           ),
         ],
@@ -353,7 +402,8 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(IddsRadius.lg - 1)),
+            borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(IddsRadius.lg - 1)),
             child: AspectRatio(
               aspectRatio: 310 / 187,
               child: SvgPicture.asset(
@@ -373,10 +423,15 @@ class _HomePageState extends State<HomePage> {
                 Text('Survei Singkat dan Kuis Tersedia', style: _title(theme)),
                 Text(
                   'Respon Anda sangat berharga bagi kami.',
-                  style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentSecondary),
+                  style: theme.textStyle(
+                      fontSize: IddsFontSize.sm,
+                      lineHeight: IddsLineHeight.sm,
+                      color: c.contentSecondary),
                 ),
                 const SizedBox(height: IddsSpacing.s16),
-                IddsButton(onPressed: _openSurvey, child: const Text('Lihat Survei dan Kuis')),
+                IddsButton(
+                    onPressed: _openSurvey,
+                    child: const Text('Lihat Survei dan Kuis')),
               ],
             ),
           ),
@@ -415,7 +470,8 @@ class _IllustrationMapper extends ColorMapper {
   final IddsColorScale primary;
 
   @override
-  Color substitute(String? id, String elementName, String attributeName, Color original) {
+  Color substitute(
+      String? id, String elementName, String attributeName, Color original) {
     final Color? mapped = switch (original.toARGB32() & 0xFFFFFF) {
       0xF3F6FC => primary.shade25,
       0xD9E9F9 => primary.shade50,
@@ -430,7 +486,8 @@ class _IllustrationMapper extends ColorMapper {
   }
 
   @override
-  bool operator ==(Object other) => other is _IllustrationMapper && other.primary == primary;
+  bool operator ==(Object other) =>
+      other is _IllustrationMapper && other.primary == primary;
 
   @override
   int get hashCode => primary.hashCode;
@@ -442,7 +499,8 @@ class _IllustrationMapper extends ColorMapper {
 /// (tidak mendukung ukuran intrinsik). Anak diukur dulu dengan tinggi bebas,
 /// lalu diukur ulang dengan tinggi kartu tertinggi.
 class _EqualHeightRow extends MultiChildRenderObjectWidget {
-  const _EqualHeightRow({required this.flexes, required this.spacing, required super.children})
+  const _EqualHeightRow(
+      {required this.flexes, required this.spacing, required super.children})
       : assert(flexes.length == children.length);
 
   /// Perbandingan lebar tiap anak, seperti `Expanded.flex`.
@@ -456,7 +514,8 @@ class _EqualHeightRow extends MultiChildRenderObjectWidget {
       _RenderEqualHeightRow(flexes: flexes, spacing: spacing);
 
   @override
-  void updateRenderObject(BuildContext context, _RenderEqualHeightRow renderObject) {
+  void updateRenderObject(
+      BuildContext context, _RenderEqualHeightRow renderObject) {
     renderObject
       ..flexes = flexes
       ..spacing = spacing;
@@ -489,7 +548,9 @@ class _RenderEqualHeightRow extends RenderBox
 
   @override
   void setupParentData(RenderBox child) {
-    if (child.parentData is! _EqualHeightParentData) child.parentData = _EqualHeightParentData();
+    if (child.parentData is! _EqualHeightParentData) {
+      child.parentData = _EqualHeightParentData();
+    }
   }
 
   @override
@@ -497,14 +558,17 @@ class _RenderEqualHeightRow extends RenderBox
     final double width = constraints.maxWidth;
     final int totalFlex = _flexes.fold(0, (int sum, int f) => sum + f);
     final double available = width - _spacing * (childCount - 1);
-    final List<double> widths = <double>[for (final int f in _flexes) available * f / totalFlex];
+    final List<double> widths = <double>[
+      for (final int f in _flexes) available * f / totalFlex
+    ];
 
     // Ukur dengan tinggi bebas untuk mencari kartu tertinggi.
     double height = 0;
     RenderBox? child = firstChild;
     int i = 0;
     while (child != null) {
-      child.layout(BoxConstraints.tightFor(width: widths[i]), parentUsesSize: true);
+      child.layout(BoxConstraints.tightFor(width: widths[i]),
+          parentUsesSize: true);
       if (child.size.height > height) height = child.size.height;
       child = childAfter(child);
       i++;
@@ -526,7 +590,8 @@ class _RenderEqualHeightRow extends RenderBox
   }
 
   @override
-  void paint(PaintingContext context, Offset offset) => defaultPaint(context, offset);
+  void paint(PaintingContext context, Offset offset) =>
+      defaultPaint(context, offset);
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) =>

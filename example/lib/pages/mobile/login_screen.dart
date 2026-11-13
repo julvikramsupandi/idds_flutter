@@ -31,7 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _login() {
     setState(() {
-      _accountError = _account.text.trim().isEmpty ? 'NIK atau email wajib diisi' : null;
+      _accountError =
+          _account.text.trim().isEmpty ? 'NIK atau email wajib diisi' : null;
       _passwordError = _password.text.isEmpty ? 'Kata sandi wajib diisi' : null;
     });
     if (_accountError != null || _passwordError != null) return;
@@ -58,7 +59,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final EdgeInsets safe = MediaQuery.paddingOf(context);
 
     return SingleChildScrollView(
-      padding: EdgeInsets.fromLTRB(IddsSpacing.s24, safe.top + IddsSpacing.s40, IddsSpacing.s24, safe.bottom + IddsSpacing.s24),
+      padding: EdgeInsets.fromLTRB(IddsSpacing.s24, safe.top + IddsSpacing.s40,
+          IddsSpacing.s24, safe.bottom + IddsSpacing.s24),
       child: AutofillGroup(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -77,7 +79,10 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: IddsSpacing.s8),
             Text(
               'Gunakan NIK atau email yang terdaftar untuk mengakses layanan.',
-              style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentSecondary),
+              style: theme.textStyle(
+                  fontSize: IddsFontSize.sm,
+                  lineHeight: IddsLineHeight.sm,
+                  color: c.contentSecondary),
             ),
             const SizedBox(height: IddsSpacing.s24),
             IddsTextField(
@@ -85,7 +90,9 @@ class _LoginScreenState extends State<LoginScreen> {
               label: const Text('NIK atau Email'),
               placeholder: 'Contoh: 7501xxxxxxxxxxxx',
               keyboardType: TextInputType.emailAddress,
-              status: _accountError == null ? IddsTextFieldStatus.neutral : IddsTextFieldStatus.error,
+              status: _accountError == null
+                  ? IddsTextFieldStatus.neutral
+                  : IddsTextFieldStatus.error,
               statusMessage: _accountError,
               onChanged: (_) {
                 if (_accountError != null) setState(() => _accountError = null);
@@ -96,10 +103,14 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: _password,
               label: const Text('Kata Sandi'),
               placeholder: 'Masukkan kata sandi',
-              status: _passwordError == null ? IddsTextFieldStatus.neutral : IddsTextFieldStatus.error,
+              status: _passwordError == null
+                  ? IddsTextFieldStatus.neutral
+                  : IddsTextFieldStatus.error,
               statusMessage: _passwordError,
               onChanged: (_) {
-                if (_passwordError != null) setState(() => _passwordError = null);
+                if (_passwordError != null) {
+                  setState(() => _passwordError = null);
+                }
               },
               onSubmitted: (_) => _login(),
             ),
@@ -115,7 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 IddsButton(
                   hierarchy: IddsButtonHierarchy.link,
-                  onPressed: () => showPhoneToast(context, title: const Text('Tautan atur ulang kata sandi telah dikirim')),
+                  onPressed: () => showPhoneToast(context,
+                      title: const Text(
+                          'Tautan atur ulang kata sandi telah dikirim')),
                   child: const Text('Lupa kata sandi?'),
                 ),
               ],
@@ -138,11 +151,16 @@ class _LoginScreenState extends State<LoginScreen> {
               children: <Widget>[
                 Text(
                   'Belum punya akun?',
-                  style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentSecondary),
+                  style: theme.textStyle(
+                      fontSize: IddsFontSize.sm,
+                      lineHeight: IddsLineHeight.sm,
+                      color: c.contentSecondary),
                 ),
                 IddsButton(
                   hierarchy: IddsButtonHierarchy.link,
-                  onPressed: () => showPhoneToast(context, title: const Text('Halaman pendaftaran belum tersedia di contoh ini')),
+                  onPressed: () => showPhoneToast(context,
+                      title: const Text(
+                          'Halaman pendaftaran belum tersedia di contoh ini')),
                   child: const Text('Daftar'),
                 ),
               ],
@@ -187,14 +205,19 @@ class _OtpSheetState extends State<_OtpSheet> {
           ),
           Text(
             'Contoh: isi 6 angka apa saja.',
-            style: theme.textStyle(fontSize: IddsFontSize.xs, lineHeight: IddsLineHeight.xs, color: theme.colors.contentTertiary),
+            style: theme.textStyle(
+                fontSize: IddsFontSize.xs,
+                lineHeight: IddsLineHeight.xs,
+                color: theme.colors.contentTertiary),
           ),
           IddsButton(
             onPressed: _code.length < 6
                 ? null
                 : () {
                     // Toast dipasang di Overlay bingkai sebelum panel ditutup.
-                    showPhoneToast(context, title: const Text('Kode OTP terverifikasi'), state: IddsToastState.positive);
+                    showPhoneToast(context,
+                        title: const Text('Kode OTP terverifikasi'),
+                        state: IddsToastState.positive);
                     Navigator.pop(context);
                   },
             child: const Text('Verifikasi'),

@@ -10,7 +10,10 @@ void main() {
     testWidgets('tampil lalu hilang otomatis', (WidgetTester tester) async {
       await tester.pumpWidget(testApp(Builder(
         builder: (BuildContext context) => GestureDetector(
-          onTap: () => showIddsToast(context: context, title: const Text('Data tersimpan'), description: const Text('Perubahan sudah disimpan.')),
+          onTap: () => showIddsToast(
+              context: context,
+              title: const Text('Data tersimpan'),
+              description: const Text('Perubahan sudah disimpan.')),
           child: const Text('Simpan'),
         ),
       )));
@@ -24,16 +27,20 @@ void main() {
       expect(find.text('Data tersimpan'), findsNothing);
     });
 
-    testWidgets('tombol X rata kanan walau judul pendek', (WidgetTester tester) async {
+    testWidgets('tombol X rata kanan walau judul pendek',
+        (WidgetTester tester) async {
       late BuildContext ctx;
       await tester.pumpWidget(testApp(Builder(builder: (BuildContext context) {
         ctx = context;
         return const SizedBox();
       })));
-      final IddsToastController toast = showIddsToast(context: ctx, title: const Text('OK'), duration: null);
+      final IddsToastController toast =
+          showIddsToast(context: ctx, title: const Text('OK'), duration: null);
       await tester.pumpAndSettle();
-      final Finder close = find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == IddsIcons.x);
-      final Rect box = tester.getRect(find.ancestor(of: close, matching: find.byType(IntrinsicWidth)));
+      final Finder close = find.byWidgetPredicate(
+          (Widget w) => w is IddsIcon && w.icon == IddsIcons.x);
+      final Rect box = tester.getRect(
+          find.ancestor(of: close, matching: find.byType(IntrinsicWidth)));
       final Rect icon = tester.getRect(close);
       expect(box.width, greaterThanOrEqualTo(358));
       // Padding 16px + 2px area tekan.
@@ -42,7 +49,8 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('tombol tutup, controller, dan tumpukan', (WidgetTester tester) async {
+    testWidgets('tombol tutup, controller, dan tumpukan',
+        (WidgetTester tester) async {
       late BuildContext ctx;
       int closed = 0;
       await tester.pumpWidget(testApp(Builder(builder: (BuildContext context) {
@@ -50,7 +58,11 @@ void main() {
         return const SizedBox();
       })));
 
-      showIddsToast(context: ctx, title: const Text('Satu'), duration: null, onClose: () => closed++);
+      showIddsToast(
+          context: ctx,
+          title: const Text('Satu'),
+          duration: null,
+          onClose: () => closed++);
       final IddsToastController second = showIddsToast(
         context: ctx,
         title: const Text('Dua'),
@@ -64,9 +76,13 @@ void main() {
       expect(find.text('Satu'), findsOneWidget);
       expect(find.text('Dua'), findsOneWidget);
       // Posisi atas kanan vs bawah tengah.
-      expect(tester.getTopLeft(find.text('Satu')).dy, lessThan(tester.getTopLeft(find.text('Dua')).dy));
+      expect(tester.getTopLeft(find.text('Satu')).dy,
+          lessThan(tester.getTopLeft(find.text('Dua')).dy));
 
-      await tester.tap(find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == IddsIcons.x).first);
+      await tester.tap(find
+          .byWidgetPredicate(
+              (Widget w) => w is IddsIcon && w.icon == IddsIcons.x)
+          .first);
       await tester.pumpAndSettle();
       expect(find.text('Satu'), findsNothing);
       expect(closed, 1);
@@ -89,10 +105,15 @@ void main() {
       return ctx;
     }
 
-    testWidgets('bawaan: toast baru menggantikan yang lama (maksimal satu)', (WidgetTester tester) async {
+    testWidgets('bawaan: toast baru menggantikan yang lama (maksimal satu)',
+        (WidgetTester tester) async {
       final BuildContext ctx = await pumpHost(tester);
       int closed = 0;
-      showIddsToast(context: ctx, title: const Text('Satu'), duration: null, onClose: () => closed++);
+      showIddsToast(
+          context: ctx,
+          title: const Text('Satu'),
+          duration: null,
+          onClose: () => closed++);
       await tester.pumpAndSettle();
       showIddsToast(context: ctx, title: const Text('Dua'), duration: null);
       await tester.pumpAndSettle();
@@ -103,16 +124,23 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('context di atas overlay (Navigator root) tetap bisa', (WidgetTester tester) async {
-      final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+    testWidgets('context di atas overlay (Navigator root) tetap bisa',
+        (WidgetTester tester) async {
+      final GlobalKey<NavigatorState> navigatorKey =
+          GlobalKey<NavigatorState>();
       await tester.pumpWidget(WidgetsApp(
         color: const Color(0xFF000000),
         navigatorKey: navigatorKey,
         pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) =>
-            PageRouteBuilder<T>(settings: settings, pageBuilder: (BuildContext context, _, __) => builder(context)),
+            PageRouteBuilder<T>(
+                settings: settings,
+                pageBuilder: (BuildContext context, _, __) => builder(context)),
         home: const SizedBox(),
       ));
-      showIddsToast(context: navigatorKey.currentContext!, title: const Text('Dari navigator'), duration: null);
+      showIddsToast(
+          context: navigatorKey.currentContext!,
+          title: const Text('Dari navigator'),
+          duration: null);
       await tester.pumpAndSettle();
       expect(find.text('Dari navigator'), findsOneWidget);
       dismissAllIddsToasts(navigatorKey.currentContext!);
@@ -120,11 +148,14 @@ void main() {
       expect(find.text('Dari navigator'), findsNothing);
     });
 
-    testWidgets('tombol X: area tekan 48dp walau ikon 16px', (WidgetTester tester) async {
+    testWidgets('tombol X: area tekan 48dp walau ikon 16px',
+        (WidgetTester tester) async {
       final BuildContext ctx = await pumpHost(tester);
-      final IddsToastController toast = showIddsToast(context: ctx, title: const Text('OK'), duration: null);
+      final IddsToastController toast =
+          showIddsToast(context: ctx, title: const Text('OK'), duration: null);
       await tester.pumpAndSettle();
-      final Rect icon = tester.getRect(find.byWidgetPredicate((Widget w) => w is IddsIcon && w.icon == IddsIcons.x));
+      final Rect icon = tester.getRect(find.byWidgetPredicate(
+          (Widget w) => w is IddsIcon && w.icon == IddsIcons.x));
       // 14px di kiri ikon: di luar ikon, di dalam area 48dp.
       await tester.tapAt(icon.centerLeft - const Offset(14, 0));
       await tester.pumpAndSettle();
@@ -133,7 +164,8 @@ void main() {
 
     testWidgets('geser ke atas menutup toast', (WidgetTester tester) async {
       final BuildContext ctx = await pumpHost(tester);
-      final IddsToastController toast = showIddsToast(context: ctx, title: const Text('Geser'), duration: null);
+      final IddsToastController toast = showIddsToast(
+          context: ctx, title: const Text('Geser'), duration: null);
       await tester.pumpAndSettle();
       await tester.fling(find.text('Geser'), const Offset(0, -200), 1000);
       await tester.pumpAndSettle();
@@ -141,7 +173,9 @@ void main() {
       expect(find.text('Geser'), findsNothing);
     });
 
-    testWidgets('pembaca layar: tampil lebih lama; dengan aksi tidak tertutup sendiri', (WidgetTester tester) async {
+    testWidgets(
+        'pembaca layar: tampil lebih lama; dengan aksi tidak tertutup sendiri',
+        (WidgetTester tester) async {
       late BuildContext ctx;
       await tester.pumpWidget(testApp(Builder(builder: (BuildContext context) {
         ctx = context;
@@ -176,18 +210,22 @@ void main() {
   });
 
   group('IddsTooltip', () {
-    testWidgets('muncul saat disorot mouse dan hilang saat keluar', (WidgetTester tester) async {
-      await tester.pumpWidget(testApp(const IddsTooltip(message: 'Unduh dokumen', child: Text('Unduh'))));
+    testWidgets('muncul saat disorot mouse dan hilang saat keluar',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(testApp(
+          const IddsTooltip(message: 'Unduh dokumen', child: Text('Unduh'))));
       expect(find.text('Unduh dokumen'), findsNothing);
 
-      final TestGesture mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      final TestGesture mouse =
+          await tester.createGesture(kind: PointerDeviceKind.mouse);
       await mouse.addPointer(location: Offset.zero);
       addTearDown(mouse.removePointer);
       await mouse.moveTo(tester.getCenter(find.text('Unduh')));
       await tester.pumpAndSettle();
       expect(find.text('Unduh dokumen'), findsOneWidget);
       // Tooltip di atas widget.
-      expect(tester.getBottomLeft(find.text('Unduh dokumen')).dy, lessThan(tester.getTopLeft(find.text('Unduh')).dy));
+      expect(tester.getBottomLeft(find.text('Unduh dokumen')).dy,
+          lessThan(tester.getTopLeft(find.text('Unduh')).dy));
 
       await mouse.moveTo(Offset.zero);
       await tester.pump(const Duration(milliseconds: 150));
@@ -204,7 +242,8 @@ void main() {
       await tester.longPress(find.text('Ikon'));
       await tester.pumpAndSettle();
       expect(find.text('Info'), findsOneWidget);
-      expect(tester.getTopLeft(find.text('Info')).dy, greaterThan(tester.getBottomLeft(find.text('Ikon')).dy));
+      expect(tester.getTopLeft(find.text('Info')).dy,
+          greaterThan(tester.getBottomLeft(find.text('Ikon')).dy));
 
       await tester.pump(const Duration(seconds: 2));
       await tester.pumpAndSettle();

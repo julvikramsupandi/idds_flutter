@@ -104,7 +104,9 @@ class IddsAvatar extends StatelessWidget {
             fit: BoxFit.cover,
             width: size.dimension,
             height: size.dimension,
-            errorBuilder: (BuildContext context, Object error, StackTrace? stack) => initialsWidget,
+            errorBuilder:
+                (BuildContext context, Object error, StackTrace? stack) =>
+                    initialsWidget,
           );
 
     return Semantics(
@@ -115,7 +117,8 @@ class IddsAvatar extends StatelessWidget {
         width: size.dimension,
         height: size.dimension,
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(color: theme.colors.backgroundSecondary, borderRadius: radius),
+        decoration: BoxDecoration(
+            color: theme.colors.backgroundSecondary, borderRadius: radius),
         // Garis tepi di atas foto agar tidak tertutup di bagian lengkung.
         foregroundDecoration: BoxDecoration(
           borderRadius: radius,

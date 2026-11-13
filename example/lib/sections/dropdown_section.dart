@@ -15,7 +15,8 @@ const List<IddsSelectOption<String>> _provinces = <IddsSelectOption<String>>[
   IddsSelectOption<String>(value: 'diy', label: 'DI Yogyakarta'),
   IddsSelectOption<String>(value: 'jatim', label: 'Jawa Timur'),
   IddsSelectOption<String>(value: 'bali', label: 'Bali'),
-  IddsSelectOption<String>(value: 'ntt', label: 'Nusa Tenggara Timur', enabled: false),
+  IddsSelectOption<String>(
+      value: 'ntt', label: 'Nusa Tenggara Timur', enabled: false),
   IddsSelectOption<String>(value: 'papua', label: 'Papua'),
 ];
 
@@ -37,10 +38,12 @@ class _DropdownSectionState extends State<DropdownSection> {
     final IddsColors c = IddsTheme.of(context).colors;
     return GallerySection(
       title: 'Dropdown',
-      subtitle: 'Select satu/banyak pilihan dengan pencarian, menu aksi, dan dropdown dasar. '
+      subtitle:
+          'Select satu/banyak pilihan dengan pencarian, menu aksi, dan dropdown dasar. '
           'Contoh memakai tiga ukuran: sm 40px, md 44px (bawaan), lg 48px; di layar < 768px masing-masing 4px lebih pendek. '
           'Gunakan panah atas/bawah, Enter, dan Esc untuk navigasi keyboard.',
-      usage: 'IddsSelect untuk satu pilihan dan IddsMultiSelect untuk banyak pilihan; aktifkan searchable untuk daftar panjang (atau onSearch untuk pencarian di server). IddsActionMenu untuk daftar aksi, IddsDropdown untuk panel berisi bebas.',
+      usage:
+          'IddsSelect untuk satu pilihan dan IddsMultiSelect untuk banyak pilihan; aktifkan searchable untuk daftar panjang (atau onSearch untuk pencarian di server). IddsActionMenu untuk daftar aksi, IddsDropdown untuk panel berisi bebas.',
       code: _dropdownCode,
       children: <Widget>[
         Wrap(
@@ -55,7 +58,9 @@ class _DropdownSectionState extends State<DropdownSection> {
                 searchable: true,
                 options: _provinces,
                 value: _province,
-                errorText: _submitted && _province == null ? 'Provinsi wajib dipilih' : null,
+                errorText: _submitted && _province == null
+                    ? 'Provinsi wajib dipilih'
+                    : null,
                 helperText: 'Ketik untuk mencari',
                 onChanged: (String? v) => setState(() => _province = v),
               ),
@@ -83,9 +88,12 @@ class _DropdownSectionState extends State<DropdownSection> {
                 showPreview: true,
                 searchable: true,
                 options: const <IddsSelectOption<String>>[
-                  IddsSelectOption<String>(value: 'ktp', label: 'KTP Elektronik'),
-                  IddsSelectOption<String>(value: 'kk', label: 'Kartu Keluarga'),
-                  IddsSelectOption<String>(value: 'akta', label: 'Akta Kelahiran'),
+                  IddsSelectOption<String>(
+                      value: 'ktp', label: 'KTP Elektronik'),
+                  IddsSelectOption<String>(
+                      value: 'kk', label: 'Kartu Keluarga'),
+                  IddsSelectOption<String>(
+                      value: 'akta', label: 'Akta Kelahiran'),
                   IddsSelectOption<String>(value: 'paspor', label: 'Paspor'),
                   IddsSelectOption<String>(value: 'sim', label: 'SIM'),
                   IddsSelectOption<String>(value: 'npwp', label: 'NPWP'),
@@ -122,9 +130,14 @@ class _DropdownSectionState extends State<DropdownSection> {
             IddsActionMenu(
               items: <IddsActionMenuEntry>[
                 const IddsActionMenuHeader('Dokumen'),
-                IddsActionMenuItem(label: 'Lihat detail', onTap: () => showGallerySnack(context, 'Lihat detail')),
-                IddsActionMenuItem(label: 'Unduh', onTap: () => showGallerySnack(context, 'Unduh')),
-                const IddsActionMenuItem(label: 'Bagikan (nonaktif)', onTap: null),
+                IddsActionMenuItem(
+                    label: 'Lihat detail',
+                    onTap: () => showGallerySnack(context, 'Lihat detail')),
+                IddsActionMenuItem(
+                    label: 'Unduh',
+                    onTap: () => showGallerySnack(context, 'Unduh')),
+                const IddsActionMenuItem(
+                    label: 'Bagikan (nonaktif)', onTap: null),
                 const IddsActionMenuDivider(),
                 IddsActionMenuItem(
                   label: 'Setujui',
@@ -148,12 +161,21 @@ class _DropdownSectionState extends State<DropdownSection> {
               placement: IddsPopoverPlacement.bottomEnd,
               width: IddsActionMenuWidth.lg,
               items: <IddsActionMenuEntry>[
-                IddsActionMenuItem(label: 'PDF', onTap: () => showGallerySnack(context, 'PDF')),
-                IddsActionMenuItem(label: 'Excel (.xlsx)', onTap: () => showGallerySnack(context, 'Excel')),
-                IddsActionMenuItem(label: 'CSV', onTap: () => showGallerySnack(context, 'CSV')),
+                IddsActionMenuItem(
+                    label: 'PDF',
+                    onTap: () => showGallerySnack(context, 'PDF')),
+                IddsActionMenuItem(
+                    label: 'Excel (.xlsx)',
+                    onTap: () => showGallerySnack(context, 'Excel')),
+                IddsActionMenuItem(
+                    label: 'CSV',
+                    onTap: () => showGallerySnack(context, 'CSV')),
               ],
             ),
-            const IddsActionMenu(label: 'Nonaktif', enabled: false, items: <IddsActionMenuEntry>[]),
+            const IddsActionMenu(
+                label: 'Nonaktif',
+                enabled: false,
+                items: <IddsActionMenuEntry>[]),
           ],
         ),
         const SizedBox(height: IddsSpacing.s24),
@@ -161,7 +183,9 @@ class _DropdownSectionState extends State<DropdownSection> {
         const SizedBox(height: IddsSpacing.s8),
         IddsDropdown(
           width: 260,
-          triggerBuilder: (BuildContext context, bool open, VoidCallback? toggle) => IddsButton(
+          triggerBuilder:
+              (BuildContext context, bool open, VoidCallback? toggle) =>
+                  IddsButton(
             hierarchy: IddsButtonHierarchy.secondary,
             onPressed: toggle,
             child: Text(open ? 'Tutup info' : 'Info layanan'),
@@ -181,7 +205,10 @@ class _DropdownSectionState extends State<DropdownSection> {
                   ),
                 ),
                 const SizedBox(height: IddsSpacing.s12),
-                IddsButton(size: IddsButtonSize.sm, onPressed: close, child: const Text('Mengerti')),
+                IddsButton(
+                    size: IddsButtonSize.sm,
+                    onPressed: close,
+                    child: const Text('Mengerti')),
               ],
             ),
           ),

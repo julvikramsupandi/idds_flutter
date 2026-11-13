@@ -33,7 +33,8 @@ class _MoreInputsSectionState extends State<MoreInputsSection> {
     return GallerySection(
       title: 'Input lainnya',
       subtitle: 'Text Area, Password, Search, Phone, OTP, dan Time Picker.',
-      usage: 'IddsSearchField memanggil onSearch 300 ms setelah pengguna berhenti mengetik. IddsPhoneInput menyimpan nilai dalam format internasional (+6281234567890). IddsTimePicker memakai IddsTime.',
+      usage:
+          'IddsSearchField memanggil onSearch 300 ms setelah pengguna berhenti mengetik. IddsPhoneInput menyimpan nilai dalam format internasional (+6281234567890). IddsTimePicker memakai IddsTime.',
       code: _inputsCode,
       children: <Widget>[
         Wrap(
@@ -68,7 +69,9 @@ class _MoreInputsSectionState extends State<MoreInputsSection> {
                     onSearch: _search,
                   ),
                   const SizedBox(height: IddsSpacing.s4),
-                  GalleryCaption(_query.isEmpty ? 'Ketik untuk mencari (jeda 300 ms)' : 'Mencari: "$_query"'),
+                  GalleryCaption(_query.isEmpty
+                      ? 'Ketik untuk mencari (jeda 300 ms)'
+                      : 'Mencari: "$_query"'),
                 ],
               ),
             ),
@@ -97,7 +100,9 @@ class _MoreInputsSectionState extends State<MoreInputsSection> {
                 value: _endTime,
                 use12Hours: true,
                 minTime: _startTime,
-                helperText: _startTime == null ? null : 'Setelah ${_startTime!.format()}',
+                helperText: _startTime == null
+                    ? null
+                    : 'Setelah ${_startTime!.format()}',
                 onChanged: (IddsTime? t) => setState(() => _endTime = t),
               ),
             ),
@@ -106,7 +111,8 @@ class _MoreInputsSectionState extends State<MoreInputsSection> {
         const SizedBox(height: IddsSpacing.s24),
         IddsOtpInput(
           title: 'Verifikasi nomor',
-          description: 'Masukkan 6 digit kode yang dikirim ke 0812****7890. Coba 123456, atau salin lalu tekan lama kotak → Tempel.',
+          description:
+              'Masukkan 6 digit kode yang dikirim ke 0812****7890. Coba 123456, atau salin lalu tekan lama kotak → Tempel.',
           value: _otp,
           error: _otpError,
           helperText: _otpError ? 'Kode salah, coba lagi.' : null,

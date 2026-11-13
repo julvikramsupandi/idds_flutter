@@ -22,7 +22,9 @@ class IddsOverlayRoute<T> extends PopupRoute<T> {
   final WidgetBuilder pageBuilder;
 
   /// Animasi masuk/keluar isi (tanpa latar).
-  final Widget Function(BuildContext context, Animation<double> animation, Widget child) transitionBuilder;
+  final Widget Function(
+          BuildContext context, Animation<double> animation, Widget child)
+      transitionBuilder;
 
   @override
   final bool barrierDismissible;
@@ -43,8 +45,12 @@ class IddsOverlayRoute<T> extends PopupRoute<T> {
   final double blurSigma;
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-    return Semantics(scopesRoute: true, explicitChildNodes: true, child: pageBuilder(context));
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return Semantics(
+        scopesRoute: true,
+        explicitChildNodes: true,
+        child: pageBuilder(context));
   }
 
   @override
@@ -85,10 +91,13 @@ class IddsOverlayRoute<T> extends PopupRoute<T> {
 /// halaman dan bukan seluruh aplikasi.
 Future<T?> iddsPushOverlayRoute<T>(
   BuildContext context,
-  IddsOverlayRoute<T> Function(Widget Function(Widget child) wrapTheme) createRoute, {
+  IddsOverlayRoute<T> Function(Widget Function(Widget child) wrapTheme)
+      createRoute, {
   bool useRootNavigator = true,
 }) {
-  final NavigatorState navigator = Navigator.of(context, rootNavigator: useRootNavigator);
-  final CapturedThemes themes = InheritedTheme.capture(from: context, to: navigator.context);
+  final NavigatorState navigator =
+      Navigator.of(context, rootNavigator: useRootNavigator);
+  final CapturedThemes themes =
+      InheritedTheme.capture(from: context, to: navigator.context);
   return navigator.push<T>(createRoute(themes.wrap));
 }

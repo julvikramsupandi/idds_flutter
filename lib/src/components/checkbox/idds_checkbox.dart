@@ -97,7 +97,9 @@ class IddsCheckbox extends StatelessWidget {
             border = state.hovered ? c.negative.shade600 : c.negative.shade500;
           } else {
             background = c.backgroundPrimary;
-            border = state.hovered ? c.strokeSecondary : IddsPrimitives.neutral.shade500;
+            border = state.hovered
+                ? c.strokeSecondary
+                : IddsPrimitives.neutral.shade500;
           }
           final BorderRadius radius = BorderRadius.circular(IddsRadius.base);
 
@@ -106,7 +108,10 @@ class IddsCheckbox extends StatelessWidget {
             borderRadius: radius,
             inset: 1,
             // CSS: inset 0 0 0 1px #fff, inset 0 0 0 2px content-primary.
-            rings: <(double, Color)>[(1.0, const Color(0xFFFFFFFF)), (1.0, c.contentPrimary)],
+            rings: <(double, Color)>[
+              (1.0, const Color(0xFFFFFFFF)),
+              (1.0, c.contentPrimary)
+            ],
             child: AnimatedContainer(
               duration: IddsDuration.fast,
               curve: IddsCurves.standard,
@@ -123,7 +128,8 @@ class IddsCheckbox extends StatelessWidget {
                       indeterminate ? IddsIcons.minus : IddsIcons.check,
                       size: 14,
                       strokeWidth: 4,
-                      color: enabled ? c.white : IddsPrimitives.neutral.shade400,
+                      color:
+                          enabled ? c.white : IddsPrimitives.neutral.shade400,
                     )
                   : null,
             ),
@@ -158,13 +164,18 @@ class IddsCheckbox extends StatelessWidget {
           return LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) => Row(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: subtext == null ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+              crossAxisAlignment: subtext == null
+                  ? CrossAxisAlignment.center
+                  : CrossAxisAlignment.start,
               spacing: IddsSpacing.s12,
               children: <Widget>[
                 box,
                 // Teks boleh membungkus bila lebar dibatasi; di dalam Row tanpa
                 // batas lebar, Flexible akan error.
-                if (constraints.hasBoundedWidth) Flexible(child: texts) else texts,
+                if (constraints.hasBoundedWidth)
+                  Flexible(child: texts)
+                else
+                  texts,
               ],
             ),
           );

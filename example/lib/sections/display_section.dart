@@ -10,7 +10,8 @@ class BadgeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return GallerySection(
       title: 'Badge',
-      usage: 'Label status singkat. Pilih variant sesuai makna (success untuk aktif/selesai, error untuk gagal, dst.) dan type soft untuk latar lembut atau fill untuk latar penuh.',
+      usage:
+          'Label status singkat. Pilih variant sesuai makna (success untuk aktif/selesai, error untuk gagal, dst.) dan type soft untuk latar lembut atau fill untuk latar penuh.',
       code: _badgeCode,
       children: <Widget>[
         for (final IddsBadgeType type in IddsBadgeType.values) ...<Widget>[
@@ -34,9 +35,15 @@ class BadgeSection extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: <Widget>[
             for (final IddsBadgeSize s in IddsBadgeSize.values)
-              IddsBadge(size: s, variant: IddsBadgeVariant.success, child: Text('Size ${s.name}')),
+              IddsBadge(
+                  size: s,
+                  variant: IddsBadgeVariant.success,
+                  child: Text('Size ${s.name}')),
             for (final IddsBadgeRounded r in IddsBadgeRounded.values)
-              IddsBadge(rounded: r, variant: IddsBadgeVariant.neutral, child: Text('Rounded ${r.name}')),
+              IddsBadge(
+                  rounded: r,
+                  variant: IddsBadgeVariant.neutral,
+                  child: Text('Rounded ${r.name}')),
             const IddsBadge(
               variant: IddsBadgeVariant.warning,
               prefixIcon: IddsIcon(IddsIcons.alertTriangle),
@@ -57,7 +64,8 @@ class AvatarSection extends StatelessWidget {
     return GallerySection(
       title: 'Avatar',
       subtitle: 'Foto gagal dimuat akan kembali ke inisial.',
-      usage: 'Inisial diambil dari dua kata pertama initials. Bila image diisi tetapi gagal dimuat, avatar kembali menampilkan inisial.',
+      usage:
+          'Inisial diambil dari dua kata pertama initials. Bila image diisi tetapi gagal dimuat, avatar kembali menampilkan inisial.',
       code: _avatarCode,
       children: <Widget>[
         for (final IddsAvatarShape shape in IddsAvatarShape.values) ...<Widget>[
@@ -66,7 +74,8 @@ class AvatarSection extends StatelessWidget {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: <Widget>[
               for (final IddsAvatarSize s in IddsAvatarSize.values)
-                IddsAvatar(initials: 'Julvikram Supandi', size: s, shape: shape),
+                IddsAvatar(
+                    initials: 'Julvikram Supandi', size: s, shape: shape),
               IddsAvatar(
                 image: const NetworkImage('https://invalid.example/foto.png'),
                 initials: 'GT',
@@ -107,9 +116,12 @@ class _AlertSectionState extends State<AlertSection> {
             const IddsAlert(
               variant: IddsAlertVariant.critical,
               title: Text('Presensi belum terkirim'),
-              message: Text('Server tidak merespons. Foto dan lokasi tetap tersimpan.'),
+              message: Text(
+                  'Server tidak merespons. Foto dan lokasi tetap tersimpan.'),
             ),
-            IddsButton(onPressed: () => Navigator.pop(context), child: const Text('Coba lagi')),
+            IddsButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Coba lagi')),
             IddsButton(
               hierarchy: IddsButtonHierarchy.secondary,
               onPressed: () => Navigator.pop(context),
@@ -125,7 +137,8 @@ class _AlertSectionState extends State<AlertSection> {
   Widget build(BuildContext context) {
     return GallerySection(
       title: 'Alert',
-      usage: 'Untuk pesan penting di dalam halaman. Alert tidak menyembunyikan dirinya sendiri: simpan status tampil di state dan hapus widget saat onDismiss dipanggil. Isi action untuk langkah lanjutan (mis. "Coba lagi"). Di layar penuh tanpa isi halaman (kamera, pemindai, peta) atau bila ada 2+ aksi, taruh alert di showIddsBottomSheet. Untuk notifikasi sementara, pakai Toast.',
+      usage:
+          'Untuk pesan penting di dalam halaman. Alert tidak menyembunyikan dirinya sendiri: simpan status tampil di state dan hapus widget saat onDismiss dipanggil. Isi action untuk langkah lanjutan (mis. "Coba lagi"). Di layar penuh tanpa isi halaman (kamera, pemindai, peta) atau bila ada 2+ aksi, taruh alert di showIddsBottomSheet. Untuk notifikasi sementara, pakai Toast.',
       code: _alertCode,
       children: <Widget>[
         for (final IddsAlertVariant v in IddsAlertVariant.values)
@@ -135,7 +148,8 @@ class _AlertSectionState extends State<AlertSection> {
               child: IddsAlert(
                 variant: v,
                 title: Text('Alert ${v.name}'),
-                message: const Text('Deskripsi singkat, idealnya tidak lebih dari dua baris.'),
+                message: const Text(
+                    'Deskripsi singkat, idealnya tidak lebih dari dua baris.'),
                 onDismiss: () => setState(() => _hidden.add(v)),
               ),
             ),
@@ -144,7 +158,8 @@ class _AlertSectionState extends State<AlertSection> {
           child: IddsAlert(
             variant: IddsAlertVariant.critical,
             title: Text('Presensi belum terkirim'),
-            message: Text('Server tidak merespons. Foto dan lokasi tetap tersimpan.'),
+            message: Text(
+                'Server tidak merespons. Foto dan lokasi tetap tersimpan.'),
             action: IddsButton(
               hierarchy: IddsButtonHierarchy.secondary,
               size: IddsButtonSize.sm,
@@ -153,7 +168,8 @@ class _AlertSectionState extends State<AlertSection> {
             ),
           ),
         ),
-        const GalleryCaption('Di layar penuh (kamera, pemindai, peta): alert di lembar bawah'),
+        const GalleryCaption(
+            'Di layar penuh (kamera, pemindai, peta): alert di lembar bawah'),
         const SizedBox(height: IddsSpacing.s8),
         Align(
           alignment: Alignment.centerLeft,

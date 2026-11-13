@@ -7,52 +7,69 @@ import 'test_app.dart';
 
 void main() {
   group('IddsCheckbox', () {
-    testWidgets('mengirim nilai kebalikan saat ditekan', (WidgetTester tester) async {
+    testWidgets('mengirim nilai kebalikan saat ditekan',
+        (WidgetTester tester) async {
       bool? received;
       await tester.pumpWidget(
-        testApp(IddsCheckbox(value: false, onChanged: (bool v) => received = v, label: 'Setuju')),
+        testApp(IddsCheckbox(
+            value: false,
+            onChanged: (bool v) => received = v,
+            label: 'Setuju')),
       );
       await tester.tap(find.text('Setuju'));
       expect(received, isTrue);
     });
 
     testWidgets('nonaktif tidak bereaksi', (WidgetTester tester) async {
-      await tester.pumpWidget(testApp(const IddsCheckbox(value: false, onChanged: null, label: 'Setuju')));
+      await tester.pumpWidget(testApp(
+          const IddsCheckbox(value: false, onChanged: null, label: 'Setuju')));
       await tester.tap(find.text('Setuju'), warnIfMissed: false);
       // Tidak ada callback; cukup pastikan tidak error.
       expect(find.text('Setuju'), findsOneWidget);
     });
 
-    testWidgets('kotak 20px di layar lebar, 16px di layar < 768px', (WidgetTester tester) async {
+    testWidgets('kotak 20px di layar lebar, 16px di layar < 768px',
+        (WidgetTester tester) async {
       Size boxSize() => tester.getSize(
-            find.descendant(of: find.byType(IddsCheckbox), matching: find.byType(AnimatedContainer)),
+            find.descendant(
+                of: find.byType(IddsCheckbox),
+                matching: find.byType(AnimatedContainer)),
           );
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
 
       tester.view.physicalSize = const Size(1024, 768);
-      await tester.pumpWidget(testApp(IddsCheckbox(value: true, onChanged: (_) {})));
+      await tester
+          .pumpWidget(testApp(IddsCheckbox(value: true, onChanged: (_) {})));
       expect(boxSize(), const Size.square(20));
 
       tester.view.physicalSize = const Size(700, 800);
-      await tester.pumpWidget(testApp(IddsCheckbox(value: true, onChanged: (_) {})));
+      await tester
+          .pumpWidget(testApp(IddsCheckbox(value: true, onChanged: (_) {})));
       // Perubahan ukuran dianimasikan; tunggu sampai selesai.
       await tester.pumpAndSettle();
       expect(boxSize(), const Size.square(16));
     });
 
-    testWidgets('tercentang menampilkan ikon, indeterminate menampilkan strip', (WidgetTester tester) async {
-      await tester.pumpWidget(testApp(IddsCheckbox(value: true, onChanged: (_) {})));
-      expect(tester.widget<IddsIcon>(find.byType(IddsIcon)).icon, IddsIcons.check);
-      await tester.pumpWidget(testApp(IddsCheckbox(value: false, indeterminate: true, onChanged: (_) {})));
-      expect(tester.widget<IddsIcon>(find.byType(IddsIcon)).icon, IddsIcons.minus);
-      await tester.pumpWidget(testApp(IddsCheckbox(value: false, onChanged: (_) {})));
+    testWidgets('tercentang menampilkan ikon, indeterminate menampilkan strip',
+        (WidgetTester tester) async {
+      await tester
+          .pumpWidget(testApp(IddsCheckbox(value: true, onChanged: (_) {})));
+      expect(
+          tester.widget<IddsIcon>(find.byType(IddsIcon)).icon, IddsIcons.check);
+      await tester.pumpWidget(testApp(
+          IddsCheckbox(value: false, indeterminate: true, onChanged: (_) {})));
+      expect(
+          tester.widget<IddsIcon>(find.byType(IddsIcon)).icon, IddsIcons.minus);
+      await tester
+          .pumpWidget(testApp(IddsCheckbox(value: false, onChanged: (_) {})));
       expect(find.byType(IddsIcon), findsNothing);
     });
 
     testWidgets('bisa diaktifkan dengan Space', (WidgetTester tester) async {
       int count = 0;
-      await tester.pumpWidget(testApp(IddsCheckbox(value: false, autofocus: true, onChanged: (_) => count++)));
+      await tester.pumpWidget(testApp(IddsCheckbox(
+          value: false, autofocus: true, onChanged: (_) => count++)));
       await tester.pump();
       await tester.sendKeyEvent(LogicalKeyboardKey.space);
       expect(count, 1);
@@ -63,7 +80,8 @@ void main() {
     const List<IddsRadioOption<String>> options = <IddsRadioOption<String>>[
       IddsRadioOption<String>(value: 'L', label: 'Laki-laki'),
       IddsRadioOption<String>(value: 'P', label: 'Perempuan'),
-      IddsRadioOption<String>(value: 'X', label: 'Tidak tersedia', enabled: false),
+      IddsRadioOption<String>(
+          value: 'X', label: 'Tidak tersedia', enabled: false),
     ];
 
     testWidgets('memilih pilihan', (WidgetTester tester) async {
@@ -82,16 +100,21 @@ void main() {
       expect(selected, 'P');
     });
 
-    testWidgets('pilihan nonaktif tidak bisa dipilih', (WidgetTester tester) async {
+    testWidgets('pilihan nonaktif tidak bisa dipilih',
+        (WidgetTester tester) async {
       String? selected;
       await tester.pumpWidget(
-        testApp(IddsRadioGroup<String>(options: options, value: 'L', onChanged: (String v) => selected = v)),
+        testApp(IddsRadioGroup<String>(
+            options: options,
+            value: 'L',
+            onChanged: (String v) => selected = v)),
       );
       await tester.tap(find.text('Tidak tersedia'), warnIfMissed: false);
       expect(selected, isNull);
     });
 
-    testWidgets('menampilkan tanda wajib dan teks bantuan', (WidgetTester tester) async {
+    testWidgets('menampilkan tanda wajib dan teks bantuan',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         testApp(
           IddsRadioGroup<String>(
@@ -112,17 +135,20 @@ void main() {
   group('IddsToggle', () {
     testWidgets('mengirim nilai kebalikan', (WidgetTester tester) async {
       bool? received;
-      await tester.pumpWidget(testApp(IddsToggle(value: true, onChanged: (bool v) => received = v)));
+      await tester.pumpWidget(testApp(
+          IddsToggle(value: true, onChanged: (bool v) => received = v)));
       await tester.tap(find.byType(IddsToggle));
       expect(received, isFalse);
     });
 
     testWidgets('ukuran track sesuai spesifikasi', (WidgetTester tester) async {
       for (final IddsToggleSize size in IddsToggleSize.values) {
-        await tester.pumpWidget(testApp(IddsToggle(value: false, size: size, onChanged: (_) {})));
+        await tester.pumpWidget(
+            testApp(IddsToggle(value: false, size: size, onChanged: (_) {})));
         // Perubahan ukuran antarvarian dianimasikan; tunggu sampai selesai.
         await tester.pumpAndSettle();
-        expect(tester.getSize(find.byType(IddsToggle)), Size(size.trackWidth, size.trackHeight));
+        expect(tester.getSize(find.byType(IddsToggle)),
+            Size(size.trackWidth, size.trackHeight));
       }
     });
   });
@@ -130,27 +156,34 @@ void main() {
   group('IddsTextField', () {
     testWidgets('mengetik memanggil onChanged', (WidgetTester tester) async {
       String? value;
-      await tester.pumpWidget(testApp(IddsTextField(onChanged: (String v) => value = v)));
+      await tester.pumpWidget(
+          testApp(IddsTextField(onChanged: (String v) => value = v)));
       await tester.enterText(find.byType(EditableText), 'Gorontalo');
       expect(value, 'Gorontalo');
     });
 
-    testWidgets('fokus tidak membuat ulang input (regresi: harus klik berkali-kali)', (WidgetTester tester) async {
+    testWidgets(
+        'fokus tidak membuat ulang input (regresi: harus klik berkali-kali)',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testApp(const IddsTextField()));
-      final EditableTextState before = tester.state<EditableTextState>(find.byType(EditableText));
+      final EditableTextState before =
+          tester.state<EditableTextState>(find.byType(EditableText));
       await tester.tap(find.byType(EditableText));
       await tester.pump();
-      final EditableTextState after = tester.state<EditableTextState>(find.byType(EditableText));
+      final EditableTextState after =
+          tester.state<EditableTextState>(find.byType(EditableText));
       expect(identical(before, after), isTrue);
       expect(after.widget.focusNode.hasFocus, isTrue);
       await tester.enterText(find.byType(EditableText), 'langsung bisa');
       expect(find.text('langsung bisa'), findsOneWidget);
     });
 
-    testWidgets('klik di mana saja di dalam kotak memfokuskan input', (WidgetTester tester) async {
+    testWidgets('klik di mana saja di dalam kotak memfokuskan input',
+        (WidgetTester tester) async {
       final FocusNode node = FocusNode();
       addTearDown(node.dispose);
-      await tester.pumpWidget(testApp(IddsTextField(focusNode: node, prefixIcon: const SizedBox.square(dimension: 20))));
+      await tester.pumpWidget(testApp(IddsTextField(
+          focusNode: node, prefixIcon: const SizedBox.square(dimension: 20))));
       final Rect box = tester.getRect(find.byType(AnimatedContainer).first);
       // Pojok kiri atas: di luar baris teks.
       await tester.tapAt(box.topLeft + const Offset(4, 4));
@@ -162,7 +195,10 @@ void main() {
       int cleared = 0;
       String? value;
       await tester.pumpWidget(
-        testApp(IddsTextField(initialValue: 'abc', onChanged: (String v) => value = v, onClear: () => cleared++)),
+        testApp(IddsTextField(
+            initialValue: 'abc',
+            onChanged: (String v) => value = v,
+            onClear: () => cleared++)),
       );
       await tester.tap(find.bySemanticsLabel('Hapus input'));
       await tester.pump();
@@ -171,14 +207,17 @@ void main() {
       expect(find.bySemanticsLabel('Hapus input'), findsNothing);
     });
 
-    testWidgets('penghitung karakter dan batas maxLength', (WidgetTester tester) async {
-      await tester.pumpWidget(testApp(const IddsTextField(maxLength: 5, showCharCount: true)));
+    testWidgets('penghitung karakter dan batas maxLength',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+          testApp(const IddsTextField(maxLength: 5, showCharCount: true)));
       await tester.enterText(find.byType(EditableText), 'Indonesia');
       await tester.pump();
       expect(find.text('5/5'), findsOneWidget);
     });
 
-    testWidgets('statusMessage menggantikan helperText', (WidgetTester tester) async {
+    testWidgets('statusMessage menggantikan helperText',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         testApp(
           const IddsTextField(
@@ -195,7 +234,8 @@ void main() {
     testWidgets(
       'teks berada tepat di tengah kolom (termasuk density compact di desktop)',
       (WidgetTester tester) async {
-        await tester.pumpWidget(testApp(const IddsTextField(initialValue: 'Gorontalo')));
+        await tester.pumpWidget(
+            testApp(const IddsTextField(initialValue: 'Gorontalo')));
         final Rect box = tester.getRect(find.byType(AnimatedContainer).first);
         final Rect input = tester.getRect(find.byType(EditableText));
         expect(input.center.dy, moreOrLessEquals(box.center.dy, epsilon: 0.5));
@@ -205,7 +245,8 @@ void main() {
 
     // Kotak input tidak dipadatkan di layar sempit (README "Penyesuaian dari
     // IDDS"): tinggi md 44 di semua lebar, sama dengan tombol.
-    testWidgets('tinggi md: 44 di semua lebar layar', (WidgetTester tester) async {
+    testWidgets('tinggi md: 44 di semua lebar layar',
+        (WidgetTester tester) async {
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       Future<double> heightAt(double width) async {

@@ -65,9 +65,14 @@ Future<T?> showIddsDrawer<T>({
       transitionDuration: const Duration(milliseconds: 350),
       reverseTransitionDuration: IddsDuration.slow,
       pageBuilder: (BuildContext context) => wrapTheme(
-        _DrawerPanel(position: position, width: width, height: height, child: Builder(builder: builder)),
+        _DrawerPanel(
+            position: position,
+            width: width,
+            height: height,
+            child: Builder(builder: builder)),
       ),
-      transitionBuilder: (BuildContext context, Animation<double> animation, Widget child) {
+      transitionBuilder:
+          (BuildContext context, Animation<double> animation, Widget child) {
         final IddsDrawerPosition side = _effectivePosition(context, position);
         // CSS: cubic-bezier(.16, 1, .3, 1) masuk, (.4, 0, .2, 1) keluar.
         final Animation<double> curved = CurvedAnimation(
@@ -82,7 +87,8 @@ Future<T?> showIddsDrawer<T>({
           IddsDrawerPosition.bottom => const Offset(0, 1),
         };
         return SlideTransition(
-          position: Tween<Offset>(begin: begin, end: Offset.zero).animate(curved),
+          position:
+              Tween<Offset>(begin: begin, end: Offset.zero).animate(curved),
           child: child,
         );
       },
@@ -92,9 +98,12 @@ Future<T?> showIddsDrawer<T>({
 }
 
 /// Di layar ≤ 640px drawer kiri/kanan menjadi panel dari bawah.
-IddsDrawerPosition _effectivePosition(BuildContext context, IddsDrawerPosition position) {
+IddsDrawerPosition _effectivePosition(
+    BuildContext context, IddsDrawerPosition position) {
   final double width = MediaQuery.sizeOf(context).width;
-  if (width <= 640 && (position == IddsDrawerPosition.left || position == IddsDrawerPosition.right)) {
+  if (width <= 640 &&
+      (position == IddsDrawerPosition.left ||
+          position == IddsDrawerPosition.right)) {
     return IddsDrawerPosition.bottom;
   }
   return position;
@@ -102,7 +111,11 @@ IddsDrawerPosition _effectivePosition(BuildContext context, IddsDrawerPosition p
 
 /// Wadah drawer: ukuran, posisi, sudut, dan bayangan.
 class _DrawerPanel extends StatelessWidget {
-  const _DrawerPanel({required this.position, required this.width, required this.height, required this.child});
+  const _DrawerPanel(
+      {required this.position,
+      required this.width,
+      required this.height,
+      required this.child});
 
   final IddsDrawerPosition position;
   final double width;
@@ -119,19 +132,26 @@ class _DrawerPanel extends StatelessWidget {
 
     // Sudut membulat hanya di sisi yang menghadap halaman.
     final BorderRadius radius = switch (side) {
-      IddsDrawerPosition.right => const BorderRadius.only(topLeft: r, bottomLeft: r),
-      IddsDrawerPosition.left => const BorderRadius.only(topRight: r, bottomRight: r),
-      IddsDrawerPosition.top => const BorderRadius.only(bottomLeft: r, bottomRight: r),
-      IddsDrawerPosition.bottom => const BorderRadius.only(topLeft: r, topRight: r),
+      IddsDrawerPosition.right =>
+        const BorderRadius.only(topLeft: r, bottomLeft: r),
+      IddsDrawerPosition.left =>
+        const BorderRadius.only(topRight: r, bottomRight: r),
+      IddsDrawerPosition.top =>
+        const BorderRadius.only(bottomLeft: r, bottomRight: r),
+      IddsDrawerPosition.bottom =>
+        const BorderRadius.only(topLeft: r, topRight: r),
     };
-    final bool horizontal = side == IddsDrawerPosition.left || side == IddsDrawerPosition.right;
-    final double panelWidth = horizontal ? math.min(width, screen.width) : screen.width;
+    final bool horizontal =
+        side == IddsDrawerPosition.left || side == IddsDrawerPosition.right;
+    final double panelWidth =
+        horizontal ? math.min(width, screen.width) : screen.width;
     final double panelHeight = horizontal
         ? screen.height
         : (height ??
             (small
                 // CSS: 45vh, minimal 280px, maksimal 90vh.
-                ? math.min(math.max(screen.height * 0.45, 280), screen.height * 0.9)
+                ? math.min(
+                    math.max(screen.height * 0.45, 280), screen.height * 0.9)
                 : screen.height * 0.6));
 
     return Align(
@@ -144,7 +164,10 @@ class _DrawerPanel extends StatelessWidget {
       child: Container(
         width: panelWidth,
         height: math.min(panelHeight, screen.height),
-        decoration: BoxDecoration(color: c.backgroundPrimary, borderRadius: radius, boxShadow: IddsShadow.xl),
+        decoration: BoxDecoration(
+            color: c.backgroundPrimary,
+            borderRadius: radius,
+            boxShadow: IddsShadow.xl),
         child: ClipRRect(
           borderRadius: radius,
           child: _DrawerScope(small: small, child: child),
@@ -238,19 +261,27 @@ class IddsDrawer extends StatelessWidget {
                         namesRoute: title != null,
                         child: DefaultTextStyle(
                           style: theme.textStyle(
-                            fontSize: small ? IddsFontSize.base : IddsFontSize.lg,
-                            lineHeight: small ? IddsLineHeight.base : IddsLineHeight.lg,
+                            fontSize:
+                                small ? IddsFontSize.base : IddsFontSize.lg,
+                            lineHeight:
+                                small ? IddsLineHeight.base : IddsLineHeight.lg,
                             fontWeight: IddsFontWeight.semibold,
                             color: c.contentPrimary,
                           ),
                           child: IconTheme(
-                            data: IconThemeData(size: small ? 20 : 24, color: c.contentPrimary),
+                            data: IconThemeData(
+                                size: small ? 20 : 24, color: c.contentPrimary),
                             child: title ?? const SizedBox.shrink(),
                           ),
                         ),
                       ),
                     ),
-                    if (showCloseButton) IddsCloseButton(label: closeLabel, size: 20, boxSize: 32, onTap: close),
+                    if (showCloseButton)
+                      IddsCloseButton(
+                          label: closeLabel,
+                          size: 20,
+                          boxSize: 32,
+                          onTap: close),
                   ],
                 ),
               ),
@@ -258,7 +289,10 @@ class IddsDrawer extends StatelessWidget {
               child: SingleChildScrollView(
                 padding: padding,
                 child: DefaultTextStyle(
-                  style: theme.textStyle(fontSize: IddsFontSize.sm, lineHeight: IddsLineHeight.sm, color: c.contentPrimary),
+                  style: theme.textStyle(
+                      fontSize: IddsFontSize.sm,
+                      lineHeight: IddsLineHeight.sm,
+                      color: c.contentPrimary),
                   child: child,
                 ),
               ),
@@ -274,7 +308,9 @@ class IddsDrawer extends StatelessWidget {
                 decoration: BoxDecoration(border: Border(top: divider)),
                 child: Row(
                   mainAxisAlignment: actionsAlignment,
-                  spacing: actionsAlignment == MainAxisAlignment.spaceBetween ? 0 : IddsSpacing.s8,
+                  spacing: actionsAlignment == MainAxisAlignment.spaceBetween
+                      ? 0
+                      : IddsSpacing.s8,
                   children: actions!,
                 ),
               ),

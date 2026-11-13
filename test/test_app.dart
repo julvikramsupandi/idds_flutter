@@ -13,7 +13,8 @@ Widget testApp(Widget child, {IddsThemeData? theme}) {
         // Scaffold di aplikasi), dibutuhkan TapRegion "tekan di luar".
         child: ColoredBox(
           color: const Color(0xFFFFFFFF),
-          child: Center(child: Padding(padding: const EdgeInsets.all(16), child: child)),
+          child: Center(
+              child: Padding(padding: const EdgeInsets.all(16), child: child)),
         ),
       ),
     ),
@@ -31,7 +32,8 @@ class _OverlayHost extends StatefulWidget {
 }
 
 class _OverlayHostState extends State<_OverlayHost> {
-  late final OverlayEntry _entry = OverlayEntry(builder: (BuildContext context) => widget.child);
+  late final OverlayEntry _entry =
+      OverlayEntry(builder: (BuildContext context) => widget.child);
 
   @override
   void didUpdateWidget(_OverlayHost oldWidget) {
@@ -40,5 +42,6 @@ class _OverlayHostState extends State<_OverlayHost> {
   }
 
   @override
-  Widget build(BuildContext context) => Overlay(initialEntries: <OverlayEntry>[_entry]);
+  Widget build(BuildContext context) =>
+      Overlay(initialEntries: <OverlayEntry>[_entry]);
 }

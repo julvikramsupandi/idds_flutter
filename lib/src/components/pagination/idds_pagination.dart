@@ -1,7 +1,9 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart' show InputDecoration, TextField, VisualDensity;
-import 'package:flutter/services.dart' show FilteringTextInputFormatter, TextInputFormatter, TextInputType;
+import 'package:flutter/material.dart'
+    show InputDecoration, TextField, VisualDensity;
+import 'package:flutter/services.dart'
+    show FilteringTextInputFormatter, TextInputFormatter, TextInputType;
 import 'package:flutter/widgets.dart';
 
 import '../../foundation/idds_icon.dart';
@@ -123,12 +125,32 @@ class IddsPagination extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       spacing: IddsSpacing.s4,
       children: <Widget>[
-        _NavButton(icon: IddsIcons.chevronsLeft, label: 'Halaman pertama', m: m, onTap: enabled && page > 1 ? () => go(1) : null),
-        _NavButton(icon: IddsIcons.chevronLeft, label: 'Halaman sebelumnya', m: m, onTap: enabled && page > 1 ? () => go(page - 1) : null),
+        _NavButton(
+            icon: IddsIcons.chevronsLeft,
+            label: 'Halaman pertama',
+            m: m,
+            onTap: enabled && page > 1 ? () => go(1) : null),
+        _NavButton(
+            icon: IddsIcons.chevronLeft,
+            label: 'Halaman sebelumnya',
+            m: m,
+            onTap: enabled && page > 1 ? () => go(page - 1) : null),
         for (final int p in visiblePages(page, totalPages))
-          _PageButton(page: p, active: p == page, m: m, onTap: enabled ? () => go(p) : null),
-        _NavButton(icon: IddsIcons.chevronRight, label: 'Halaman berikutnya', m: m, onTap: enabled && page < totalPages ? () => go(page + 1) : null),
-        _NavButton(icon: IddsIcons.chevronsRight, label: 'Halaman terakhir', m: m, onTap: enabled && page < totalPages ? () => go(totalPages) : null),
+          _PageButton(
+              page: p,
+              active: p == page,
+              m: m,
+              onTap: enabled ? () => go(p) : null),
+        _NavButton(
+            icon: IddsIcons.chevronRight,
+            label: 'Halaman berikutnya',
+            m: m,
+            onTap: enabled && page < totalPages ? () => go(page + 1) : null),
+        _NavButton(
+            icon: IddsIcons.chevronsRight,
+            label: 'Halaman terakhir',
+            m: m,
+            onTap: enabled && page < totalPages ? () => go(totalPages) : null),
       ],
     );
 
@@ -151,7 +173,8 @@ class IddsPagination extends StatelessWidget {
                       }
                     : null,
                 options: <IddsSelectOption<int>>[
-                  for (final int n in pageSizeOptions) IddsSelectOption<int>(value: n, label: '$n'),
+                  for (final int n in pageSizeOptions)
+                    IddsSelectOption<int>(value: n, label: '$n'),
                 ],
               ),
             ],
@@ -161,7 +184,10 @@ class IddsPagination extends StatelessWidget {
       label: 'Pagination',
       explicitChildNodes: true,
       child: DefaultTextStyle(
-        style: theme.textStyle(fontSize: m.fontSize, lineHeight: m.lineHeight, fontWeight: m.fontWeight),
+        style: theme.textStyle(
+            fontSize: m.fontSize,
+            lineHeight: m.lineHeight,
+            fontWeight: m.fontWeight),
         child: Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: lg ? IddsSpacing.s16 : IddsSpacing.s8,
@@ -173,7 +199,11 @@ class IddsPagination extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(pageLabel),
-                  _PageInput(page: page, total: totalPages, m: m, onSubmit: enabled ? go : null),
+                  _PageInput(
+                      page: page,
+                      total: totalPages,
+                      m: m,
+                      onSubmit: enabled ? go : null),
                   Text('$ofLabel $totalPages'),
                 ],
               ),
@@ -212,7 +242,11 @@ BoxDecoration _focusDecoration(IddsColors c, double radius) => BoxDecoration(
     );
 
 class _NavButton extends StatelessWidget {
-  const _NavButton({required this.icon, required this.label, required this.m, required this.onTap});
+  const _NavButton(
+      {required this.icon,
+      required this.label,
+      required this.m,
+      required this.onTap});
 
   final IddsIconData icon;
   final String label;
@@ -262,7 +296,11 @@ class _NavButton extends StatelessWidget {
 }
 
 class _PageButton extends StatelessWidget {
-  const _PageButton({required this.page, required this.active, required this.m, required this.onTap});
+  const _PageButton(
+      {required this.page,
+      required this.active,
+      required this.m,
+      required this.onTap});
 
   final int page;
   final bool active;
@@ -318,7 +356,11 @@ class _PageButton extends StatelessWidget {
 }
 
 class _PageInput extends StatefulWidget {
-  const _PageInput({required this.page, required this.total, required this.m, required this.onSubmit});
+  const _PageInput(
+      {required this.page,
+      required this.total,
+      required this.m,
+      required this.onSubmit});
 
   final int page;
   final int total;
@@ -330,7 +372,8 @@ class _PageInput extends StatefulWidget {
 }
 
 class _PageInputState extends State<_PageInput> {
-  late final TextEditingController _controller = TextEditingController(text: '${widget.page}');
+  late final TextEditingController _controller =
+      TextEditingController(text: '${widget.page}');
   final FocusNode _focus = FocusNode();
 
   @override
@@ -373,7 +416,8 @@ class _PageInputState extends State<_PageInput> {
     final bool enabled = widget.onSubmit != null;
     final TextStyle style = DefaultTextStyle.of(context).style;
     // CSS: lebar = jumlah karakter + 12px, minimal 28px.
-    final double width = math.max(28, _controller.text.length * style.fontSize! * 0.62 + 12);
+    final double width =
+        math.max(28, _controller.text.length * style.fontSize! * 0.62 + 12);
     final BorderRadius radius = BorderRadius.circular(IddsRadius.md);
 
     return Padding(
@@ -384,14 +428,18 @@ class _PageInputState extends State<_PageInput> {
           visible: _focus.hasFocus,
           borderRadius: radius,
           inset: 1,
-          rings: <(double, Color)>[(2.0, c.backgroundPrimary), (1.0, c.contentPrimary)],
+          rings: <(double, Color)>[
+            (2.0, c.backgroundPrimary),
+            (1.0, c.contentPrimary)
+          ],
           child: Container(
             width: width,
             padding: const EdgeInsets.all(IddsSpacing.s4 - 1),
             decoration: BoxDecoration(
               color: c.backgroundPrimary,
               borderRadius: radius,
-              border: Border.all(color: _focus.hasFocus ? c.strokeTertiary : c.strokePrimary),
+              border: Border.all(
+                  color: _focus.hasFocus ? c.strokeTertiary : c.strokePrimary),
             ),
             child: iddsMaterialShim(
               context,
@@ -401,11 +449,14 @@ class _PageInputState extends State<_PageInput> {
                 enabled: enabled,
                 textAlign: TextAlign.center,
                 keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
                 style: style.copyWith(color: c.contentPrimary),
                 cursorColor: c.contentPrimary,
                 onSubmitted: (_) => _submit(),
-                decoration: const InputDecoration.collapsed(hintText: null).copyWith(
+                decoration:
+                    const InputDecoration.collapsed(hintText: null).copyWith(
                   visualDensity: VisualDensity.standard,
                 ),
               ),

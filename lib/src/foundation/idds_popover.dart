@@ -97,7 +97,8 @@ class IddsPopover extends StatefulWidget {
   State<IddsPopover> createState() => _IddsPopoverState();
 }
 
-class _IddsPopoverState extends State<IddsPopover> with SingleTickerProviderStateMixin {
+class _IddsPopoverState extends State<IddsPopover>
+    with SingleTickerProviderStateMixin {
   final OverlayPortalController _portal = OverlayPortalController();
   final LayerLink _link = LayerLink();
   final Object _tapGroup = Object();
@@ -105,7 +106,8 @@ class _IddsPopoverState extends State<IddsPopover> with SingleTickerProviderStat
 
   /// Induk fokus pemicu dan panel, untuk melepas fokus saat pengguna
   /// mengeklik di luar.
-  final FocusNode _focus = FocusNode(canRequestFocus: false, skipTraversal: true, debugLabel: 'IddsPopover');
+  final FocusNode _focus = FocusNode(
+      canRequestFocus: false, skipTraversal: true, debugLabel: 'IddsPopover');
 
   /// Geseran horizontal agar panel tidak keluar dari tepi layar.
   double _dx = 0;
@@ -153,14 +155,19 @@ class _IddsPopoverState extends State<IddsPopover> with SingleTickerProviderStat
     // Bergantung pada MediaQuery agar posisi dihitung ulang saat ukuran layar berubah.
     MediaQuery.maybeSizeOf(overlayContext);
     final RenderBox? anchor = context.findRenderObject() as RenderBox?;
-    final RenderBox? overlayBox = Overlay.maybeOf(context)?.context.findRenderObject() as RenderBox?;
-    if (anchor == null || !anchor.hasSize || overlayBox == null) return const SizedBox.shrink();
+    final RenderBox? overlayBox =
+        Overlay.maybeOf(context)?.context.findRenderObject() as RenderBox?;
+    if (anchor == null || !anchor.hasSize || overlayBox == null) {
+      return const SizedBox.shrink();
+    }
 
-    final Offset topLeft = anchor.localToGlobal(Offset.zero, ancestor: overlayBox);
+    final Offset topLeft =
+        anchor.localToGlobal(Offset.zero, ancestor: overlayBox);
     final Rect anchorRect = topLeft & anchor.size;
     final Size screen = overlayBox.size;
     const double margin = IddsSpacing.s8;
-    final double spaceBelow = screen.height - anchorRect.bottom - widget.gap - margin;
+    final double spaceBelow =
+        screen.height - anchorRect.bottom - widget.gap - margin;
     final double spaceAbove = anchorRect.top - widget.gap - margin;
 
     // Pindah ke sisi seberang bila sisi yang diminta sempit (< 200px atau
@@ -174,7 +181,8 @@ class _IddsPopoverState extends State<IddsPopover> with SingleTickerProviderStat
     final bool end = placement._isEnd;
     final double available = math.max(0, top ? spaceAbove : spaceBelow);
 
-    final double minWidth = math.max(widget.minWidth ?? 0, widget.matchAnchorWidth ? anchorRect.width : 0);
+    final double minWidth = math.max(
+        widget.minWidth ?? 0, widget.matchAnchorWidth ? anchorRect.width : 0);
     final double maxWidth = screen.width - 2 * margin;
 
     Widget panel = ConstrainedBox(
@@ -183,17 +191,24 @@ class _IddsPopoverState extends State<IddsPopover> with SingleTickerProviderStat
         maxWidth: widget.width ?? maxWidth,
         maxHeight: math.min(widget.maxHeight, available),
       ),
-      child: widget.width == null ? IntrinsicWidth(child: widget.panelBuilder(overlayContext)) : SizedBox(width: widget.width, child: widget.panelBuilder(overlayContext)),
+      child: widget.width == null
+          ? IntrinsicWidth(child: widget.panelBuilder(overlayContext))
+          : SizedBox(
+              width: widget.width, child: widget.panelBuilder(overlayContext)),
     );
 
     panel = KeyedSubtree(key: _panelKey, child: panel);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _clampHorizontally(margin));
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _clampHorizontally(margin));
 
-    final Animation<double> curved = CurvedAnimation(parent: _animation, curve: Curves.easeOut);
+    final Animation<double> curved =
+        CurvedAnimation(parent: _animation, curve: Curves.easeOut);
     panel = FadeTransition(
       opacity: curved,
       child: SlideTransition(
-        position: Tween<Offset>(begin: Offset(0, top ? 0.03 : -0.03), end: Offset.zero).animate(curved),
+        position: Tween<Offset>(
+                begin: Offset(0, top ? 0.03 : -0.03), end: Offset.zero)
+            .animate(curved),
         child: panel,
       ),
     );
@@ -203,12 +218,17 @@ class _IddsPopoverState extends State<IddsPopover> with SingleTickerProviderStat
         CompositedTransformFollower(
           link: _link,
           showWhenUnlinked: false,
-          targetAnchor: top ? (end ? Alignment.topRight : Alignment.topLeft) : (end ? Alignment.bottomRight : Alignment.bottomLeft),
-          followerAnchor: top ? (end ? Alignment.bottomRight : Alignment.bottomLeft) : (end ? Alignment.topRight : Alignment.topLeft),
+          targetAnchor: top
+              ? (end ? Alignment.topRight : Alignment.topLeft)
+              : (end ? Alignment.bottomRight : Alignment.bottomLeft),
+          followerAnchor: top
+              ? (end ? Alignment.bottomRight : Alignment.bottomLeft)
+              : (end ? Alignment.topRight : Alignment.topLeft),
           offset: Offset(_dx, top ? -widget.gap : widget.gap),
           child: TapRegion(
             groupId: _tapGroup,
-            child: _DismissOnEscape(enabled: true, onDismiss: widget.onDismiss, child: panel),
+            child: _DismissOnEscape(
+                enabled: true, onDismiss: widget.onDismiss, child: panel),
           ),
         ),
       ],
@@ -220,10 +240,13 @@ class _IddsPopoverState extends State<IddsPopover> with SingleTickerProviderStat
   /// terlihat melompat).
   void _clampHorizontally(double margin) {
     if (!mounted || !widget.open) return;
-    final RenderBox? box = _panelKey.currentContext?.findRenderObject() as RenderBox?;
-    final RenderBox? overlayBox = Overlay.maybeOf(context)?.context.findRenderObject() as RenderBox?;
+    final RenderBox? box =
+        _panelKey.currentContext?.findRenderObject() as RenderBox?;
+    final RenderBox? overlayBox =
+        Overlay.maybeOf(context)?.context.findRenderObject() as RenderBox?;
     if (box == null || !box.hasSize || overlayBox == null) return;
-    final double left = box.localToGlobal(Offset.zero, ancestor: overlayBox).dx - _dx;
+    final double left =
+        box.localToGlobal(Offset.zero, ancestor: overlayBox).dx - _dx;
     final double width = box.size.width;
     final double screen = overlayBox.size.width;
     double dx = 0;
@@ -260,7 +283,10 @@ class _IddsPopoverState extends State<IddsPopover> with SingleTickerProviderStat
             overlayChildBuilder: _buildOverlay,
             // Selalu dibungkus (aksi hanya aktif saat terbuka) agar subtree
             // anchor tidak dibuat ulang ketika panel dibuka/ditutup.
-            child: _DismissOnEscape(enabled: widget.open, onDismiss: widget.onDismiss, child: widget.child),
+            child: _DismissOnEscape(
+                enabled: widget.open,
+                onDismiss: widget.onDismiss,
+                child: widget.child),
           ),
         ),
       ),
@@ -269,7 +295,8 @@ class _IddsPopoverState extends State<IddsPopover> with SingleTickerProviderStat
 }
 
 class _DismissOnEscape extends StatelessWidget {
-  const _DismissOnEscape({required this.enabled, required this.onDismiss, required this.child});
+  const _DismissOnEscape(
+      {required this.enabled, required this.onDismiss, required this.child});
 
   final bool enabled;
   final VoidCallback onDismiss;
@@ -295,7 +322,12 @@ class _DismissOnEscape extends StatelessWidget {
 /// dan bayangan.
 class IddsPopoverSurface extends StatelessWidget {
   /// Membuat permukaan panel.
-  const IddsPopoverSurface({super.key, required this.child, this.shadow, this.radius = IddsRadius.lg, this.padding});
+  const IddsPopoverSurface(
+      {super.key,
+      required this.child,
+      this.shadow,
+      this.radius = IddsRadius.lg,
+      this.padding});
 
   /// Isi panel.
   final Widget child;
@@ -320,11 +352,20 @@ class IddsPopoverSurface extends StatelessWidget {
         border: Border.all(color: c.strokePrimary),
         boxShadow: shadow ??
             const <BoxShadow>[
-              BoxShadow(color: Color(0x1A000000), offset: Offset(0, 10), blurRadius: 25, spreadRadius: -5),
-              BoxShadow(color: Color(0x0A000000), offset: Offset(0, 10), blurRadius: 10, spreadRadius: -5),
+              BoxShadow(
+                  color: Color(0x1A000000),
+                  offset: Offset(0, 10),
+                  blurRadius: 25,
+                  spreadRadius: -5),
+              BoxShadow(
+                  color: Color(0x0A000000),
+                  offset: Offset(0, 10),
+                  blurRadius: 10,
+                  spreadRadius: -5),
             ],
       ),
-      child: ClipRRect(borderRadius: BorderRadius.circular(radius - 1), child: child),
+      child: ClipRRect(
+          borderRadius: BorderRadius.circular(radius - 1), child: child),
     );
   }
 }

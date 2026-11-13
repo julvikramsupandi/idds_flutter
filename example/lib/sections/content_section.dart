@@ -30,8 +30,10 @@ class _ContentSectionState extends State<ContentSection> {
       children: <Widget>[
         GallerySection(
           title: 'Accordion',
-          subtitle: 'Grup (satu terbuka), accordion tunggal, dan gaya kartu. Panah atas/bawah berpindah antar judul.',
-          usage: 'IddsAccordionGroup hanya membuka satu panel dalam satu waktu (multipleOpen: true untuk lebih). Isi bisa widget apa saja. IddsAccordionCard untuk satu panel bergaya kartu.',
+          subtitle:
+              'Grup (satu terbuka), accordion tunggal, dan gaya kartu. Panah atas/bawah berpindah antar judul.',
+          usage:
+              'IddsAccordionGroup hanya membuka satu panel dalam satu waktu (multipleOpen: true untuk lebih). Isi bisa widget apa saja. IddsAccordionCard untuk satu panel bergaya kartu.',
           code: _accordionCode,
           children: <Widget>[
             ConstrainedBox(
@@ -44,17 +46,23 @@ class _ContentSectionState extends State<ContentSection> {
                     items: <IddsAccordionItem>[
                       IddsAccordionItem(
                         title: Text('Siapa yang bisa mendaftar?'),
-                        child: Text('Warga Provinsi Gorontalo berusia 17–35 tahun yang sedang menempuh pendidikan.'),
+                        child: Text(
+                            'Warga Provinsi Gorontalo berusia 17–35 tahun yang sedang menempuh pendidikan.'),
                       ),
                       IddsAccordionItem(
                         title: Text('Dokumen apa saja yang dibutuhkan?'),
-                        child: Text('KTP, Kartu Keluarga, transkrip nilai, dan surat keterangan aktif kuliah.'),
+                        child: Text(
+                            'KTP, Kartu Keluarga, transkrip nilai, dan surat keterangan aktif kuliah.'),
                       ),
                       IddsAccordionItem(
                         title: Text('Kapan pengumuman hasil seleksi?'),
-                        child: Text('Pengumuman dikirim lewat email paling lambat 30 hari setelah pendaftaran ditutup.'),
+                        child: Text(
+                            'Pengumuman dikirim lewat email paling lambat 30 hari setelah pendaftaran ditutup.'),
                       ),
-                      IddsAccordionItem(title: Text('Pertanyaan nonaktif'), child: Text('-'), enabled: false),
+                      IddsAccordionItem(
+                          title: Text('Pertanyaan nonaktif'),
+                          child: Text('-'),
+                          enabled: false),
                     ],
                   ),
                   const SizedBox(height: IddsSpacing.s24),
@@ -69,8 +77,10 @@ class _ContentSectionState extends State<ContentSection> {
         ),
         GallerySection(
           title: 'Card',
-          subtitle: 'Basic, horizontal (media pindah ke atas di layar < 640px), overlay, dan card polos.',
-          usage: 'Kartu konten dengan media, avatar, judul, keterangan, dan aksi. Isi onTap agar seluruh kartu bisa ditekan. IddsCardPlain adalah wadah bergaris tepi untuk isi bebas.',
+          subtitle:
+              'Basic, horizontal (media pindah ke atas di layar < 640px), overlay, dan card polos.',
+          usage:
+              'Kartu konten dengan media, avatar, judul, keterangan, dan aksi. Isi onTap agar seluruh kartu bisa ditekan. IddsCardPlain adalah wadah bergaris tepi untuk isi bebas.',
           code: _cardCode,
           children: <Widget>[
             Wrap(
@@ -84,8 +94,10 @@ class _ContentSectionState extends State<ContentSection> {
                     media: _media(context, TablerIcons.school),
                     avatar: const IddsAvatar(initials: 'DK'),
                     title: const Text('Beasiswa Pendidikan 2026'),
-                    description: const Text('Pendaftaran dibuka hingga 30 November 2026 untuk mahasiswa aktif.'),
-                    action: IddsButton(onPressed: () {}, child: const Text('Daftar sekarang')),
+                    description: const Text(
+                        'Pendaftaran dibuka hingga 30 November 2026 untuk mahasiswa aktif.'),
+                    action: IddsButton(
+                        onPressed: () {}, child: const Text('Daftar sekarang')),
                   ),
                 ),
                 SizedBox(
@@ -94,7 +106,8 @@ class _ContentSectionState extends State<ContentSection> {
                     variant: IddsCardVariant.overlay,
                     media: _media(context, TablerIcons.mountain),
                     title: const Text('Wisata Danau Limboto'),
-                    description: const Text('Kenali potensi wisata dan ekonomi kreatif di sekitar danau.'),
+                    description: const Text(
+                        'Kenali potensi wisata dan ekonomi kreatif di sekitar danau.'),
                     onTap: () => showGallerySnack(context, 'Kartu ditekan'),
                   ),
                 ),
@@ -105,16 +118,20 @@ class _ContentSectionState extends State<ContentSection> {
               variant: IddsCardVariant.horizontal,
               media: _media(context, TablerIcons.file_text),
               title: const Text('Laporan Kinerja Triwulan III'),
-              description: const Text('Ringkasan capaian layanan digital pemerintah daerah selama Juli–September.'),
+              description: const Text(
+                  'Ringkasan capaian layanan digital pemerintah daerah selama Juli–September.'),
               onTap: () => showGallerySnack(context, 'Membuka laporan'),
             ),
             const SizedBox(height: IddsSpacing.s16),
-            const IddsCardPlain(child: Text('Card polos: wadah bergaris tepi untuk konten apa saja.')),
+            const IddsCardPlain(
+                child: Text(
+                    'Card polos: wadah bergaris tepi untuk konten apa saja.')),
           ],
         ),
         GallerySection(
           title: 'Loading & Divider',
-          usage: 'Spinner untuk proses singkat, progress bar/circle bila kemajuan diketahui (value 0–1, null untuk berjalan terus), dan skeleton sebagai kerangka konten saat data dimuat.',
+          usage:
+              'Spinner untuk proses singkat, progress bar/circle bila kemajuan diketahui (value 0–1, null untuk berjalan terus), dan skeleton sebagai kerangka konten saat data dimuat.',
           code: _loadingCode,
           children: <Widget>[
             const Wrap(
@@ -123,8 +140,10 @@ class _ContentSectionState extends State<ContentSection> {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: <Widget>[
                 IddsSpinner(),
-                IddsSpinner(size: 32, strokeWidth: 4, color: IddsLoadingColor.success),
-                IddsSpinner(title: 'Memuat data', subtitle: 'Mohon tunggu sebentar'),
+                IddsSpinner(
+                    size: 32, strokeWidth: 4, color: IddsLoadingColor.success),
+                IddsSpinner(
+                    title: 'Memuat data', subtitle: 'Mohon tunggu sebentar'),
               ],
             ),
             const SizedBox(height: IddsSpacing.s24),
@@ -135,24 +154,30 @@ class _ContentSectionState extends State<ContentSection> {
                 spacing: IddsSpacing.s12,
                 children: <Widget>[
                   IddsProgressBar(value: _progress),
-                  const IddsProgressBar(height: IddsProgressBarHeight.lg, color: IddsLoadingColor.success, value: 0.8),
+                  const IddsProgressBar(
+                      height: IddsProgressBarHeight.lg,
+                      color: IddsLoadingColor.success,
+                      value: 0.8),
                   const IddsProgressBar(),
                   Row(
                     spacing: IddsSpacing.s12,
                     children: <Widget>[
                       IddsCircleProgress(value: _progress),
-                      IddsCircleProgress(value: _progress, diameter: 40, strokeWidth: 4),
+                      IddsCircleProgress(
+                          value: _progress, diameter: 40, strokeWidth: 4),
                       Text('${(_progress * 100).round()}%'),
                       const Spacer(),
                       IddsButton(
                         size: IddsButtonSize.sm,
                         hierarchy: IddsButtonHierarchy.secondary,
-                        onPressed: () => setState(() => _progress = _progress >= 1 ? 0 : _progress + 0.2),
+                        onPressed: () => setState(() =>
+                            _progress = _progress >= 1 ? 0 : _progress + 0.2),
                         child: const Text('Tambah'),
                       ),
                     ],
                   ),
-                  const IddsDivider(spacing: IddsSpacing.s8, label: Text('Skeleton')),
+                  const IddsDivider(
+                      spacing: IddsSpacing.s8, label: Text('Skeleton')),
                   const Row(
                     spacing: IddsSpacing.s12,
                     children: <Widget>[
@@ -162,18 +187,26 @@ class _ContentSectionState extends State<ContentSection> {
                           spacing: IddsSpacing.s8,
                           children: <Widget>[
                             IddsSkeleton(height: 16),
-                            IddsSkeleton(height: 12, color: IddsSkeletonColor.blue),
+                            IddsSkeleton(
+                                height: 12, color: IddsSkeletonColor.blue),
                           ],
                         ),
                       ),
                     ],
                   ),
                   const IddsSkeleton(height: 120, radius: IddsRadius.lg),
-                  const IddsDivider(variant: IddsDividerVariant.middle, light: true),
+                  const IddsDivider(
+                      variant: IddsDividerVariant.middle, light: true),
                   const IntrinsicHeight(
                     child: Row(
                       spacing: IddsSpacing.s12,
-                      children: <Widget>[Text('Beranda'), IddsDivider.vertical(), Text('Layanan'), IddsDivider.vertical(), Text('Kontak')],
+                      children: <Widget>[
+                        Text('Beranda'),
+                        IddsDivider.vertical(),
+                        Text('Layanan'),
+                        IddsDivider.vertical(),
+                        Text('Kontak')
+                      ],
                     ),
                   ),
                 ],

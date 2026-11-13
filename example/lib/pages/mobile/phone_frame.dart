@@ -15,7 +15,8 @@ import 'package:idds_flutter/idds_flutter.dart';
 ///
 /// Bila ruang lebih sempit dari bingkai, bingkai diperkecil utuh.
 class PhoneFrame extends StatelessWidget {
-  const PhoneFrame({super.key, required this.child, this.screenSize = defaultScreenSize});
+  const PhoneFrame(
+      {super.key, required this.child, this.screenSize = defaultScreenSize});
 
   /// Lebar layar ponsel Android umum (logical pixel).
   static const double defaultScreenWidth = 360;
@@ -40,7 +41,8 @@ class PhoneFrame extends StatelessWidget {
   final Widget child;
 
   /// Ukuran luar bingkai.
-  Size get outerSize => Size(screenSize.width + bezel * 2, screenSize.height + bezel * 2);
+  Size get outerSize =>
+      Size(screenSize.width + bezel * 2, screenSize.height + bezel * 2);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,8 @@ class PhoneFrame extends StatelessWidget {
         borderRadius: BorderRadius.circular(44),
         border: theme.isDark ? Border.all(color: c.strokeSecondary) : null,
         boxShadow: const <BoxShadow>[
-          BoxShadow(color: Color(0x1F000000), blurRadius: 24, offset: Offset(0, 12)),
+          BoxShadow(
+              color: Color(0x1F000000), blurRadius: 24, offset: Offset(0, 12)),
         ],
       ),
       child: ClipRRect(
@@ -70,7 +73,9 @@ class PhoneFrame extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final double scale = constraints.hasBoundedWidth ? math.min(1, constraints.maxWidth / outer.width) : 1;
+        final double scale = constraints.hasBoundedWidth
+            ? math.min(1, constraints.maxWidth / outer.width)
+            : 1;
         if (scale >= 1) return phone;
         return SizedBox(
           width: outer.width * scale,
@@ -91,8 +96,11 @@ class _PhoneScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final IddsColors c = IddsTheme.of(context).colors;
-    const EdgeInsets safe = EdgeInsets.only(top: PhoneFrame.statusBarHeight, bottom: PhoneFrame.homeIndicatorHeight);
-    final MediaQueryData parent = MediaQuery.maybeOf(context) ?? const MediaQueryData();
+    const EdgeInsets safe = EdgeInsets.only(
+        top: PhoneFrame.statusBarHeight,
+        bottom: PhoneFrame.homeIndicatorHeight);
+    final MediaQueryData parent =
+        MediaQuery.maybeOf(context) ?? const MediaQueryData();
 
     return SizedBox.fromSize(
       size: size,
@@ -114,12 +122,16 @@ class _PhoneScreen extends StatelessWidget {
                   // Route dibuat sekali; isi diambil dari _ScreenChild agar
                   // ikut berubah saat induk membangun ulang (mis. ganti brand).
                   child: Navigator(
-                    onGenerateRoute: (RouteSettings settings) => PageRouteBuilder<void>(
+                    onGenerateRoute: (RouteSettings settings) =>
+                        PageRouteBuilder<void>(
                       settings: settings,
                       transitionDuration: Duration.zero,
-                      pageBuilder: (BuildContext context, Animation<double> a, Animation<double> b) => Builder(
-                        builder: (BuildContext context) =>
-                            context.dependOnInheritedWidgetOfExactType<_ScreenChild>()!.screen,
+                      pageBuilder: (BuildContext context, Animation<double> a,
+                              Animation<double> b) =>
+                          Builder(
+                        builder: (BuildContext context) => context
+                            .dependOnInheritedWidgetOfExactType<_ScreenChild>()!
+                            .screen,
                       ),
                     ),
                   ),
@@ -127,7 +139,12 @@ class _PhoneScreen extends StatelessWidget {
               ),
               // Status bar & indikator beranda digambar di atas isi, seperti
               // ponsel sungguhan; isi memberi jarak lewat MediaQuery.padding.
-              const Positioned(top: 0, left: 0, right: 0, height: PhoneFrame.statusBarHeight, child: _StatusBar()),
+              const Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: PhoneFrame.statusBarHeight,
+                  child: _StatusBar()),
               Positioned(
                 bottom: 6,
                 left: 0,
@@ -137,7 +154,9 @@ class _PhoneScreen extends StatelessWidget {
                     child: Container(
                       width: 120,
                       height: 4,
-                      decoration: BoxDecoration(color: c.contentPrimary, borderRadius: BorderRadius.circular(2)),
+                      decoration: BoxDecoration(
+                          color: c.contentPrimary,
+                          borderRadius: BorderRadius.circular(2)),
                     ),
                   ),
                 ),
@@ -187,7 +206,8 @@ class _StatusBar extends StatelessWidget {
               Container(
                 width: 12,
                 height: 12,
-                decoration: const BoxDecoration(color: Color(0xFF1F1F1F), shape: BoxShape.circle),
+                decoration: const BoxDecoration(
+                    color: Color(0xFF1F1F1F), shape: BoxShape.circle),
               ),
               const Spacer(),
               Icon(TablerIcons.antenna_bars_5, size: 16, color: color),
