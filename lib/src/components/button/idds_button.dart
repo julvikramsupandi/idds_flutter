@@ -186,8 +186,11 @@ class _IddsButtonState extends State<IddsButton> {
               softWrap: false,
               child: IconTheme(
                 data: IconThemeData(size: metrics.lineHeight, color: style.foreground),
+                // CSS `justify-content: center`: isi tetap di tengah saat
+                // tombol dibuat selebar induk.
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   spacing: IddsSpacing.s8,
                   children: <Widget>[
                     if (widget.prefixIcon != null) widget.prefixIcon!,

@@ -1,3 +1,13 @@
+## Belum dirilis
+
+- `IddsButton`: isi tombol kini di tengah saat tombol dibuat selebar induk
+  (mis. `SizedBox(width: double.infinity, child: IddsButton(...))`), sesuai
+  CSS IDDS `justify-content: center`. Sebelumnya teks menempel di kiri.
+- Galeri: Beranda kini dibuka dengan tab **Mobile**, berisi contoh aplikasi
+  layanan publik (Masuk, Beranda Layanan, Form Pengajuan) di bingkai ponsel
+  360px yang bisa dicoba langsung dari web. Contoh dasbor lama pindah ke tab
+  **Web**.
+
 ## 0.2.1
 
 Temuan dari pemakaian di aplikasi Godigi (Android/iOS).
