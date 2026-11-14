@@ -1,5 +1,16 @@
 ## Belum dirilis
 
+- `IddsStepper`: langkah aktif kini memakai warna utama brand (`primaryMain`),
+  bukan biru `guide` (dicatat di "Penyesuaian dari IDDS"); latar langkah di
+  dark mode tidak lagi terang.
+- `IddsStepper`: parameter baru `dense` (untuk kartu/daftar: tanpa label,
+  garis minimal 8px, tanpa padding dan tinggi minimal 80px), `maxVisible`
+  (langkah banyak diringkas "…", langkah pertama, terakhir, dan di sekitar
+  langkah fokus tetap tampil), dan `semanticLabel` (satu kalimat pembaca
+  layar). `currentStep` kini opsional (bawaan 0).
+- `IddsStep`: `status` (`IddsStepStatus.completed/active/upcoming/error`)
+  untuk alur yang tidak lurus, `highlighted` (cincin luar, mis. tahap milik
+  pengguna); `label` kini opsional.
 - `LICENSE` kini hanya berisi teks MIT standar agar dikenali pub.dev sebagai
   lisensi OSI. Catatan pihak ketiga (token `@idds/styles`, Tabler Icons,
   nama/logo instansi) dipindah ke berkas `NOTICE`.
