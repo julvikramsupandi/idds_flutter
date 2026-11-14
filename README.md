@@ -246,6 +246,14 @@ IddsStepper(currentStep: 1, steps: [
   IddsStep(label: 'Dokumen'),
 ])
 
+// Di kartu daftar: status per langkah, langkah pengguna ditandai, ringkas.
+IddsStepper(dense: true, maxVisible: 7, semanticLabel: 'Tahap 3 dari 4', steps: [
+  IddsStep(status: IddsStepStatus.completed),
+  IddsStep(status: IddsStepStatus.active),
+  IddsStep(status: IddsStepStatus.upcoming, highlighted: true),
+  IddsStep(status: IddsStepStatus.upcoming),
+])
+
 IddsPagination(
   currentPage: page,
   totalPages: 12,
@@ -513,6 +521,9 @@ diubah karena di CSS aslinya tidak terbaca atau hilang di dark mode:
 | Alert caution | Judul & ikon `warning-500` (kontras ±1,6:1) | `warning-600` |
 | Alert berwarna, dark mode | Latar `*-100` tetap terang (skala warna status sama di kedua mode), deskripsi `content-primary` (putih di atas latar terang) | Latar gelap bernuansa (warna 500 ±16% di atas `background-primary`), judul/ikon skala 300, deskripsi `content-primary`; kontras ≥ 4,5:1 |
 | Alert info & critical, judul | `guide-500` / `negative-500` (kontras ±4,35 / ±3,6:1 di atas latar 100) | `guide-600` / `negative-600`; garis tepi tetap 500 |
+| Stepper, langkah aktif | `guide-500` (biru, warna informasi) | Warna utama brand (`primaryMain`), agar posisi sekarang tidak terbaca sebagai info |
+| Stepper, dark mode | Latar langkah `*-50` tetap terang | Nuansa warna langkah ±16% di atas `background-primary` |
+| Stepper horizontal di HP | Banyak langkah = gulir menyamping (`horizontal-responsive`) | Mode `dense` (tanpa label, garis min. 8px) + `maxVisible` meringkas dengan "…" |
 | Radio, hover | Latar `neutral-50` (terang di dark mode) | `background-secondary` |
 | Text Field di layar < 640px | Tinggi turun 8px (`md` 44 → 36) dan teks isian 12px | Kotak input tetap 40/44/48 dan teks 14px: di bawah 40px melanggar tinggi minimum IDDS sendiri, dan tinggi input harus sama dengan tombol di form |
 | OTP Input di layar sempit | `flex-wrap`: kotak turun ke baris berikutnya bila tidak muat | Selalu satu baris; kotak menyusut mengikuti lebar induk, jarak 8px di layar ≤ 640px |

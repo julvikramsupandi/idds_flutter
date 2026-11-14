@@ -218,9 +218,10 @@ class _StepperSectionState extends State<StepperSection> {
   Widget build(BuildContext context) {
     return GallerySection(
       title: 'Stepper',
-      subtitle: 'Tekan langkah untuk berpindah. Langkah 3 ditandai bermasalah.',
+      subtitle:
+          'Tekan langkah untuk berpindah. Langkah 3 ditandai bermasalah. Bawah: mode ringkas untuk kartu daftar.',
       usage:
-          'currentStep dimulai dari 0. Langkah sebelum currentStep ditandai selesai; errorSteps menandai langkah bermasalah. Isi onStepTap bila pengguna boleh melompat antarlangkah.',
+          'currentStep dimulai dari 0. Langkah sebelum currentStep ditandai selesai; errorSteps menandai langkah bermasalah. Isi onStepTap bila pengguna boleh melompat antarlangkah. Untuk alur yang tidak lurus, isi IddsStep.status per langkah dan highlighted untuk menandai satu langkah (mis. tahap milik pengguna). Di kartu/daftar pakai dense: true (tanpa label, jarak rapat), maxVisible agar langkah banyak diringkas menjadi "…", dan semanticLabel untuk satu kalimat pembaca layar.',
       code: _stepperCode,
       children: <Widget>[
         IddsStepper(
@@ -245,6 +246,23 @@ class _StepperSectionState extends State<StepperSection> {
             IddsStep(label: 'Dokumen'),
             IddsStep(label: 'Konfirmasi'),
           ],
+        ),
+        const SizedBox(height: IddsSpacing.s16),
+        SizedBox(
+          width: 320,
+          child: IddsStepper(
+            dense: true,
+            maxVisible: 7,
+            semanticLabel:
+                'Tahap 6 dari 9, giliran Anda; tahap 1 sampai 5 selesai',
+            steps: <IddsStep>[
+              for (int i = 0; i < 5; i++)
+                const IddsStep(status: IddsStepStatus.completed),
+              const IddsStep(status: IddsStepStatus.active, highlighted: true),
+              for (int i = 0; i < 3; i++)
+                const IddsStep(status: IddsStepStatus.upcoming),
+            ],
+          ),
         ),
       ],
     );
@@ -371,6 +389,20 @@ IddsStepper(
     IddsStep(label: 'Pendidikan'),
     IddsStep(label: 'Dokumen'),
     IddsStep(label: 'Konfirmasi'),
+  ],
+)
+
+// Mode ringkas di kartu daftar: status per langkah, tanpa label.
+IddsStepper(
+  dense: true,
+  maxVisible: 7, // lebih dari 7 langkah diringkas "…"
+  semanticLabel: 'Tahap 6 dari 9, giliran Anda',
+  steps: [
+    for (final step in workflow)
+      IddsStep(
+        status: step.isDone ? IddsStepStatus.completed : IddsStepStatus.upcoming,
+        highlighted: step.isMine,
+      ),
   ],
 )
 ''';

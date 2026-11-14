@@ -232,6 +232,101 @@ void main() {
       await tester.tap(find.text('Konfirmasi'));
       expect(tapped, 2);
     });
+
+    test('visibleIndexes meringkas di sekitar langkah fokus', () {
+      expect(IddsStepper.visibleIndexes(5, 2, 7), <int?>[0, 1, 2, 3, 4]);
+      expect(
+        IddsStepper.visibleIndexes(8, 5, 7),
+        <int?>[0, null, 3, 4, 5, 6, 7],
+      );
+      expect(
+        IddsStepper.visibleIndexes(10, 1, 7),
+        <int?>[0, 1, 2, 3, 4, null, 9],
+      );
+      expect(
+        IddsStepper.visibleIndexes(12, 5, 7),
+        <int?>[0, null, 4, 5, 6, null, 11],
+      );
+      for (int count = 8; count <= 15; count++) {
+        for (int focus = 0; focus < count; focus++) {
+          final List<int?> v = IddsStepper.visibleIndexes(count, focus, 7);
+          expect(v.length, 7, reason: 'count $count focus $focus');
+          expect(v, contains(focus), reason: 'count $count focus $focus');
+        }
+      }
+    });
+
+    testWidgets('dense: status per langkah, tanpa label, muat di 320px',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        testApp(
+          SizedBox(
+            width: 320,
+            child: IddsStepper(
+              dense: true,
+              maxVisible: 7,
+              semanticLabel: 'Tahap 3 dari 9, menunggu tahap 2',
+              steps: <IddsStep>[
+                const IddsStep(
+                  label: 'Paraf',
+                  status: IddsStepStatus.completed,
+                ),
+                const IddsStep(status: IddsStepStatus.active),
+                const IddsStep(
+                  status: IddsStepStatus.upcoming,
+                  highlighted: true,
+                ),
+                for (int i = 0; i < 6; i++)
+                  const IddsStep(status: IddsStepStatus.upcoming),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      // Label tidak tampil pada mode ringkas.
+      expect(find.text('Paraf'), findsNothing);
+      expect(find.byType(IddsIcon), findsOneWidget);
+      expect(find.text('…'), findsOneWidget);
+      expect(find.text('9'), findsOneWidget);
+      expect(
+        find.bySemanticsLabel('Tahap 3 dari 9, menunggu tahap 2'),
+        findsOneWidget,
+      );
+      expect(tester.getSize(find.byType(IddsStepper)).height, lessThan(40));
+    });
+
+    testWidgets('cincin highlighted padat 2px dengan celah, tanpa bayangan',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        testApp(
+          const SizedBox(
+            width: 320,
+            child: IddsStepper(
+              dense: true,
+              steps: <IddsStep>[
+                IddsStep(status: IddsStepStatus.completed),
+                IddsStep(status: IddsStepStatus.active, highlighted: true),
+                IddsStep(status: IddsStepStatus.upcoming),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(tester.getSize(find.byType(IddsStepper)).height, 32);
+      final Iterable<BoxDecoration> decorations = tester
+          .widgetList<DecoratedBox>(find.byType(DecoratedBox))
+          .map((DecoratedBox d) => d.decoration)
+          .whereType<BoxDecoration>();
+      expect(
+        decorations.any((BoxDecoration d) => d.boxShadow != null),
+        isFalse,
+      );
+      expect(
+        decorations.where((BoxDecoration d) => d.border?.top.width == 2),
+        hasLength(1),
+      );
+    });
   });
 
   group('IddsPagination', () {
