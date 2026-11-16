@@ -254,6 +254,14 @@ IddsStepper(dense: true, maxVisible: 7, semanticLabel: 'Tahap 3 dari 4', steps: 
   IddsStep(status: IddsStepStatus.upcoming),
 ])
 
+// Linimasa vertikal: isi bebas di bawah label, garis mengikuti tinggi isi.
+IddsStepper(direction: Axis.vertical, steps: [
+  IddsStep(label: 'Tahap 1 · Paraf', status: IddsStepStatus.completed,
+      content: Text('Nama penanda tangan')),
+  IddsStep(label: 'Tahap 2 · Tanda tangan', status: IddsStepStatus.active,
+      highlighted: true, content: Text('Anda')),
+])
+
 IddsPagination(
   currentPage: page,
   totalPages: 12,

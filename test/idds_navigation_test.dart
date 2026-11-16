@@ -217,6 +217,44 @@ void main() {
       expect(find.text('3'), findsOneWidget);
     });
 
+    testWidgets('vertikal dengan content: linimasa, garis ikut tinggi isi',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        testApp(
+          const SizedBox(
+            width: 360,
+            child: IddsStepper(
+              direction: Axis.vertical,
+              steps: <IddsStep>[
+                IddsStep(
+                  label: 'Tahap 1',
+                  status: IddsStepStatus.completed,
+                  content: SizedBox(height: 120, child: Text('Isi panjang')),
+                ),
+                IddsStep(
+                  label: 'Tahap 2',
+                  status: IddsStepStatus.active,
+                  highlighted: true,
+                  content: Text('Isi pendek'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      expect(find.text('Isi panjang'), findsOneWidget);
+      expect(find.text('Isi pendek'), findsOneWidget);
+      expect(find.text('Tahap 1'), findsOneWidget);
+      // Garis penghubung tahap 1 setidaknya setinggi isinya dikurangi kotak.
+      final Iterable<Size> lines = tester
+          .widgetList<Container>(find.byType(Container))
+          .where((Container c) => c.constraints?.maxWidth == 2)
+          .map((Container c) => tester.getSize(find.byWidget(c)));
+      expect(lines, isNotEmpty);
+      expect(lines.first.height, greaterThan(80));
+    });
+
     testWidgets('onStepTap mengirim indeks', (WidgetTester tester) async {
       int? tapped;
       await tester.pumpWidget(

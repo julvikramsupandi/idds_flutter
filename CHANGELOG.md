@@ -1,5 +1,9 @@
 ## Belum dirilis
 
+- `IddsStep.content`: isi tambahan di bawah label pada stepper vertikal
+  (mis. nama, status, riwayat). Bila ada langkah yang mengisinya, stepper
+  vertikal memakai tata letak linimasa: label boleh lebih dari satu baris dan
+  garis penghubung mengikuti tinggi isi (bukan tetap 72px).
 - `IddsStepper`: langkah aktif kini memakai warna utama brand (`primaryMain`),
   bukan biru `guide` (dicatat di "Penyesuaian dari IDDS"); latar langkah di
   dark mode tidak lagi terang.

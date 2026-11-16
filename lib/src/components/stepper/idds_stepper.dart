@@ -33,6 +33,7 @@ class IddsStep {
     this.enabled = true,
     this.status,
     this.highlighted = false,
+    this.content,
   });
 
   /// Nama langkah. Boleh kosong pada [IddsStepper.dense].
@@ -51,6 +52,12 @@ class IddsStep {
 
   /// Ditandai cincin luar, mis. "tahap Anda" di antara tahap orang lain.
   final bool highlighted;
+
+  /// Isi tambahan di bawah label, hanya pada stepper vertikal (mis. nama
+  /// penanda tangan, status, dan riwayat tahap). Bila salah satu langkah
+  /// mengisinya, stepper vertikal memakai tata letak linimasa: label boleh
+  /// lebih dari satu baris dan garis penghubung mengikuti tinggi isi.
+  final Widget? content;
 }
 
 /// Penanda kemajuan proses bertahap.
@@ -211,6 +218,10 @@ class IddsStepper extends StatelessWidget {
             );
     }
 
+    if (!horizontal && steps.any((IddsStep s) => s.content != null)) {
+      return _timeline(context, visible);
+    }
+
     final List<Widget> children = <Widget>[];
     for (int v = 0; v < visible.length; v++) {
       final int? i = visible[v];
@@ -264,6 +275,115 @@ class IddsStepper extends StatelessWidget {
   }
 }
 
+extension on IddsStepper {
+  /// Linimasa vertikal untuk langkah ber-[IddsStep.content]: kotak di kiri,
+  /// garis penghubung setinggi isi langkah, label dan isi di kanan.
+  Widget _timeline(BuildContext context, List<int?> visible) {
+    final IddsThemeData theme = IddsTheme.of(context);
+    final IddsColors c = theme.colors;
+    // Lebar kolom kiri = kotak bercincin (32px) agar garis tetap segaris
+    // walau hanya sebagian langkah yang ditandai.
+    const double rail = 32;
+
+    final List<Widget> rows = <Widget>[];
+    for (int v = 0; v < visible.length; v++) {
+      final int? i = visible[v];
+      final bool isLast = v == visible.length - 1;
+      if (i == null) {
+        rows.add(
+          const Row(
+            children: <Widget>[
+              SizedBox(width: rail, child: _Gap(horizontal: false)),
+            ],
+          ),
+        );
+        continue;
+      }
+      final IddsStep step = steps[i];
+      final IddsStepStatus status = _status(i);
+      final Color line = status == IddsStepStatus.completed
+          ? c.positive.shade600
+          : c.strokePrimary;
+      final Widget? content = step.content;
+      rows.add(
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              SizedBox(
+                width: rail,
+                child: Column(
+                  children: <Widget>[
+                    _StepItem(
+                      index: i,
+                      step: step,
+                      status: status,
+                      horizontal: false,
+                      dense: false,
+                      boxOnly: true,
+                      onTap: onStepTap != null && step.enabled
+                          ? () => onStepTap!(i)
+                          : null,
+                    ),
+                    if (!isLast)
+                      Expanded(
+                        child: Container(
+                          width: 2,
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          color: line,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: IddsSpacing.s12),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: step.highlighted ? 8 : 4,
+                    bottom: isLast ? 0 : IddsSpacing.s24,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      // Label sudah dibacakan bersama status oleh kotak.
+                      if (step.label.isNotEmpty)
+                        ExcludeSemantics(
+                          child: Text(
+                            step.label,
+                            style: theme.textStyle(
+                              fontSize: IddsFontSize.xs,
+                              lineHeight: IddsLineHeight.xs,
+                              color: status == IddsStepStatus.upcoming
+                                  ? c.contentTertiary
+                                  : c.contentSecondary,
+                            ),
+                          ),
+                        ),
+                      if (content != null) content,
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final Widget body = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: rows,
+    );
+    final String? label = semanticLabel;
+    if (label != null) {
+      return Semantics(container: true, label: label, child: body);
+    }
+    return Semantics(container: true, explicitChildNodes: true, child: body);
+  }
+}
+
 /// Pengganti langkah yang diringkas.
 class _Gap extends StatelessWidget {
   const _Gap({required this.horizontal});
@@ -300,7 +420,11 @@ class _StepItem extends StatelessWidget {
     required this.horizontal,
     required this.dense,
     required this.onTap,
+    this.boxOnly = false,
   });
+
+  /// Hanya kotak (linimasa vertikal); label digambar oleh linimasa.
+  final bool boxOnly;
 
   final int index;
   final IddsStep step;
@@ -382,7 +506,9 @@ class _StepItem extends StatelessWidget {
           child: Padding(padding: const EdgeInsets.all(4), child: box),
         );
       }
-      if (dense) return Opacity(opacity: step.enabled ? 1 : 0.6, child: box);
+      if (dense || boxOnly) {
+        return Opacity(opacity: step.enabled ? 1 : 0.6, child: box);
+      }
 
       final Widget label = Text(
         step.label,
