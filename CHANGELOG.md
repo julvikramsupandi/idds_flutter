@@ -1,4 +1,4 @@
-## Belum dirilis
+## 0.3.0
 
 - `IddsStep.content`: isi tambahan di bawah label pada stepper vertikal
   (mis. nama, status, riwayat). Bila ada langkah yang mengisinya, stepper
